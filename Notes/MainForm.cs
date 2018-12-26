@@ -42,10 +42,24 @@ namespace Notes
 
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
-			Size noteTableSize = new Size(searchButton.Location.X, this.Height - menu.Height);
+			// Кнопки
+			const int borderWidth = 15;
+			int newButtonPointX = this.Width - searchButton.Width - borderWidth;
+			foreach (Control c in Controls)
+			{
+				if (c is Button)
+					c.Location = new Point(newButtonPointX, c.Location.Y);
+			}
 
+			// Таблица. Она зависит от расположения кнопок, потому выполняется после них.
 			if (_currentNoteTable != null)
+			{
+				int tableWidth = searchButton.Location.X;
+				int tableHeight = this.Height - menu.Location.Y - menu.Height - 40;	// Не знаю, что там еще на 40 пикселей висит. Может заголовок.
+				Size noteTableSize = new Size(tableWidth, tableHeight);
+
 				_currentNoteTable.ChangeSize(noteTableSize);
+			}
 		}
 	}
 }

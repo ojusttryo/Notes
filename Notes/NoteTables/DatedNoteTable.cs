@@ -84,10 +84,8 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			this.MinimumSize = tableSize;
 			this.Size = tableSize;
-			this.MaximumSize = tableSize;
-
+			
 			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
 
 			Columns[0].Width = (int)(tableSize.Width * 0.4);
