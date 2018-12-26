@@ -1,0 +1,4 @@
+*.exe
+/Notes/obj/*
+/Notes/bin/*
+/Notes/.vs/*
