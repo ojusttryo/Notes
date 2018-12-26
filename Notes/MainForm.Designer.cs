@@ -60,45 +60,45 @@
 			// 
 			// searchButton
 			// 
-			this.searchButton.Location = new System.Drawing.Point(725, 24);
+			this.searchButton.Location = new System.Drawing.Point(734, 23);
 			this.searchButton.Name = "searchButton";
-			this.searchButton.Size = new System.Drawing.Size(60, 60);
+			this.searchButton.Size = new System.Drawing.Size(50, 50);
 			this.searchButton.TabIndex = 0;
 			this.searchButton.Text = "Search";
 			this.searchButton.UseVisualStyleBackColor = true;
 			// 
 			// addButton
 			// 
-			this.addButton.Location = new System.Drawing.Point(725, 81);
+			this.addButton.Location = new System.Drawing.Point(734, 69);
 			this.addButton.Name = "addButton";
-			this.addButton.Size = new System.Drawing.Size(60, 60);
+			this.addButton.Size = new System.Drawing.Size(50, 50);
 			this.addButton.TabIndex = 2;
 			this.addButton.Text = "Add";
 			this.addButton.UseVisualStyleBackColor = true;
 			// 
 			// removeButton
 			// 
-			this.removeButton.Location = new System.Drawing.Point(725, 136);
+			this.removeButton.Location = new System.Drawing.Point(734, 114);
 			this.removeButton.Name = "removeButton";
-			this.removeButton.Size = new System.Drawing.Size(60, 60);
+			this.removeButton.Size = new System.Drawing.Size(50, 50);
 			this.removeButton.TabIndex = 3;
 			this.removeButton.Text = "Remove";
 			this.removeButton.UseVisualStyleBackColor = true;
 			// 
 			// editButton
 			// 
-			this.editButton.Location = new System.Drawing.Point(725, 193);
+			this.editButton.Location = new System.Drawing.Point(734, 162);
 			this.editButton.Name = "editButton";
-			this.editButton.Size = new System.Drawing.Size(60, 60);
+			this.editButton.Size = new System.Drawing.Size(50, 50);
 			this.editButton.TabIndex = 4;
 			this.editButton.Text = "Edit";
 			this.editButton.UseVisualStyleBackColor = true;
 			// 
 			// settingsButton
 			// 
-			this.settingsButton.Location = new System.Drawing.Point(725, 248);
+			this.settingsButton.Location = new System.Drawing.Point(734, 209);
 			this.settingsButton.Name = "settingsButton";
-			this.settingsButton.Size = new System.Drawing.Size(60, 60);
+			this.settingsButton.Size = new System.Drawing.Size(50, 50);
 			this.settingsButton.TabIndex = 5;
 			this.settingsButton.Text = "Settings";
 			this.settingsButton.UseVisualStyleBackColor = true;
