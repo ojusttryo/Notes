@@ -8,7 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Notes.Notes;
 using Notes.NoteTables;
+using Notes.AddForms;
 
 namespace Notes
 {
@@ -17,8 +19,6 @@ namespace Notes
 		private NoteTable _currentNoteTable;
 
 		private NoteTable _films;
-
-		private NoteTable _games;
 
 
 		private int _borderWidth = 0;
@@ -38,8 +38,7 @@ namespace Notes
 
 			Point noteTableLocation = new Point(this.ClientRectangle.Location.X, this.ClientRectangle.Location.Y + menu.Height);
 
-			_films = new DatedNoteTable(noteTableLocation);
-			_games = new DatedNoteTable(noteTableLocation);
+			_films = new DatedNoteTable(noteTableLocation, "Films");
 			_currentNoteTable = _films;
 
 			Controls.Add(_currentNoteTable);
@@ -67,6 +66,24 @@ namespace Notes
 
 				_currentNoteTable.ChangeSize(noteTableSize);
 			}
+		}
+
+		private void addButton_Click(object sender, EventArgs e)
+		{
+			switch (_currentNoteTable.TableNameInDatabase)
+			{
+				case "Films": new AddDatedNoteForm(this, "Add film").ShowDialog(); break;
+					
+				default: break;
+			}
+		}
+
+
+		public void AddNote(Note note)
+		{
+			bool added = _currentNoteTable.AddNote(note);
+			if (added)
+				Database.Insert(_currentNoteTable.TableNameInDatabase, note);
 		}
 	}
 }

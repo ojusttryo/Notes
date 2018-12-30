@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SQLite;
 
+using Notes.Notes;
 
 namespace Notes
 {
@@ -49,7 +50,7 @@ namespace Notes
 			string Season       = "Season        INTEGER NOT NULL DEFAULT 0";
 			string Episode      = "Episode       INTEGER NOT NULL DEFAULT 0";
 
-
+		
 			string command = string.Format("CREATE TABLE IF NOT EXISTS Films ({0}, {1}, {2}, {3}, {4});", 
 				Id, Name, Year, CurrentState, Comment);
 			ExecuteNonQuery(command);
@@ -60,10 +61,6 @@ namespace Notes
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS Performances ({0}, {1}, {2}, {3}, {4});", 
 				Id, Name, Year, CurrentState, Comment);
-			ExecuteNonQuery(command);
-
-			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5});", 
-				Id, Name, Year, CurrentState, Comment, Version);
 			ExecuteNonQuery(command);
 			
 			command = string.Format("CREATE TABLE IF NOT EXISTS Literature ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12});", 
@@ -82,6 +79,10 @@ namespace Notes
 				Id, Name, CurrentState, Comment, DownloadLink, Version);
 			ExecuteNonQuery(command);
 
+			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5});", 
+				Id, Name, CurrentState, Comment, DownloadLink, Version);
+			ExecuteNonQuery(command);
+			
 			command = string.Format("CREATE TABLE IF NOT EXISTS People ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9});", 
 				Id, Name, CurrentState, Comment, Address, Birthday, Nickname, WebPages, Contacts, Sex);
 			ExecuteNonQuery(command);
@@ -97,6 +98,50 @@ namespace Notes
 			command = string.Format("CREATE TABLE IF NOT EXISTS TVShows ({0}, {1}, {2}, {3}, {4}, {5});", 
 				Id, Name, CurrentState, Comment, Season, Episode);
 			ExecuteNonQuery(command);
+		}
+
+
+		public static void Insert(string tableName, Note note)
+		{
+			switch (tableName)
+			{
+				case "Films":        InsertDatedNote(tableName, note); break;
+				case "AnimeFilms":   InsertDatedNote(tableName, note); break;
+				case "Performances": InsertDatedNote(tableName, note); break;
+																			
+				case "Literature":   break;
+
+				case "Bookmarks":    break;
+
+				case "Meal":         break;
+
+				case "Programs":     break;
+				case "Games":        break;
+
+				case "People":       break;
+
+				case "Serials":      break;
+				case "AnimeSerials": break;
+				case "TVShows":      break;
+
+				default: break;
+			}
+		}
+
+
+		private static void InsertDatedNote(string tableName, Note note)
+		{
+			DatedNote datedNote = note as DatedNote;
+			if (datedNote == null)
+			{
+				Log.Error("Try to save incorrect dated note");
+				return;
+			}
+
+			string commandText = string.Format("INSERT INTO {0} (Name, Year, CurrentState, Comment) VALUES (\"{1}\", {2}, {3}, \"{4}\");", 
+				tableName, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
+
+			ExecuteNonQuery(commandText);
 		}
 
 
@@ -143,47 +188,144 @@ namespace Notes
 		}
 
 
-		///// <summary>
-		///// Подключается к БД и считывает заметки. Результат никогда не равен null.
-		///// </summary>
-		//private List<Note> ExecuteReader(SQLiteCommand selectCommand)
-		//{
-		//	try
-		//	{
-		//		using (selectCommand)
-		//		{
-		//			using (SQLiteConnection connection = Database.CreateConnection())
-		//			{
-		//				if (selectCommand == null || selectCommand.CommandText.Length == 0)
-		//					return new List<Note>();
+		public static List<Note> GetNotes(string tableName)
+		{
+			string commandText = string.Format("SELECT * FROM {0}", tableName);
+            SQLiteCommand command = new SQLiteCommand(commandText);
+			List<Note> notes = ExecuteReader(command, tableName);
 
-		//				List<Note> notes = new List<Note>();
+			return notes;
+		}
 
-		//				connection.Open();
 
-		//				selectCommand.Connection = connection;
+		/// <summary>
+		/// Подключается к БД и считывает заметки. Результат никогда не равен null.
+		/// </summary>
+		private static List<Note> ExecuteReader(SQLiteCommand selectCommand, string tableName)
+		{
+			try
+			{
+				using (selectCommand)
+				{
+					using (SQLiteConnection connection = Database.CreateConnection())
+					{
+						if (selectCommand == null || selectCommand.CommandText.Length == 0)
+							return new List<Note>();
 
-		//				if (connection.State == System.Data.ConnectionState.Open)
-		//				{
-		//					using (SQLiteDataReader reader = selectCommand.ExecuteReader())
-		//					{
-		//						notes = ReadNotes(reader);
-		//					}
-		//				}
+						List<Note> notes = new List<Note>();
 
-		//				connection.Close();
+						connection.Open();
 
-		//				return (notes == null) ? new List<Note>() : notes;
-		//			}
-		//		}
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Log.Error(string.Format("Can not execute select command: {0}{1}{2}{3}", 
-		//			Environment.NewLine, selectCommand.CommandText, Environment.NewLine, ex.ToString()));
+						selectCommand.Connection = connection;
 
-		//		return new List<Note>();
-		//	}			
-		//}
+						if (connection.State == System.Data.ConnectionState.Open)
+						{
+							using (SQLiteDataReader reader = selectCommand.ExecuteReader())
+							{
+								switch (tableName)
+								{
+									case "Films":        notes = ReadDatedNotes(reader); break;
+									case "AnimeFilms":   notes = ReadDatedNotes(reader); break;
+									case "Performances": notes = ReadDatedNotes(reader); break;
+																			
+									case "Literature":   notes = ReadLiterature(reader); break;
+
+									case "Bookmarks":    notes = ReadBookmarks(reader); break;
+
+									case "Meal":         notes = ReadMeal(reader); break;
+
+									case "Programs":     notes = ReadPrograms(reader); break;
+									case "Games":        notes = ReadPrograms(reader); break;
+
+									case "People":       notes = ReadPeople(reader); break;
+
+									case "Serials":      notes = ReadSerials(reader); break;
+									case "AnimeSerials": notes = ReadSerials(reader); break;
+									case "TVShows":      notes = ReadSerials(reader); break;
+
+									default: break;
+								}
+							}
+						}
+
+						connection.Close();
+
+						return (notes == null) ? new List<Note>() : notes;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not execute select command: {0}{1}{2}{3}",
+					Environment.NewLine, selectCommand.CommandText, Environment.NewLine, ex.ToString()));
+
+				return new List<Note>();
+			}
+		}
+
+
+		private static List<Note> ReadDatedNotes(SQLiteDataReader reader)
+		{
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					DatedNote datedNote = new DatedNote();
+
+					datedNote.Id = reader.GetInt32(0);
+					datedNote.Name = reader.GetString(1);
+					datedNote.Year = reader.GetInt32(2);
+					datedNote.CurrentState = (Note.State)reader.GetInt32(3);
+					datedNote.Comment = reader.GetString(4);					
+
+					notes.Add(datedNote);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read dated notes: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
+		}
+
+
+		private static List<Note> ReadPrograms(SQLiteDataReader reader)
+		{
+			return null;
+		}
+
+
+		private static List<Note> ReadLiterature(SQLiteDataReader reader)
+		{
+			return null;
+		}
+
+
+		private static List<Note> ReadBookmarks(SQLiteDataReader reader)
+		{
+			return null;
+		}
+
+
+		private static List<Note> ReadMeal(SQLiteDataReader reader)
+		{
+			return null;
+		}
+
+
+		private static List<Note> ReadPeople(SQLiteDataReader reader)
+		{
+			return null;
+		}
+
+		private static List<Note> ReadSerials(SQLiteDataReader reader)
+		{
+			return null;
+		}
 	}
 }
