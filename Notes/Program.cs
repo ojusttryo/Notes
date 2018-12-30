@@ -14,10 +14,11 @@ namespace Notes
 		[STAThread]
 		static void Main()
 		{
+			Database.Create();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
-
 		}
 	}
 }
