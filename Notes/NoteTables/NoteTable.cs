@@ -44,12 +44,38 @@ namespace Notes.NoteTables
 			BorderStyle = BorderStyle.None;
 
 			ScrollBars = ScrollBars.Vertical;
+
+			CellValueChanged += delegate(object o, DataGridViewCellEventArgs e) 
+			{
+				// TODO: обработка изменения состояния и кнопок плюс/минус для серий и сезонов.
+			};
+		}
+
+
+		/// <summary>
+		/// Получить индекс состояния. 
+		/// </summary>
+		/// <param name="state">Строка состояния, как в интерфейсе.</param>
+		/// <returns>Индекс строки состояния или -1, если не найден.</returns>
+		protected int GetStateIndex(string state)
+		{
+			for (int i = 0; i < States.Length; i++)
+			{
+				if (state == States[i])
+					return i;
+			}
+
+			return -1;
 		}
 
 
 		public abstract void Initialize();
 
 		public abstract bool AddNote(Note note);
+
+		public abstract void UpdateNote(Note note);
+
+		public abstract Note GetNoteFromSelectedRow();
 
 		public abstract void ChangeSize(Size tableSize);
 	}

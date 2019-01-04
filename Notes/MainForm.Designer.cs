@@ -30,7 +30,7 @@
 		{
 			this.searchButton = new System.Windows.Forms.Button();
 			this.addButton = new System.Windows.Forms.Button();
-			this.removeButton = new System.Windows.Forms.Button();
+			this.deleteButton = new System.Windows.Forms.Button();
 			this.editButton = new System.Windows.Forms.Button();
 			this.settingsButton = new System.Windows.Forms.Button();
 			this.menu = new System.Windows.Forms.MenuStrip();
@@ -77,14 +77,15 @@
 			this.addButton.UseVisualStyleBackColor = true;
 			this.addButton.Click += new System.EventHandler(this.addButton_Click);
 			// 
-			// removeButton
+			// deleteButton
 			// 
-			this.removeButton.Location = new System.Drawing.Point(734, 114);
-			this.removeButton.Name = "removeButton";
-			this.removeButton.Size = new System.Drawing.Size(50, 50);
-			this.removeButton.TabIndex = 3;
-			this.removeButton.Text = "Remove";
-			this.removeButton.UseVisualStyleBackColor = true;
+			this.deleteButton.Location = new System.Drawing.Point(734, 114);
+			this.deleteButton.Name = "deleteButton";
+			this.deleteButton.Size = new System.Drawing.Size(50, 50);
+			this.deleteButton.TabIndex = 3;
+			this.deleteButton.Text = "Delete";
+			this.deleteButton.UseVisualStyleBackColor = true;
+			this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
 			// 
 			// editButton
 			// 
@@ -94,6 +95,7 @@
 			this.editButton.TabIndex = 4;
 			this.editButton.Text = "Edit";
 			this.editButton.UseVisualStyleBackColor = true;
+			this.editButton.Click += new System.EventHandler(this.editButton_Click);
 			// 
 			// settingsButton
 			// 
@@ -230,37 +232,37 @@
 			// allToolStripMenuItem
 			// 
 			this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-			this.allToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.allToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.allToolStripMenuItem.Text = "All";
 			// 
 			// activeToolStripMenuItem
 			// 
 			this.activeToolStripMenuItem.Name = "activeToolStripMenuItem";
-			this.activeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.activeToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.activeToolStripMenuItem.Text = "Active";
 			// 
 			// deletedToolStripMenuItem
 			// 
 			this.deletedToolStripMenuItem.Name = "deletedToolStripMenuItem";
-			this.deletedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deletedToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.deletedToolStripMenuItem.Text = "Deleted";
 			// 
 			// finishedToolStripMenuItem
 			// 
 			this.finishedToolStripMenuItem.Name = "finishedToolStripMenuItem";
-			this.finishedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.finishedToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.finishedToolStripMenuItem.Text = "Finished";
 			// 
 			// postponedToolStripMenuItem
 			// 
 			this.postponedToolStripMenuItem.Name = "postponedToolStripMenuItem";
-			this.postponedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.postponedToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.postponedToolStripMenuItem.Text = "Postponed";
 			// 
 			// waitingToolStripMenuItem
 			// 
 			this.waitingToolStripMenuItem.Name = "waitingToolStripMenuItem";
-			this.waitingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.waitingToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.waitingToolStripMenuItem.Text = "Waiting";
 			// 
 			// MainForm
@@ -270,7 +272,7 @@
 			this.ClientSize = new System.Drawing.Size(784, 462);
 			this.Controls.Add(this.settingsButton);
 			this.Controls.Add(this.editButton);
-			this.Controls.Add(this.removeButton);
+			this.Controls.Add(this.deleteButton);
 			this.Controls.Add(this.addButton);
 			this.Controls.Add(this.searchButton);
 			this.Controls.Add(this.menu);
@@ -289,7 +291,7 @@
 
 		private System.Windows.Forms.Button searchButton;
 		private System.Windows.Forms.Button addButton;
-		private System.Windows.Forms.Button removeButton;
+		private System.Windows.Forms.Button deleteButton;
 		private System.Windows.Forms.Button editButton;
 		private System.Windows.Forms.Button settingsButton;
 		private System.Windows.Forms.MenuStrip menu;

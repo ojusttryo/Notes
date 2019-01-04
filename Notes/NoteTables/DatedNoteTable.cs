@@ -49,31 +49,8 @@ namespace Notes.NoteTables
 			//string[] row = { "Note1", "1990", "Postponed", "Some comment" };
 			//Rows.Add(row);
 			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
-			//Rows.Add(row);
+
+
 		}
 
 
@@ -93,12 +70,41 @@ namespace Notes.NoteTables
 				DatedNote datedNote = note as DatedNote;
 				
 				Rows.Add(new string[] { datedNote.Id.ToString(), datedNote.Name, datedNote.Year.ToString(), "", datedNote.Comment });
-				Rows[Rows.Count - 1].Cells[3].Value = NoteTable.States[(int)datedNote.CurrentState];
+				Rows[Rows.Count - 1].Cells[3].Value = States[(int)datedNote.CurrentState];
 
 				return true;
 			}
 
 			return false;
+		}
+
+
+		public override void UpdateNote(Note note)
+		{
+			DatedNote datedNote = note as DatedNote;
+			if (datedNote == null)
+				return;
+
+			CurrentRow.Cells[1].Value = datedNote.Name;
+			CurrentRow.Cells[2].Value = datedNote.Year.ToString();
+			CurrentRow.Cells[3].Value = States[(int)datedNote.CurrentState];
+			CurrentRow.Cells[4].Value = datedNote.Comment;
+		}
+
+
+		public override Note GetNoteFromSelectedRow()
+		{
+			if (CurrentRow == null)
+				return null;
+
+			DatedNote datedNote = new DatedNote();
+			datedNote.Id = Int32.Parse(CurrentRow.Cells[0].Value.ToString());
+			datedNote.Name = CurrentRow.Cells[1].Value.ToString();
+			datedNote.Year = Int32.Parse(CurrentRow.Cells[2].Value.ToString());
+			datedNote.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[3].Value.ToString());
+			datedNote.Comment = CurrentRow.Cells[4].Value.ToString();
+
+			return datedNote;
 		}
 
 

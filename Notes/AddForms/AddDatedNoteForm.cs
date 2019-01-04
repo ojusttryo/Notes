@@ -9,6 +9,7 @@ using Notes.NoteTables;
 
 namespace Notes.AddForms
 {
+	// TODO: переименовать класс и кнопку, т.к. используется для добавления и изменения.
 	public class AddDatedNoteForm : Form
 	{
 		private Label yearLabel;
@@ -21,17 +22,27 @@ namespace Notes.AddForms
 		private RichTextBox commentRichTextBox;
 		private Label nameLabel;
 
-		private MainForm mainForm;
+		private MainForm _mainForm;
+		private DatedNote _editedNote;
 
-
-		public AddDatedNoteForm(MainForm parent, string title)
+		public AddDatedNoteForm(MainForm parent, string title, string buttonText, Note editedNote = null)
 		{
 			InitializeComponent();
 
-			mainForm = parent;
+			_mainForm = parent;
+			_editedNote = editedNote as DatedNote;
 			Text = title;
+			addButton.Text = buttonText;
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
+
+			if (_editedNote != null)
+			{
+				nameTextBox.Text = _editedNote.Name;
+				yearTextBox.Text = _editedNote.Year.ToString();
+				stateComboBox.SelectedValue = NoteTable.States[(int)_editedNote.CurrentState];
+				commentRichTextBox.Text = _editedNote.Comment;
+			}
 		}
 
 
@@ -124,6 +135,7 @@ namespace Notes.AddForms
 			// 
 			this.commentRichTextBox.Location = new System.Drawing.Point(66, 74);
 			this.commentRichTextBox.Name = "commentRichTextBox";
+			this.commentRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 3;
 			this.commentRichTextBox.Text = "";
@@ -171,14 +183,16 @@ namespace Notes.AddForms
 				return;
 			}
 
-			// Add note
-			DatedNote datedNote = new DatedNote();
+			// Add or update note
+			bool isUpdating = (_editedNote != null);
+
+			DatedNote datedNote = isUpdating ? _editedNote : new DatedNote();
 			datedNote.Name = nameTextBox.Text;
 			datedNote.Year = (int)n;
 			datedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			datedNote.Comment = commentRichTextBox.Text;
 
-			mainForm.AddNote(datedNote);
+			_mainForm.AddOrUpdateNote(datedNote);
 
 			Close();
 		}

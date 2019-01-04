@@ -101,13 +101,29 @@ namespace Notes
 		}
 
 
-		public static void Insert(string tableName, Note note)
+		/// <summary>
+		/// Добавляет запись в таблицу. Если запись с таким note.Id уже существует, то обновляет данные в ней.
+		/// </summary>
+		/// <param name="tableName">Имя таблицы в БД.</param>
+		/// <param name="note">Заметка.</param>
+		/// <returns>
+		/// If the new row is inserted, the number of affected-rows is 1.
+		/// If the existing row is updated, the number of affected-rows is 2.
+		/// If the existing row is updated using its current values, the number of affected-rows is 0.
+		/// </returns>
+		/// <remarks>
+		/// Используется команда INSERT ... ON DUPLICATE KEY UPDATE 
+		/// http://www.mysqltutorial.org/mysql-insert-or-update-on-duplicate-key-update/
+		/// </remarks>
+		public static int InsertOrUpdate(string tableName, Note note)
 		{
+			Log.Info(string.Format("Insert or update note with Id = {0} in {1}", note.Id, tableName));
+
 			switch (tableName)
 			{
-				case "Films":        InsertDatedNote(tableName, note); break;
-				case "AnimeFilms":   InsertDatedNote(tableName, note); break;
-				case "Performances": InsertDatedNote(tableName, note); break;
+				case "Films":        return InsertOrUpdateDatedNote(tableName, note);
+				case "AnimeFilms":   return InsertOrUpdateDatedNote(tableName, note);
+				case "Performances": return InsertOrUpdateDatedNote(tableName, note);
 																			
 				case "Literature":   break;
 
@@ -124,24 +140,90 @@ namespace Notes
 				case "AnimeSerials": break;
 				case "TVShows":      break;
 
-				default: break;
+				default: return 0;
 			}
+
+			return 0;
 		}
 
 
-		private static void InsertDatedNote(string tableName, Note note)
+		private static int InsertOrUpdateDatedNote(string tableName, Note note)
 		{
 			DatedNote datedNote = note as DatedNote;
 			if (datedNote == null)
 			{
 				Log.Error("Try to save incorrect dated note");
-				return;
+				return 0;
 			}
 
-			string commandText = string.Format("INSERT INTO {0} (Name, Year, CurrentState, Comment) VALUES (\"{1}\", {2}, {3}, \"{4}\");", 
-				tableName, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
+			int noteId = (note.Id > 0) ? note.Id : (SelectMaxId(tableName) + 1);
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, Year, CurrentState, Comment) " + 
+				"VALUES ({1}, \"{2}\", {3}, {4}, \"{5}\") " + 
+				"ON DUPLICATE KEY UPDATE Name = \"2}\", Year = {3}, CurrentState = {4}, Comment = \"{5}\";", 
+				tableName, noteId, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
 
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		public static bool DeleteNote(string tableName, int id)
+		{
+			string commandText = string.Format("DELETE FROM {0} WHERE Id = {1}", tableName, id);
+			int deletedRows = ExecuteNonQuery(commandText);
+
+			return (deletedRows == 1);
+		}
+
+
+		public static void DeleteLastNote(string tableName)
+		{
+			string commandText = string.Format("DELETE FROM {0} ORDER BY Id DESC LIMIT 1");
 			ExecuteNonQuery(commandText);
+		}
+
+
+		/// <summary>
+		/// Получить максимальный Id в таблице.
+		/// </summary>
+		/// <param name="tableName">Имя таблицы.</param>
+		/// <returns>Id записи или -1, если записей нет или произошла ошибка.</returns>
+		private static int SelectMaxId(string tableName)
+		{
+			int maxId = -1;
+
+			try
+			{
+				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT MAX(Id) FROM {0}", tableName)))
+				{
+					using (SQLiteConnection connection = CreateConnection())
+					{
+						if (command == null)
+							return maxId;
+
+						connection.Open();
+						command.Connection = connection;
+						if (connection.State == System.Data.ConnectionState.Open)
+						{
+							using (SQLiteDataReader reader = command.ExecuteReader())
+							{
+								if (reader.Read())
+									maxId = reader.GetInt32(0);
+							}
+						}
+
+						connection.Close();
+						command.Connection = null;
+					}
+				}
+
+				return maxId;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not select max Id from: {0}{1}{2}", tableName, Environment.NewLine, ex.ToString()));
+				return maxId;
+			}
 		}
 
 
@@ -154,6 +236,8 @@ namespace Notes
 		/// <summary>
 		/// Подключается к БД и выполняет заданную команду (INSERT, UPDATE, DELETE).
 		/// </summary>
+		/// <param name="commandText">Текст команды.</param>
+		/// <returns>Количество вставленных/обновленных строк.</returns>
 		private static int ExecuteNonQuery(string commandText)
 		{
 			try
