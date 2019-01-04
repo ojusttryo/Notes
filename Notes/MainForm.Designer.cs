@@ -28,9 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.searchButton = new System.Windows.Forms.Button();
-			this.addButton = new System.Windows.Forms.Button();
-			this.deleteButton = new System.Windows.Forms.Button();
 			this.editButton = new System.Windows.Forms.Button();
 			this.settingsButton = new System.Windows.Forms.Button();
 			this.menu = new System.Windows.Forms.MenuStrip();
@@ -55,55 +52,39 @@
 			this.finishedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.postponedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.waitingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteButton = new System.Windows.Forms.Button();
+			this.addButton = new System.Windows.Forms.Button();
+			this.searchButton = new System.Windows.Forms.Button();
 			this.menu.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// searchButton
-			// 
-			this.searchButton.Location = new System.Drawing.Point(734, 23);
-			this.searchButton.Name = "searchButton";
-			this.searchButton.Size = new System.Drawing.Size(50, 50);
-			this.searchButton.TabIndex = 0;
-			this.searchButton.Text = "Search";
-			this.searchButton.UseVisualStyleBackColor = true;
-			// 
-			// addButton
-			// 
-			this.addButton.Location = new System.Drawing.Point(734, 69);
-			this.addButton.Name = "addButton";
-			this.addButton.Size = new System.Drawing.Size(50, 50);
-			this.addButton.TabIndex = 2;
-			this.addButton.Text = "Add";
-			this.addButton.UseVisualStyleBackColor = true;
-			this.addButton.Click += new System.EventHandler(this.addButton_Click);
-			// 
-			// deleteButton
-			// 
-			this.deleteButton.Location = new System.Drawing.Point(734, 114);
-			this.deleteButton.Name = "deleteButton";
-			this.deleteButton.Size = new System.Drawing.Size(50, 50);
-			this.deleteButton.TabIndex = 3;
-			this.deleteButton.Text = "Delete";
-			this.deleteButton.UseVisualStyleBackColor = true;
-			this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
-			// 
 			// editButton
 			// 
-			this.editButton.Location = new System.Drawing.Point(734, 162);
+			this.editButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
+			this.editButton.FlatAppearance.BorderSize = 0;
+			this.editButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+			this.editButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+			this.editButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.editButton.Image = global::Notes.Properties.Resources.edit_40x40;
+			this.editButton.Location = new System.Drawing.Point(734, 174);
 			this.editButton.Name = "editButton";
 			this.editButton.Size = new System.Drawing.Size(50, 50);
 			this.editButton.TabIndex = 4;
-			this.editButton.Text = "Edit";
 			this.editButton.UseVisualStyleBackColor = true;
 			this.editButton.Click += new System.EventHandler(this.editButton_Click);
 			// 
 			// settingsButton
 			// 
-			this.settingsButton.Location = new System.Drawing.Point(734, 209);
+			this.settingsButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
+			this.settingsButton.FlatAppearance.BorderSize = 0;
+			this.settingsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+			this.settingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+			this.settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.settingsButton.Image = global::Notes.Properties.Resources.settings_40x40;
+			this.settingsButton.Location = new System.Drawing.Point(734, 224);
 			this.settingsButton.Name = "settingsButton";
 			this.settingsButton.Size = new System.Drawing.Size(50, 50);
 			this.settingsButton.TabIndex = 5;
-			this.settingsButton.Text = "Settings";
 			this.settingsButton.UseVisualStyleBackColor = true;
 			// 
 			// menu
@@ -264,6 +245,50 @@
 			this.waitingToolStripMenuItem.Name = "waitingToolStripMenuItem";
 			this.waitingToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
 			this.waitingToolStripMenuItem.Text = "Waiting";
+			// 
+			// deleteButton
+			// 
+			this.deleteButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
+			this.deleteButton.FlatAppearance.BorderSize = 0;
+			this.deleteButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+			this.deleteButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+			this.deleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.deleteButton.Image = global::Notes.Properties.Resources.delete_40х40;
+			this.deleteButton.Location = new System.Drawing.Point(734, 124);
+			this.deleteButton.Name = "deleteButton";
+			this.deleteButton.Size = new System.Drawing.Size(50, 50);
+			this.deleteButton.TabIndex = 3;
+			this.deleteButton.UseVisualStyleBackColor = true;
+			this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
+			// 
+			// addButton
+			// 
+			this.addButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
+			this.addButton.FlatAppearance.BorderSize = 0;
+			this.addButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+			this.addButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+			this.addButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.addButton.Image = global::Notes.Properties.Resources.add_40х40;
+			this.addButton.Location = new System.Drawing.Point(734, 73);
+			this.addButton.Name = "addButton";
+			this.addButton.Size = new System.Drawing.Size(50, 50);
+			this.addButton.TabIndex = 2;
+			this.addButton.UseVisualStyleBackColor = true;
+			this.addButton.Click += new System.EventHandler(this.addButton_Click);
+			// 
+			// searchButton
+			// 
+			this.searchButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
+			this.searchButton.FlatAppearance.BorderSize = 0;
+			this.searchButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+			this.searchButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+			this.searchButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.searchButton.Image = global::Notes.Properties.Resources.search_40x40;
+			this.searchButton.Location = new System.Drawing.Point(734, 23);
+			this.searchButton.Name = "searchButton";
+			this.searchButton.Size = new System.Drawing.Size(50, 50);
+			this.searchButton.TabIndex = 0;
+			this.searchButton.UseVisualStyleBackColor = true;
 			// 
 			// MainForm
 			// 
