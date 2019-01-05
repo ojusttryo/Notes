@@ -29,6 +29,11 @@ namespace Notes
 		/// Высота заголовка главного окна. Нужна для правильного позиционирования элементов.
 		/// </summary>
 		private int _titleHeight = 0;
+		
+		/// <summary>
+		/// Вертикальный и горизонтальный отступ между элементами на форме.
+		/// </summary>
+		const int _indentBetweenElements = 5;
 
 
 		public MainForm()
@@ -41,7 +46,7 @@ namespace Notes
 			BackColor = Color.White;
 			Resize += new EventHandler(MainForm_Resize);
 
-			Point noteTableLocation = new Point(this.ClientRectangle.Location.X, this.ClientRectangle.Location.Y + menu.Height);
+			Point noteTableLocation = new Point(ClientRectangle.Location.X, addButton.Location.Y + addButton.Height + _indentBetweenElements);
 
 			_films = new DatedNoteTable(noteTableLocation, "Films");
 			_currentNoteTable = _films;
@@ -57,19 +62,16 @@ namespace Notes
 		/// </summary>
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
-			// Кнопки
-			int newButtonPointX = this.Width - searchButton.Width - _borderWidth * 2;
-			foreach (Control c in Controls)
-			{
-				if (c is Button)
-					c.Location = new Point(newButtonPointX, c.Location.Y);
-			}
-
+			searchButton.Location = new Point(this.ClientRectangle.Width - searchButton.Width - _indentBetweenElements * 2, searchButton.Location.Y);
+			searchComboBox.Location = new Point(searchButton.Location.X - searchComboBox.Width - _indentBetweenElements, searchComboBox.Location.Y);
+			searchTextBox.Location = new Point(settingsButton.Location.X + settingsButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
+			searchTextBox.Width = searchComboBox.Location.X - settingsButton.Location.X - settingsButton.Width - 2  * _indentBetweenElements;
+			
 			// Таблица
 			if (_currentNoteTable != null)
 			{
-				int tableWidth = this.ClientRectangle.Width - searchButton.Width;
-				int tableHeight = this.ClientRectangle.Height - menu.Height;
+				int tableWidth = this.Width;
+				int tableHeight = this.ClientRectangle.Height;
 				Size noteTableSize = new Size(tableWidth, tableHeight);
 
 				_currentNoteTable.ChangeSize(noteTableSize);

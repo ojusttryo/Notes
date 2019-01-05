@@ -63,9 +63,9 @@ namespace Notes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap add_40х40 {
+        internal static System.Drawing.Bitmap add_20х20 {
             get {
-                object obj = ResourceManager.GetObject("add_40х40", resourceCulture);
+                object obj = ResourceManager.GetObject("add_20х20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace Notes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap delete_40х40 {
+        internal static System.Drawing.Bitmap delete_20х20 {
             get {
-                object obj = ResourceManager.GetObject("delete_40х40", resourceCulture);
+                object obj = ResourceManager.GetObject("delete_20х20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace Notes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap edit_40x40 {
+        internal static System.Drawing.Bitmap edit_20x20 {
             get {
-                object obj = ResourceManager.GetObject("edit_40x40", resourceCulture);
+                object obj = ResourceManager.GetObject("edit_20x20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace Notes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap search_40x40 {
+        internal static System.Drawing.Bitmap search_20x20 {
             get {
-                object obj = ResourceManager.GetObject("search_40x40", resourceCulture);
+                object obj = ResourceManager.GetObject("search_20x20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace Notes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settings_40x40 {
+        internal static System.Drawing.Bitmap settings_20x20 {
             get {
-                object obj = ResourceManager.GetObject("settings_40x40", resourceCulture);
+                object obj = ResourceManager.GetObject("settings_20x20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
