@@ -34,7 +34,7 @@ namespace Notes.AddForms
 			Text = title;
 			addButton.Text = buttonText;
 			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
+			stateComboBox.SelectedIndex = (editedNote == null) ? 0 : (int)editedNote.CurrentState;
 
 			if (_editedNote != null)
 			{
@@ -164,9 +164,9 @@ namespace Notes.AddForms
 		private void addButton_Click(object sender, EventArgs e)
 		{
 			nameTextBox.ForeColor = System.Drawing.Color.Black;
-			nameLabel.ForeColor = System.Drawing.Color.Black;
+			nameLabel.ForeColor   = System.Drawing.Color.Black;
 			yearTextBox.ForeColor = System.Drawing.Color.Black;
-			yearLabel.ForeColor = System.Drawing.Color.Black;
+			yearLabel.ForeColor   = System.Drawing.Color.Black;
 
 			// Check if input is OK
 			uint n = 0;
@@ -186,7 +186,7 @@ namespace Notes.AddForms
 			// Add or update note
 			bool isUpdating = (_editedNote != null);
 
-			DatedNote datedNote = isUpdating ? _editedNote : new DatedNote();
+			DatedNote datedNote = isUpdating ? _editedNote    : new DatedNote();
 			datedNote.Name = nameTextBox.Text;
 			datedNote.Year = (int)n;
 			datedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;

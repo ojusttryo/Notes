@@ -21,7 +21,7 @@ namespace Notes
 
 			// Многие поля дублируются, поэтому объявление перенесено сюда.
 			string Id           = "Id            INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
-			string Name         = "Name          TEXT UNIQUE NOT NULL";
+			string Name         = "Name          TEXT NOT NULL";
 			string Year         = "Year		     INTEGER NOT NULL DEFAULT 0";
 			string CurrentState = "CurrentState  INTEGER NOT NULL DEFAULT 0";	// Not defined/Active/Deleted/Finished/Postponed/Waiting
 			string Comment      = "Comment       TEXT NOT NULL";
@@ -136,6 +136,13 @@ namespace Notes
 		}
 
 
+		/// <summary>
+		/// Вставляет новую заметку в БД или обновляет существующую (по Id). 
+		/// В случае вставки выставляет для переданной заметки правильный Id. 
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <param name="note"></param>
+		/// <returns></returns>
 		private static int InsertOrUpdateDatedNote(string tableName, Note note)
 		{
 			DatedNote datedNote = note as DatedNote;
@@ -145,12 +152,12 @@ namespace Notes
 				return 0;
 			}
 
-			int noteId = (note.Id > 0) ? note.Id : (SelectMaxId(tableName) + 1);
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
 			string commandText = string.Format(
 				"INSERT INTO {0} (Id, Name, Year, CurrentState, Comment) " + 
 				"VALUES ({1}, \"{2}\", {3}, {4}, \"{5}\") " + 
 				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", Year = {3}, CurrentState = {4}, Comment = \"{5}\";", 
-				tableName, noteId, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
+				tableName, note.Id, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
 
 			return ExecuteNonQuery(commandText);
 		}

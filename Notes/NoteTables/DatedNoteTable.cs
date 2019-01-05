@@ -69,8 +69,14 @@ namespace Notes.NoteTables
 			{
 				DatedNote datedNote = note as DatedNote;
 				
-				Rows.Add(new string[] { datedNote.Id.ToString(), datedNote.Name, datedNote.Year.ToString(), "", datedNote.Comment });
-				Rows[Rows.Count - 1].Cells[3].Value = States[(int)datedNote.CurrentState];
+				Rows.Add(new string[] 
+				{
+					datedNote.Id.ToString(),
+					datedNote.Name,
+					datedNote.Year.ToString(),
+					States[(int)datedNote.CurrentState],
+					datedNote.Comment
+				});
 
 				return true;
 			}
@@ -98,11 +104,11 @@ namespace Notes.NoteTables
 				return null;
 
 			DatedNote datedNote = new DatedNote();
-			datedNote.Id = Int32.Parse(CurrentRow.Cells[0].Value.ToString());
-			datedNote.Name = CurrentRow.Cells[1].Value.ToString();
-			datedNote.Year = Int32.Parse(CurrentRow.Cells[2].Value.ToString());
+			datedNote.Id =                         Int32.Parse(CurrentRow.Cells[0].Value.ToString());
+			datedNote.Name =                                   CurrentRow.Cells[1].Value.ToString();
+			datedNote.Year =                       Int32.Parse(CurrentRow.Cells[2].Value.ToString());
 			datedNote.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[3].Value.ToString());
-			datedNote.Comment = CurrentRow.Cells[4].Value.ToString();
+			datedNote.Comment =                                CurrentRow.Cells[4].Value.ToString();
 
 			return datedNote;
 		}

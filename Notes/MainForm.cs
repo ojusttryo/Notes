@@ -160,12 +160,17 @@ namespace Notes
 
 		private void editButton_Click(object sender, EventArgs e)
 		{
+			// Временно запрещается вызов событий, чтоб не было повторного сохранения изменений в таблице.
+			_currentNoteTable.CallCustomEvents = false;
+
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
 				case "Films": new AddDatedNoteForm(this, "Edit film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 					
 				default: break;
 			}
+
+			_currentNoteTable.CallCustomEvents = true;
 		}
 
 

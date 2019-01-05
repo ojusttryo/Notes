@@ -60,7 +60,7 @@ namespace Notes.Notes
 
 		public Note()
 		{
-			Id = 0;
+			Id = -1;	// В БД начинается с 0
 			_name = String.Empty;
 			CurrentState = State.All;
 			Comment = String.Empty;

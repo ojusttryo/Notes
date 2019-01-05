@@ -19,6 +19,11 @@ namespace Notes.NoteTables
 
 		protected static DataGridViewComboBoxColumn _stateColumn = null;
 
+		/// <summary>
+		/// Свойство указывает на необходимость вызова не дефолтных событий (например, реакция на изменение состояния).
+		/// </summary>
+		public bool CallCustomEvents { get; set; }
+
 
 		static NoteTable()
 		{
@@ -32,6 +37,8 @@ namespace Notes.NoteTables
 
 		protected NoteTable()
 		{
+			CallCustomEvents = true;
+
 			AllowUserToAddRows = false;
 			AllowUserToDeleteRows = false;
 
@@ -45,9 +52,29 @@ namespace Notes.NoteTables
 
 			ScrollBars = ScrollBars.Vertical;
 
+			// Без первого события не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
+			// https://stackoverflow.com/questions/5652957/what-event-catches-a-change-of-value-in-a-combobox-in-a-datagridviewcell
+			CurrentCellDirtyStateChanged += delegate(object o, EventArgs e)
+			{
+				if (!CallCustomEvents)
+					return;
+
+				if (IsCurrentCellDirty)
+					CommitEdit(DataGridViewDataErrorContexts.Commit);
+			};
 			CellValueChanged += delegate(object o, DataGridViewCellEventArgs e) 
 			{
-				// TODO: обработка изменения состояния и кнопок плюс/минус для серий и сезонов.
+				if (!CallCustomEvents)
+					return;
+
+				if (Columns[e.ColumnIndex].Name == "State")
+				{
+					// TODO: Сохранение состояния для записи
+
+					MessageBox.Show("State");
+				}
+
+				// TODO: обработка	 кнопок плюс/минус для серий и сезонов.
 			};
 		}
 
