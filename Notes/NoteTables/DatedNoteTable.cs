@@ -28,13 +28,13 @@ namespace Notes.NoteTables
 			Columns.Add(new DataGridViewTextBoxColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
-			Columns.Add(_stateColumn);
+			Columns.Add(CreateStateColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
 
 			// Columns settings
 			Columns[0].Name = "Id";
 			Columns[0].ReadOnly = true;
-			Columns[0].Visible = false;			// TODO after test set to false
+			Columns[0].Visible = false;
 			Columns[1].Name = "Name";			
 			Columns[1].ReadOnly = true;
 			Columns[2].Name = "Year";			
@@ -43,14 +43,6 @@ namespace Notes.NoteTables
 			Columns[3].ReadOnly = false;
 			Columns[4].Name = "Comment";			
 			Columns[4].ReadOnly = true;
-			
-
-			//// Test rows
-			//string[] row = { "Note1", "1990", "Postponed", "Some comment" };
-			//Rows.Add(row);
-			//Rows.Add(row);
-
-
 		}
 
 
@@ -73,7 +65,7 @@ namespace Notes.NoteTables
 				{
 					datedNote.Id.ToString(),
 					datedNote.Name,
-					datedNote.Year.ToString(),
+					(datedNote.Year == 0) ? "" : datedNote.Year.ToString(),
 					States[(int)datedNote.CurrentState],
 					datedNote.Comment
 				});
@@ -92,7 +84,7 @@ namespace Notes.NoteTables
 				return;
 
 			CurrentRow.Cells[1].Value = datedNote.Name;
-			CurrentRow.Cells[2].Value = datedNote.Year.ToString();
+			CurrentRow.Cells[2].Value = (datedNote.Year == 0) ? "" : datedNote.Year.ToString();
 			CurrentRow.Cells[3].Value = States[(int)datedNote.CurrentState];
 			CurrentRow.Cells[4].Value = datedNote.Comment;
 		}
@@ -104,11 +96,11 @@ namespace Notes.NoteTables
 				return null;
 
 			DatedNote datedNote = new DatedNote();
-			datedNote.Id =                         Int32.Parse(CurrentRow.Cells[0].Value.ToString());
-			datedNote.Name =                                   CurrentRow.Cells[1].Value.ToString();
-			datedNote.Year =                       Int32.Parse(CurrentRow.Cells[2].Value.ToString());
+			datedNote.Id = Int32.Parse(CurrentRow.Cells[0].Value.ToString());
+			datedNote.Name = CurrentRow.Cells[1].Value.ToString();
+			datedNote.Year = (CurrentRow.Cells[2].Value.ToString() == string.Empty) ? 0 : Int32.Parse(CurrentRow.Cells[2].Value.ToString());
 			datedNote.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[3].Value.ToString());
-			datedNote.Comment =                                CurrentRow.Cells[4].Value.ToString();
+			datedNote.Comment = CurrentRow.Cells[4].Value.ToString();
 
 			return datedNote;
 		}

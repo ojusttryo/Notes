@@ -17,8 +17,6 @@ namespace Notes.NoteTables
 		public static string[] States = { "Not selected", "Active", "Deleted", "Finished", "Postponed", "Waiting" };
 
 
-		protected static DataGridViewComboBoxColumn _stateColumn = null;
-
 		/// <summary>
 		/// Свойство указывает на необходимость вызова не дефолтных событий (например, реакция на изменение состояния).
 		/// </summary>
@@ -27,11 +25,19 @@ namespace Notes.NoteTables
 
 		static NoteTable()
 		{
-			_stateColumn = new DataGridViewComboBoxColumn();
-			_stateColumn.Items.AddRange(States);
-			_stateColumn.DefaultCellStyle.BackColor = Color.White;
-			_stateColumn.DefaultCellStyle.SelectionBackColor = Color.White;
-			_stateColumn.FlatStyle = FlatStyle.Flat;
+
+		}
+
+
+		protected DataGridViewComboBoxColumn CreateStateColumn()
+		{
+			DataGridViewComboBoxColumn stateColumn = new DataGridViewComboBoxColumn();
+			stateColumn.Items.AddRange(States);
+			stateColumn.DefaultCellStyle.BackColor = Color.White;
+			stateColumn.DefaultCellStyle.SelectionBackColor = Color.White;
+			stateColumn.FlatStyle = FlatStyle.Flat;
+
+			return stateColumn;
 		}
 
 
@@ -67,14 +73,14 @@ namespace Notes.NoteTables
 				if (!CallCustomEvents)
 					return;
 
-				if (Columns[e.ColumnIndex].Name == "State")
+				MessageBox.Show(Columns[e.ColumnIndex].Name);
+
+				switch (Columns[e.ColumnIndex].Name)
 				{
-					// TODO: Сохранение состояния для записи
-
-					MessageBox.Show("State");
+					case "State": Database.InsertOrUpdate(TableNameInDatabase, GetNoteFromSelectedRow()); break;
+					// TODO: обработка	 кнопок плюс/минус для серий и сезонов.
+					default: break;
 				}
-
-				// TODO: обработка	 кнопок плюс/минус для серий и сезонов.
 			};
 		}
 

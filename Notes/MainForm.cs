@@ -37,6 +37,10 @@ namespace Notes
 
 		private NoteTable _films;
 
+		private NoteTable _animeFilms;
+
+		private NoteTable _performances;
+
 
 		public MainForm()
 		{
@@ -50,13 +54,24 @@ namespace Notes
 
 			Point noteTableLocation = new Point(ClientRectangle.Location.X, addButton.Location.Y + addButton.Height + _indentBetweenElements);
 
-			_films = new DatedNoteTable(noteTableLocation, "Films");
-			_currentNoteTable = _films;
-			UpdateSearchComboBox();
+			_animeFilms   = new DatedNoteTable(noteTableLocation, "AnimeFilms");
+			_films        = new DatedNoteTable(noteTableLocation, "Films");
+			_performances = new DatedNoteTable(noteTableLocation, "Performances");
+			SwitchToTable(_films);
+		}
 
+
+		private void SwitchToTable(NoteTable table)
+		{
+			if (_currentNoteTable != null)
+				Controls.Remove(_currentNoteTable);
+
+			_currentNoteTable = table;
 			Controls.Add(_currentNoteTable);
 
-			this.OnResize(null);
+			UpdateSearchComboBox();
+			ShowAllRows();
+			OnResize(null);
 		}
 
 
@@ -87,10 +102,6 @@ namespace Notes
 					if (label.PreferredWidth > maxItemWidth)
 						maxItemWidth = label.PreferredWidth;
 				}
-				foreach (Control c in searchComboBox.Controls)
-				{
-					c.BackColor = Color.White;
-				}
 
 				searchComboBox.Width = maxItemWidth + 20;	// 20 - скролбар + небольшой отступ
 			}
@@ -102,9 +113,9 @@ namespace Notes
 		/// </summary>
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
-			searchButton.Location = new Point(this.ClientRectangle.Width - searchButton.Width - _indentBetweenElements * 2, searchButton.Location.Y);
+			searchButton.Location   = new Point(ClientRectangle.Width - searchButton.Width - _indentBetweenElements * 2, searchButton.Location.Y);
 			searchComboBox.Location = new Point(searchButton.Location.X - searchComboBox.Width - _indentBetweenElements, searchComboBox.Location.Y);
-			searchTextBox.Location = new Point(settingsButton.Location.X + settingsButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
+			searchTextBox.Location  = new Point(settingsButton.Location.X + settingsButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
 			searchTextBox.Width = searchComboBox.Location.X - settingsButton.Location.X - settingsButton.Width - 2  * _indentBetweenElements;
 			if (searchTextBox.Width > 400)
 			{
@@ -128,7 +139,9 @@ namespace Notes
 		{
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "Films": new AddDatedNoteForm(this, "Add film", "Add").ShowDialog(); break;
+				case "AnimeFilms":   new AddDatedNoteForm(this, "Add anime film",  "Add").ShowDialog(); break;
+				case "Films":        new AddDatedNoteForm(this, "Add film",        "Add").ShowDialog(); break;
+				case "Performances": new AddDatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
 					
 				default: break;
 			}
@@ -165,8 +178,10 @@ namespace Notes
 
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "Films": new AddDatedNoteForm(this, "Edit film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-					
+				case "AnimeFilms":   new AddDatedNoteForm(this, "Edit anime film",  "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Films":        new AddDatedNoteForm(this, "Edit film",        "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Performances": new AddDatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+
 				default: break;
 			}
 
@@ -221,6 +236,66 @@ namespace Notes
 				if (!Regex.IsMatch(row.Cells[columnIndex].Value.ToString(), searchTextBox.Text, Constant.CommonRegexOptions))
 					row.Visible = false;
 			}
+		}
+
+		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void animeFilmsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SwitchToTable(_animeFilms);
+		}
+
+		private void animeSerialsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void filmsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SwitchToTable(_films);
+		}
+
+		private void gamesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void literatureToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void performancesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SwitchToTable(_performances);
+		}
+
+		private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void programsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void serialsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void TVshowsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

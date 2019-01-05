@@ -170,16 +170,23 @@ namespace Notes.AddForms
 
 			// Check if input is OK
 			uint n = 0;
-			if (nameTextBox.Text.Trim().Length == 0)
+			string name = nameTextBox.Text.Trim();
+			string year = yearTextBox.Text.Trim();
+
+			if (name.Length == 0)
 			{
 				nameTextBox.ForeColor = System.Drawing.Color.Red;
 				nameLabel.ForeColor = System.Drawing.Color.Red;
 				return;
 			}
-			if (UInt32.TryParse(yearTextBox.Text.Trim(), out n) == false)
+
+			// Можно оставить год пустым.
+			if (year.Length == 0)
+				year = "0";
+			if (UInt32.TryParse(year, out n) == false)
 			{
 				yearTextBox.ForeColor = System.Drawing.Color.Red;
-				yearLabel.ForeColor = System.Drawing.Color.Red;
+				yearLabel.ForeColor   = System.Drawing.Color.Red;
 				return;
 			}
 
