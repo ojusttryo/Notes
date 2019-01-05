@@ -78,5 +78,7 @@ namespace Notes.NoteTables
 		public abstract Note GetNoteFromSelectedRow();
 
 		public abstract void ChangeSize(Size tableSize);
+
+		public abstract string[] SearchFields { get; }
 	}
 }

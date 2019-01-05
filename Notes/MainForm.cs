@@ -16,10 +16,6 @@ namespace Notes
 {
 	public partial class MainForm : Form
 	{
-		private NoteTable _currentNoteTable;
-
-		private NoteTable _films;
-		
 		/// <summary>
 		/// Ширина границы окна. Нужна для правильного позиционирования элементов.
 		/// </summary>
@@ -34,6 +30,10 @@ namespace Notes
 		/// Вертикальный и горизонтальный отступ между элементами на форме.
 		/// </summary>
 		const int _indentBetweenElements = 5;
+
+		private NoteTable _currentNoteTable;
+
+		private NoteTable _films;
 
 
 		public MainForm()
@@ -50,10 +50,38 @@ namespace Notes
 
 			_films = new DatedNoteTable(noteTableLocation, "Films");
 			_currentNoteTable = _films;
+			UpdateSearchComboBox();
 
 			Controls.Add(_currentNoteTable);
 
 			this.OnResize(null);
+		}
+
+
+		private void UpdateSearchComboBox()
+		{
+			searchComboBox.Items.Clear();
+			if (_currentNoteTable != null)
+			{
+				searchComboBox.Items.AddRange(_currentNoteTable.SearchFields);
+				searchComboBox.SelectedIndex = 0;
+
+				// Ширина выпадающего списка.
+				int maxItemWidth = 0;
+				Label label = new Label();
+				foreach (object item in searchComboBox.Items)
+				{
+					label.Text = item.ToString();
+					if (label.PreferredWidth > maxItemWidth)
+						maxItemWidth = label.PreferredWidth;
+				}
+				foreach (Control c in searchComboBox.Controls)
+				{
+					c.BackColor = Color.White;
+				}
+
+				searchComboBox.Width = maxItemWidth + 20;	// 20 - скролбар + небольшой отступ
+			}
 		}
 
 

@@ -120,5 +120,14 @@ namespace Notes.NoteTables
 			Columns[3].Width = 100;
 			Columns[4].Width = (tableSize.Width - Columns[0].Width - Columns[1].Width - Columns[2].Width - Columns[3].Width - scrollbarWidth);
 		}
+
+
+		public override string[] SearchFields
+		{
+			get
+			{
+				return new string[] { "Name" };
+			}
+		}
 	}
 }
