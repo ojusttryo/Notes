@@ -104,17 +104,6 @@ namespace Notes
 		/// <summary>
 		/// Добавляет запись в таблицу. Если запись с таким note.Id уже существует, то обновляет данные в ней.
 		/// </summary>
-		/// <param name="tableName">Имя таблицы в БД.</param>
-		/// <param name="note">Заметка.</param>
-		/// <returns>
-		/// If the new row is inserted, the number of affected-rows is 1.
-		/// If the existing row is updated, the number of affected-rows is 2.
-		/// If the existing row is updated using its current values, the number of affected-rows is 0.
-		/// </returns>
-		/// <remarks>
-		/// Используется команда INSERT ... ON DUPLICATE KEY UPDATE 
-		/// http://www.mysqltutorial.org/mysql-insert-or-update-on-duplicate-key-update/
-		/// </remarks>
 		public static int InsertOrUpdate(string tableName, Note note)
 		{
 			Log.Info(string.Format("Insert or update note with Id = {0} in {1}", note.Id, tableName));
@@ -160,7 +149,7 @@ namespace Notes
 			string commandText = string.Format(
 				"INSERT INTO {0} (Id, Name, Year, CurrentState, Comment) " + 
 				"VALUES ({1}, \"{2}\", {3}, {4}, \"{5}\") " + 
-				"ON DUPLICATE KEY UPDATE Name = \"2}\", Year = {3}, CurrentState = {4}, Comment = \"{5}\";", 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", Year = {3}, CurrentState = {4}, Comment = \"{5}\";", 
 				tableName, noteId, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
 
 			return ExecuteNonQuery(commandText);

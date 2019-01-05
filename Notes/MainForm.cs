@@ -132,9 +132,17 @@ namespace Notes
 			int result = Database.InsertOrUpdate(_currentNoteTable.TableNameInDatabase, note);
 			switch (result)
 			{
-				case 0: break;     // Ничего не добавлено. Если из-за исключения, то это в данный момент не проверяется. Можно посмотреть в логе.
-				case 1: _currentNoteTable.AddNote(note); break;
-				case 2: _currentNoteTable.UpdateNote(note); break;
+				// Ничего не добавлено. Если из-за исключения, то это в данный момент не проверяется. Можно посмотреть в логе.
+				case 0: break;
+				// Добавлена или обновлена 1 строка. В MySQL при обновлении будет результат 2, но в SQLite возвращает также 1.
+				case 1:
+				{
+					if (_currentNoteTable.CurrentRow != null && Int32.Parse(_currentNoteTable.CurrentRow.Cells[0].Value.ToString()) == note.Id)
+						_currentNoteTable.UpdateNote(note);
+					else
+						_currentNoteTable.AddNote(note);
+					break;
+				}
 				default: break;
 			}
 		}
