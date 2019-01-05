@@ -139,9 +139,9 @@ namespace Notes
 		{
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "AnimeFilms":   new AddDatedNoteForm(this, "Add anime film",  "Add").ShowDialog(); break;
-				case "Films":        new AddDatedNoteForm(this, "Add film",        "Add").ShowDialog(); break;
-				case "Performances": new AddDatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
+				case "AnimeFilms":   new DatedNoteForm(this, "Add anime film",  "Add").ShowDialog(); break;
+				case "Films":        new DatedNoteForm(this, "Add film",        "Add").ShowDialog(); break;
+				case "Performances": new DatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
 					
 				default: break;
 			}
@@ -178,9 +178,9 @@ namespace Notes
 
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "AnimeFilms":   new AddDatedNoteForm(this, "Edit anime film",  "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Films":        new AddDatedNoteForm(this, "Edit film",        "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Performances": new AddDatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "AnimeFilms":   new DatedNoteForm(this, "Edit anime film",  "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Films":        new DatedNoteForm(this, "Edit film",        "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Performances": new DatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
 			}

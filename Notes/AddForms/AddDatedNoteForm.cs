@@ -10,12 +10,12 @@ using Notes.NoteTables;
 namespace Notes.AddForms
 {
 	// TODO: переименовать класс и кнопку, т.к. используется для добавления и изменения.
-	public class AddDatedNoteForm : Form
+	public class DatedNoteForm : Form
 	{
 		private Label yearLabel;
 		private Label stateLabel;
 		private Label commentLabel;
-		private Button addButton;
+		private Button submitButton;
 		private TextBox nameTextBox;
 		private TextBox yearTextBox;
 		private ComboBox stateComboBox;
@@ -25,14 +25,14 @@ namespace Notes.AddForms
 		private MainForm _mainForm;
 		private DatedNote _editedNote;
 
-		public AddDatedNoteForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public DatedNoteForm(MainForm parent, string title, string buttonText, Note editedNote = null)
 		{
 			InitializeComponent();
 
 			_mainForm = parent;
 			_editedNote = editedNote as DatedNote;
 			Text = title;
-			addButton.Text = buttonText;
+			submitButton.Text = buttonText;
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = (editedNote == null) ? 0 : (int)editedNote.CurrentState;
 
@@ -52,7 +52,7 @@ namespace Notes.AddForms
 			this.yearLabel = new System.Windows.Forms.Label();
 			this.stateLabel = new System.Windows.Forms.Label();
 			this.commentLabel = new System.Windows.Forms.Label();
-			this.addButton = new System.Windows.Forms.Button();
+			this.submitButton = new System.Windows.Forms.Button();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.yearTextBox = new System.Windows.Forms.TextBox();
 			this.stateComboBox = new System.Windows.Forms.ComboBox();
@@ -101,13 +101,13 @@ namespace Notes.AddForms
 			// 
 			// addButton
 			// 
-			this.addButton.Location = new System.Drawing.Point(186, 191);
-			this.addButton.Name = "addButton";
-			this.addButton.Size = new System.Drawing.Size(75, 23);
-			this.addButton.TabIndex = 4;
-			this.addButton.Text = "Add";
-			this.addButton.UseVisualStyleBackColor = true;
-			this.addButton.Click += new System.EventHandler(this.addButton_Click);
+			this.submitButton.Location = new System.Drawing.Point(186, 191);
+			this.submitButton.Name = "addButton";
+			this.submitButton.Size = new System.Drawing.Size(75, 23);
+			this.submitButton.TabIndex = 4;
+			this.submitButton.Text = "Add";
+			this.submitButton.UseVisualStyleBackColor = true;
+			this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
 			// 
 			// nameTextBox
 			// 
@@ -147,7 +147,7 @@ namespace Notes.AddForms
 			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.yearTextBox);
 			this.Controls.Add(this.nameTextBox);
-			this.Controls.Add(this.addButton);
+			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.commentLabel);
 			this.Controls.Add(this.stateLabel);
 			this.Controls.Add(this.yearLabel);
@@ -161,7 +161,7 @@ namespace Notes.AddForms
 
 		}
 
-		private void addButton_Click(object sender, EventArgs e)
+		private void submitButton_Click(object sender, EventArgs e)
 		{
 			nameTextBox.ForeColor = System.Drawing.Color.Black;
 			nameLabel.ForeColor   = System.Drawing.Color.Black;
