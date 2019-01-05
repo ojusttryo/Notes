@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 using Notes.Notes;
 using Notes.NoteTables;
@@ -55,6 +57,16 @@ namespace Notes
 			Controls.Add(_currentNoteTable);
 
 			this.OnResize(null);
+		}
+
+
+		private void ShowAllRows()
+		{
+			if (_currentNoteTable != null)
+			{
+				foreach (DataGridViewRow row in _currentNoteTable.Rows)
+					row.Visible = true;
+			}
 		}
 
 
@@ -180,6 +192,29 @@ namespace Notes
 					break;
 				}
 				default: break;
+			}
+		}
+
+		private void searchButton_Click(object sender, EventArgs e)
+		{
+			// Можно сделать через запрос к базе. Но как по мне, лучше не перезаписывать данные в таблице новым запросом, а просто скрывать лишнее.
+
+			string fieldName = searchComboBox.GetItemText(searchComboBox.SelectedItem);
+			if (!_currentNoteTable.Columns.Contains(fieldName))
+				return;
+
+			// При пустом запросе отображаются все строки.
+			if (searchTextBox.Text == string.Empty)
+			{
+				foreach (DataGridViewRow row in _currentNoteTable.Rows)
+					row.Visible = true;
+			}
+
+			int columnIndex = _currentNoteTable.Columns[fieldName].Index;
+			foreach (DataGridViewRow row in _currentNoteTable.Rows)
+			{
+				if (!Regex.IsMatch(row.Cells[columnIndex].Value.ToString(), searchTextBox.Text, Constant.CommonRegexOptions))
+					row.Visible = false;
 			}
 		}
 	}

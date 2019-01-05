@@ -291,6 +291,7 @@
 			this.searchButton.Size = new System.Drawing.Size(24, 24);
 			this.searchButton.TabIndex = 0;
 			this.searchButton.UseVisualStyleBackColor = true;
+			this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
 			// 
 			// searchTextBox
 			// 
