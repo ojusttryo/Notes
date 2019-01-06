@@ -179,6 +179,12 @@ namespace Notes
 
 		private void editButton_Click(object sender, EventArgs e)
 		{
+			StartCurrentNoteEditing();
+		}
+
+
+		public void StartCurrentNoteEditing()
+		{
 			if (_currentNoteTable.CurrentRow == null)
 				return;
 
@@ -197,7 +203,6 @@ namespace Notes
 
 			_currentNoteTable.CallCustomEvents = true;
 		}
-
 
 
 		/// <summary>

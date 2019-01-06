@@ -67,7 +67,8 @@ namespace Notes.NoteTables
 			ScrollBars = ScrollBars.Vertical;
 			VerticalScrollBar.Visible = true;
 
-			// Без первого события не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
+			// События для изменения заметки через главную форму. Можно менять только некоторые столбцы.
+			// Первое событие нужно, т.к. без него не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
 			// https://stackoverflow.com/questions/5652957/what-event-catches-a-change-of-value-in-a-combobox-in-a-datagridviewcell
 			CurrentCellDirtyStateChanged += delegate(object o, EventArgs e)
 			{
@@ -88,6 +89,14 @@ namespace Notes.NoteTables
 					// TODO: обработка	 кнопок плюс/минус для серий и сезонов.
 					default: break;
 				}
+			};
+
+			// Двойное нажатие на клетку таблицы должно вызывать меню редактирования текущей заметки.
+			CellDoubleClick += delegate (object o, DataGridViewCellEventArgs e)
+			{
+				MainForm mainForm = this.Parent as MainForm;
+				if (mainForm != null)
+					mainForm.StartCurrentNoteEditing();
 			};
 		}
 
