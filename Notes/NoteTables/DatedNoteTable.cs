@@ -11,18 +11,14 @@ namespace Notes.NoteTables
 {
 	class DatedNoteTable : NoteTable
 	{
-		public DatedNoteTable(Point location, string tableName)
+		public DatedNoteTable(Point location, string tableName):
+			base(location, tableName)
 		{
-			Initialize();
 
-			Location = location;
-			TableNameInDatabase = tableName;
-
-			SetNotes();
 		}
 
 
-		public override void Initialize()
+		public override void CreateColumns()
 		{
 			// Add columns
 			Columns.Add(new DataGridViewTextBoxColumn());
@@ -43,15 +39,6 @@ namespace Notes.NoteTables
 			Columns[3].ReadOnly = false;
 			Columns[4].Name = "Comment";			
 			Columns[4].ReadOnly = true;
-		}
-
-
-		private void SetNotes()
-		{
-			List<Note> notes = Database.GetNotes(TableNameInDatabase);
-
-			foreach (Note note in notes)
-				AddNote(note);
 		}
 
 

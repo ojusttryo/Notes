@@ -29,19 +29,27 @@ namespace Notes.NoteTables
 		}
 
 
-		protected DataGridViewComboBoxColumn CreateStateColumn()
+		private NoteTable()
 		{
-			DataGridViewComboBoxColumn stateColumn = new DataGridViewComboBoxColumn();
-			stateColumn.Items.AddRange(States);
-			stateColumn.DefaultCellStyle.BackColor = Color.White;
-			stateColumn.DefaultCellStyle.SelectionBackColor = Color.White;
-			stateColumn.FlatStyle = FlatStyle.Flat;
-
-			return stateColumn;
+			// Forbidden
 		}
 
 
-		protected NoteTable()
+		protected NoteTable(Point location, string tableName)
+		{
+			Location = location;
+			TableNameInDatabase = tableName;
+
+			Initialize();
+			CreateColumns();
+
+			List<Note> notes = Database.GetNotes(TableNameInDatabase);
+			foreach (Note note in notes)
+				AddNote(note);
+		}
+
+
+		private void Initialize()
 		{
 			CallCustomEvents = true;
 
@@ -85,6 +93,18 @@ namespace Notes.NoteTables
 		}
 
 
+		protected DataGridViewComboBoxColumn CreateStateColumn()
+		{
+			DataGridViewComboBoxColumn stateColumn = new DataGridViewComboBoxColumn();
+			stateColumn.Items.AddRange(States);
+			stateColumn.DefaultCellStyle.BackColor = Color.White;
+			stateColumn.DefaultCellStyle.SelectionBackColor = Color.White;
+			stateColumn.FlatStyle = FlatStyle.Flat;
+
+			return stateColumn;
+		}
+
+
 		/// <summary>
 		/// Получить индекс состояния. 
 		/// </summary>
@@ -102,7 +122,7 @@ namespace Notes.NoteTables
 		}
 
 
-		public abstract void Initialize();
+		public abstract void CreateColumns();
 
 		public abstract bool AddNote(Note note);
 
