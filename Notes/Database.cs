@@ -30,8 +30,8 @@ namespace Notes
 			string Universe     = "Universe      TEXT NOT NULL";
 			string Series       = "Series        TEXT NOT NULL";
 			string Genre        = "Genre         TEXT NOT NULL";
-			string PagesCount   = "PagesCount    INTEGER NOT NULL DEFAULT 0";
-			string CurrentPage  = "CurrentPage   INTEGER NOT NULL DEFAULT 0";
+			string Pages        = "Pages         INTEGER NOT NULL DEFAULT 0";
+			string Page         = "Page          INTEGER NOT NULL DEFAULT 0";
 			string Volume       = "Volume        INTEGER NOT NULL DEFAULT 0";
 			string Chapter      = "Chapter       INTEGER NOT NULL DEFAULT 0";
 			string URL          = "URL           TEXT NOT NULL";
@@ -64,7 +64,7 @@ namespace Notes
 			ExecuteNonQuery(command);
 			
 			command = string.Format("CREATE TABLE IF NOT EXISTS Literature ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12});", 
-				Id, Name, Year, CurrentState, Comment, Author, Universe, Series, Genre, PagesCount,	CurrentPage, Volume, Chapter);
+				Id, Name, Author, Genre, Universe, Series, Volume, Chapter, Page, Pages, Year, CurrentState, Comment);
 			ExecuteNonQuery(command);
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS Bookmarks ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7});", 
@@ -114,7 +114,7 @@ namespace Notes
 				case "AnimeFilms":   return InsertOrUpdateDatedNote(tableName, note);
 				case "Performances": return InsertOrUpdateDatedNote(tableName, note);
 																			
-				case "Literature":   break;
+				case "Literature":   return InsertOrUpdateLiterature(tableName, note);
 
 				case "Bookmarks":    break;
 
@@ -163,6 +163,29 @@ namespace Notes
 		}
 
 
+		private static int InsertOrUpdateLiterature(string tableName, Note note)
+		{
+			Literature lit = note as Literature;
+			if (lit == null)
+			{
+				Log.Error("Try to save incorrect literature note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id,    Name,  Author,   Genre, Universe,  Series, Volume, Chapter, Page, Pages, Year, CurrentState,  Comment) " + 
+				"VALUES         ({1}, \"{2}\", \"{3}\", \"{4}\",  \"{5}\", \"{6}\",    {7},     {8},  {9},  {10}, {11},         {12}, \"{13}\") " + 
+				"ON CONFLICT(Id) DO UPDATE " + 
+				"SET Name = \"{2}\", Author = \"{3}\", Genre = \"{4}\", Universe = \"{5}\", Series = \"{6}\", " + 
+				"Volume = {7}, Chapter = {8}, Page = {9}, Pages = {10}, Year = {11}, CurrentState = {12}, Comment = \"{13}\";", 
+				tableName, note.Id, lit.Name, lit.Author, lit.Genre, lit.Universe, lit.Series, 
+				lit.Volume, lit.Chapter, lit.Page, lit.Pages, lit.Year, (int)lit.CurrentState, lit.Comment);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
 		public static bool DeleteNote(string tableName, int id)
 		{
 			string commandText = string.Format("DELETE FROM {0} WHERE Id = {1}", tableName, id);
@@ -172,6 +195,7 @@ namespace Notes
 		}
 
 
+		// TODO: remove if not used
 		public static void DeleteLastNote(string tableName)
 		{
 			string commandText = string.Format("DELETE FROM {0} ORDER BY Id DESC LIMIT 1");
@@ -382,7 +406,39 @@ namespace Notes
 
 		private static List<Note> ReadLiterature(SQLiteDataReader reader)
 		{
-			return null;
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Literature literature = new Literature();
+
+					literature.Id = reader.GetInt32(0);
+					literature.Name = reader.GetString(1);
+					literature.Author = reader.GetString(2);
+					literature.Genre = reader.GetString(3);
+					literature.Universe = reader.GetString(4);
+					literature.Series = reader.GetString(5);
+					literature.Volume = reader.GetInt32(6);
+					literature.Chapter = reader.GetInt32(7);
+					literature.Page = reader.GetInt32(8);
+					literature.Pages = reader.GetInt32(9);
+					literature.Year = reader.GetInt32(10);
+					literature.CurrentState = (Note.State)reader.GetInt32(11);
+					literature.Comment = reader.GetString(12);					
+
+					notes.Add(literature);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read literature notes: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
 		}
 
 

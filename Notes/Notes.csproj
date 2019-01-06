@@ -99,8 +99,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Notes\DatedNote.cs" />
+    <Compile Include="Notes\Literature.cs" />
     <Compile Include="Notes\Note.cs" />
     <Compile Include="NoteTables\DatedNoteTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NoteTables\LiteratureTable.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NoteTables\NoteTable.cs">

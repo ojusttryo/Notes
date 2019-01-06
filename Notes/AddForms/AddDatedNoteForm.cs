@@ -43,6 +43,8 @@ namespace Notes.AddForms
 				stateComboBox.SelectedValue = NoteTable.States[(int)_editedNote.CurrentState];
 				commentRichTextBox.Text = _editedNote.Comment;
 			}
+
+			yearTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
 		}
 
 
@@ -99,13 +101,13 @@ namespace Notes.AddForms
 			this.commentLabel.TabIndex = 3;
 			this.commentLabel.Text = "Comment";
 			// 
-			// addButton
+			// submitButton
 			// 
 			this.submitButton.Location = new System.Drawing.Point(186, 191);
-			this.submitButton.Name = "addButton";
+			this.submitButton.Name = "submitButton";
 			this.submitButton.Size = new System.Drawing.Size(75, 23);
 			this.submitButton.TabIndex = 4;
-			this.submitButton.Text = "Add";
+			this.submitButton.Text = "Submit";
 			this.submitButton.UseVisualStyleBackColor = true;
 			this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
 			// 
@@ -140,7 +142,7 @@ namespace Notes.AddForms
 			this.commentRichTextBox.TabIndex = 3;
 			this.commentRichTextBox.Text = "";
 			// 
-			// AddDatedNoteForm
+			// DatedNoteForm
 			// 
 			this.ClientSize = new System.Drawing.Size(442, 224);
 			this.Controls.Add(this.commentRichTextBox);
@@ -153,9 +155,9 @@ namespace Notes.AddForms
 			this.Controls.Add(this.yearLabel);
 			this.Controls.Add(this.nameLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Name = "AddDatedNoteForm";
+			this.Name = "DatedNoteForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Add note";
+			this.Text = "Note";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -163,39 +165,12 @@ namespace Notes.AddForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			nameTextBox.ForeColor = System.Drawing.Color.Black;
-			nameLabel.ForeColor   = System.Drawing.Color.Black;
-			yearTextBox.ForeColor = System.Drawing.Color.Black;
-			yearLabel.ForeColor   = System.Drawing.Color.Black;
-
-			// Check if input is OK
-			uint n = 0;
-			string name = nameTextBox.Text.Trim();
-			string year = yearTextBox.Text.Trim();
-
-			if (name.Length == 0)
-			{
-				nameTextBox.ForeColor = System.Drawing.Color.Red;
-				nameLabel.ForeColor = System.Drawing.Color.Red;
-				return;
-			}
-
-			// Можно оставить год пустым.
-			if (year.Length == 0)
-				year = "0";
-			if (UInt32.TryParse(year, out n) == false)
-			{
-				yearTextBox.ForeColor = System.Drawing.Color.Red;
-				yearLabel.ForeColor   = System.Drawing.Color.Red;
-				return;
-			}
-
 			// Add or update note
 			bool isUpdating = (_editedNote != null);
 
 			DatedNote datedNote = isUpdating ? _editedNote    : new DatedNote();
 			datedNote.Name = nameTextBox.Text;
-			datedNote.Year = (int)n;
+			datedNote.Year = (yearTextBox.Text.Trim().Length == 0) ? 0 : Int32.Parse(yearTextBox.Text.Trim());
 			datedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			datedNote.Comment = commentRichTextBox.Text;
 

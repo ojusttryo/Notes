@@ -27,19 +27,15 @@ namespace Notes
 		/// Высота заголовка главного окна. Нужна для правильного позиционирования элементов.
 		/// </summary>
 		private int _titleHeight = 0;
-		
+
 		/// <summary>
 		/// Вертикальный и горизонтальный отступ между элементами на форме.
 		/// </summary>
 		const int _indentBetweenElements = 5;
 
+		private Dictionary<string, NoteTable> _noteTables;
+
 		private NoteTable _currentNoteTable;
-
-		private NoteTable _films;
-
-		private NoteTable _animeFilms;
-
-		private NoteTable _performances;
 
 
 		public MainForm()
@@ -54,10 +50,13 @@ namespace Notes
 
 			Point noteTableLocation = new Point(ClientRectangle.Location.X, addButton.Location.Y + addButton.Height + _indentBetweenElements);
 
-			_animeFilms   = new DatedNoteTable(noteTableLocation, "AnimeFilms");
-			_films        = new DatedNoteTable(noteTableLocation, "Films");
-			_performances = new DatedNoteTable(noteTableLocation, "Performances");
-			SwitchToTable(_films);
+			_noteTables = new Dictionary<string, NoteTable>();
+			_noteTables.Add("AnimeFilms", new DatedNoteTable(noteTableLocation, "AnimeFilms"));
+			_noteTables.Add("Films", new DatedNoteTable(noteTableLocation, "Films"));
+			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances"));
+			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation, "Literature"));
+
+			SwitchToTable(_noteTables["Films"]);
 		}
 
 
@@ -103,7 +102,7 @@ namespace Notes
 						maxItemWidth = label.PreferredWidth;
 				}
 
-				searchComboBox.Width = maxItemWidth + 20;	// 20 - скролбар + небольшой отступ
+				searchComboBox.Width = maxItemWidth + 20;   // 20 - скролбар + небольшой отступ
 			}
 		}
 
@@ -113,17 +112,17 @@ namespace Notes
 		/// </summary>
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
-			searchButton.Location   = new Point(ClientRectangle.Width - searchButton.Width - _indentBetweenElements * 2, searchButton.Location.Y);
+			searchButton.Location = new Point(ClientRectangle.Width - searchButton.Width - _indentBetweenElements * 2, searchButton.Location.Y);
 			searchComboBox.Location = new Point(searchButton.Location.X - searchComboBox.Width - _indentBetweenElements, searchComboBox.Location.Y);
-			searchTextBox.Location  = new Point(settingsButton.Location.X + settingsButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
-			searchTextBox.Width = searchComboBox.Location.X - settingsButton.Location.X - settingsButton.Width - 2  * _indentBetweenElements;
+			searchTextBox.Location = new Point(settingsButton.Location.X + settingsButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
+			searchTextBox.Width = searchComboBox.Location.X - settingsButton.Location.X - settingsButton.Width - 2 * _indentBetweenElements;
 			if (searchTextBox.Width > 400)
 			{
 				searchTextBox.Width = 400;
 				searchComboBox.Location = new Point(searchTextBox.Location.X + searchTextBox.Width + _indentBetweenElements, searchComboBox.Location.Y);
 				searchButton.Location = new Point(searchComboBox.Location.X + searchComboBox.Width + _indentBetweenElements, searchButton.Location.Y);
 			}
-			
+
 			// Таблица
 			if (_currentNoteTable != null)
 			{
@@ -139,10 +138,10 @@ namespace Notes
 		{
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "AnimeFilms":   new DatedNoteForm(this, "Add anime film",  "Add").ShowDialog(); break;
-				case "Films":        new DatedNoteForm(this, "Add film",        "Add").ShowDialog(); break;
+				case "AnimeFilms": new DatedNoteForm(this, "Add anime film", "Add").ShowDialog(); break;
+				case "Films": new DatedNoteForm(this, "Add film", "Add").ShowDialog(); break;
 				case "Performances": new DatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
-					
+
 				default: break;
 			}
 		}
@@ -161,7 +160,7 @@ namespace Notes
 			if (answer == DialogResult.No)
 				return;
 
-			int id = Int32.Parse(currentRow.Cells[0].Value.ToString());		// Там всегда корректный Id. Пользователь не имеет доступа к ячейке.
+			int id = Int32.Parse(currentRow.Cells[0].Value.ToString());     // Там всегда корректный Id. Пользователь не имеет доступа к ячейке.
 
 			bool deleted = Database.DeleteNote(_currentNoteTable.TableNameInDatabase, id);
 			if (!deleted)
@@ -178,8 +177,8 @@ namespace Notes
 
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "AnimeFilms":   new DatedNoteForm(this, "Edit anime film",  "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Films":        new DatedNoteForm(this, "Edit film",        "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "AnimeFilms": new DatedNoteForm(this, "Edit anime film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Films": new DatedNoteForm(this, "Edit film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Performances": new DatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
@@ -245,7 +244,7 @@ namespace Notes
 
 		private void animeFilmsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_animeFilms);
+			SwitchToTable(_noteTables["AnimeFilms"]);
 		}
 
 		private void animeSerialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -260,7 +259,7 @@ namespace Notes
 
 		private void filmsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_films);
+			SwitchToTable(_noteTables["Films"]);
 		}
 
 		private void gamesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -270,12 +269,12 @@ namespace Notes
 
 		private void literatureToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable(_noteTables["Literature"]);
 		}
 
 		private void performancesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_performances);
+			SwitchToTable(_noteTables["Performances"]);
 		}
 
 		private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -296,6 +295,18 @@ namespace Notes
 		private void TVshowsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
+		}
+
+
+		public static void CheckNumericInput(object sender, KeyPressEventArgs e)
+		{
+			// From https://ourcodeworld.com/articles/read/507/how-to-allow-only-numbers-inside-a-textbox-in-winforms-c-sharp
+
+			// Verify that the pressed key isn't CTRL or any non-numeric digit
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+			{
+				e.Handled = true;
+			}
 		}
 	}
 }

@@ -29,16 +29,19 @@ namespace Notes.NoteTables
 
 			// Columns settings
 			Columns[0].Name = "Id";
-			Columns[0].ReadOnly = true;
-			Columns[0].Visible = false;
 			Columns[1].Name = "Name";			
-			Columns[1].ReadOnly = true;
 			Columns[2].Name = "Year";			
-			Columns[2].ReadOnly = true;
 			Columns[3].Name = "State";			
+			Columns[4].Name = "Comment";
+
+			foreach (DataGridViewColumn column in Columns)
+				column.ReadOnly = true;
+
+			// Состояние можно редактировать напрямую.
 			Columns[3].ReadOnly = false;
-			Columns[4].Name = "Comment";			
-			Columns[4].ReadOnly = true;
+
+			// Id не отображается.
+			Columns[0].Visible = false;
 		}
 
 
