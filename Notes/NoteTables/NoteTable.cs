@@ -65,6 +65,7 @@ namespace Notes.NoteTables
 			BorderStyle = BorderStyle.None;
 
 			ScrollBars = ScrollBars.Vertical;
+			VerticalScrollBar.Visible = true;
 
 			// Без первого события не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
 			// https://stackoverflow.com/questions/5652957/what-event-catches-a-change-of-value-in-a-combobox-in-a-datagridviewcell
@@ -80,8 +81,6 @@ namespace Notes.NoteTables
 			{
 				if (!CallCustomEvents)
 					return;
-
-				MessageBox.Show(Columns[e.ColumnIndex].Name);
 
 				switch (Columns[e.ColumnIndex].Name)
 				{

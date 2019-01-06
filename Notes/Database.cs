@@ -247,6 +247,45 @@ namespace Notes
 		}
 
 
+		public static List<string> SelectUniqueValues(string tableName, string fieldName)
+		{
+			List<string> values = new List<string>();
+
+			try
+			{
+				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT DISTINCT {0} FROM {1}", fieldName, tableName)))
+				{
+					using (SQLiteConnection connection = CreateConnection())
+					{
+						if (command == null)
+							return values;
+
+						connection.Open();
+						command.Connection = connection;
+						if (connection.State == System.Data.ConnectionState.Open)
+						{
+							using (SQLiteDataReader reader = command.ExecuteReader())
+							{
+								if (reader.Read())
+									values.Add(reader.GetString(0));
+							}
+						}
+
+						connection.Close();
+						command.Connection = null;
+					}
+				}
+
+				return values;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not select unique {0} values from {1}: {2}{3}", fieldName, tableName, Environment.NewLine, ex.ToString()));
+				return values;
+			}
+		}
+
+
 		public static SQLiteConnection CreateConnection()
 		{
 			return new SQLiteConnection(string.Format("Data source={0}; Version={1}", Database.FileName, 3));

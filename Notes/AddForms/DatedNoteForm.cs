@@ -39,7 +39,7 @@ namespace Notes.AddForms
 			if (_editedNote != null)
 			{
 				nameTextBox.Text = _editedNote.Name;
-				yearTextBox.Text = _editedNote.Year.ToString();
+				yearTextBox.Text = (_editedNote.Year == 0) ? "" : _editedNote.Year.ToString();
 				stateComboBox.SelectedValue = NoteTable.States[(int)_editedNote.CurrentState];
 				commentRichTextBox.Text = _editedNote.Comment;
 			}
@@ -85,7 +85,7 @@ namespace Notes.AddForms
 			// 
 			this.stateLabel.AutoSize = true;
 			this.stateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.stateLabel.Location = new System.Drawing.Point(214, 52);
+			this.stateLabel.Location = new System.Drawing.Point(239, 51);
 			this.stateLabel.Name = "stateLabel";
 			this.stateLabel.Size = new System.Drawing.Size(32, 13);
 			this.stateLabel.TabIndex = 2;
@@ -103,7 +103,7 @@ namespace Notes.AddForms
 			// 
 			// submitButton
 			// 
-			this.submitButton.Location = new System.Drawing.Point(186, 191);
+			this.submitButton.Location = new System.Drawing.Point(190, 191);
 			this.submitButton.Name = "submitButton";
 			this.submitButton.Size = new System.Drawing.Size(75, 23);
 			this.submitButton.TabIndex = 4;
@@ -121,16 +121,19 @@ namespace Notes.AddForms
 			// yearTextBox
 			// 
 			this.yearTextBox.Location = new System.Drawing.Point(66, 47);
+			this.yearTextBox.MaxLength = 9;
 			this.yearTextBox.Name = "yearTextBox";
-			this.yearTextBox.Size = new System.Drawing.Size(142, 20);
+			this.yearTextBox.Size = new System.Drawing.Size(155, 20);
 			this.yearTextBox.TabIndex = 1;
 			// 
 			// stateComboBox
 			// 
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(252, 47);
+			this.stateComboBox.Location = new System.Drawing.Point(273, 47);
 			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(176, 21);
+			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
 			this.stateComboBox.TabIndex = 2;
 			// 
 			// commentRichTextBox
@@ -144,7 +147,7 @@ namespace Notes.AddForms
 			// 
 			// DatedNoteForm
 			// 
-			this.ClientSize = new System.Drawing.Size(442, 224);
+			this.ClientSize = new System.Drawing.Size(444, 224);
 			this.Controls.Add(this.commentRichTextBox);
 			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.yearTextBox);
@@ -155,6 +158,7 @@ namespace Notes.AddForms
 			this.Controls.Add(this.yearLabel);
 			this.Controls.Add(this.nameLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
 			this.Name = "DatedNoteForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Note";

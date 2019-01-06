@@ -56,7 +56,10 @@ namespace Notes
 			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances"));
 			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation, "Literature"));
 
-			SwitchToTable(_noteTables["Films"]);
+			SwitchToTable(_noteTables["Literature"]);
+
+			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
+			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
 		}
 
 
@@ -70,6 +73,7 @@ namespace Notes
 
 			UpdateSearchComboBox();
 			ShowAllRows();
+
 			OnResize(null);
 		}
 
@@ -127,7 +131,7 @@ namespace Notes
 			if (_currentNoteTable != null)
 			{
 				int tableWidth = this.Width;
-				int tableHeight = this.ClientRectangle.Height;
+				int tableHeight = this.ClientRectangle.Height - addButton.Location.Y - addButton.Height - _indentBetweenElements;
 				Size noteTableSize = new Size(tableWidth, tableHeight);
 
 				_currentNoteTable.ChangeSize(noteTableSize);
@@ -141,6 +145,7 @@ namespace Notes
 				case "AnimeFilms": new DatedNoteForm(this, "Add anime film", "Add").ShowDialog(); break;
 				case "Films": new DatedNoteForm(this, "Add film", "Add").ShowDialog(); break;
 				case "Performances": new DatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
+				case "Literature": new LiteratureForm(this, "Add literature", "Add").ShowDialog(); break;
 
 				default: break;
 			}
@@ -167,11 +172,16 @@ namespace Notes
 				MessageBox.Show("Unknown error. Cannot delete note.");
 			else
 				_currentNoteTable.Rows.RemoveAt(currentRow.Index);
+
+			OnResize(null);
 		}
 
 
 		private void editButton_Click(object sender, EventArgs e)
 		{
+			if (_currentNoteTable.CurrentRow == null)
+				return;
+
 			// Временно запрещается вызов событий, чтоб не было повторного сохранения изменений в таблице.
 			_currentNoteTable.CallCustomEvents = false;
 
@@ -180,6 +190,7 @@ namespace Notes
 				case "AnimeFilms": new DatedNoteForm(this, "Edit anime film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Films": new DatedNoteForm(this, "Edit film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Performances": new DatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Literature": new LiteratureForm(this, "Edit literature", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
 			}
@@ -205,9 +216,14 @@ namespace Notes
 				case 1:
 				{
 					if (_currentNoteTable.CurrentRow != null && Int32.Parse(_currentNoteTable.CurrentRow.Cells[0].Value.ToString()) == note.Id)
+					{
 						_currentNoteTable.UpdateNote(note);
+					}
 					else
+					{
 						_currentNoteTable.AddNote(note);
+						OnResize(null);
+					}
 					break;
 				}
 				default: break;
@@ -235,6 +251,8 @@ namespace Notes
 				if (!Regex.IsMatch(row.Cells[columnIndex].Value.ToString(), searchTextBox.Text, Constant.CommonRegexOptions))
 					row.Visible = false;
 			}
+
+			OnResize(null);
 		}
 
 		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -301,12 +319,9 @@ namespace Notes
 		public static void CheckNumericInput(object sender, KeyPressEventArgs e)
 		{
 			// From https://ourcodeworld.com/articles/read/507/how-to-allow-only-numbers-inside-a-textbox-in-winforms-c-sharp
-
 			// Verify that the pressed key isn't CTRL or any non-numeric digit
-			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
-			{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
 				e.Handled = true;
-			}
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace Notes.Notes
 	/// <summary>
 	/// Литература (книга, рассказ и т.п.)
 	/// </summary>
-    class Literature : DatedNote
+    class Literature : DatedNote, ICloneable
     {
 		private int MAX_AUTHOR_LEN = 255;
 		private int MAX_UNIVERSE_LEN = 255;
@@ -140,6 +140,12 @@ namespace Notes.Notes
 			_currentPage = 0;
 			_volume = 0;
 			_chapter = 0;
+		}
+
+
+		public object Clone()
+		{
+			return this.MemberwiseClone();
 		}
     }
 }

@@ -81,6 +81,8 @@ namespace Notes.NoteTables
 			Columns[(int)Index.Pages].Visible    = false;
 			Columns[(int)Index.Year].Visible     = false;
 			Columns[(int)Index.Comment].Visible  = false;
+
+
 		}
 
 
@@ -167,31 +169,31 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			this.Size = tableSize;
-			
 			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
 
-			Columns[(int)Index.Id].Width   = 0;
+			Width = tableSize.Width - scrollbarWidth;
+			Height = tableSize.Height;
 			
-			Columns[(int)Index.Author].Width = (int)(tableSize.Width * 0.2);
-			Columns[(int)Index.Genre].Width = 120;
+			int authorWidth = (int)(Width * 0.2);
+			int genreWidth = 120;
+			int seriesWidth = (int)(Width * 0.2);
+			int volumeWidth = 45;
+			int stateWidth = 100;
+			int nameWidth = this.Width - scrollbarWidth - authorWidth - genreWidth - seriesWidth - volumeWidth - stateWidth;
+
+			Columns[(int)Index.Id].Width = 0;
+			Columns[(int)Index.Name].Width = nameWidth;
+			Columns[(int)Index.Author].Width = authorWidth;
+			Columns[(int)Index.Genre].Width = genreWidth;
 			Columns[(int)Index.Universe].Width = 0;
-			Columns[(int)Index.Series].Width = (int)(tableSize.Width * 0.2);
-			Columns[(int)Index.Volume].Width = 45;
+			Columns[(int)Index.Series].Width = seriesWidth;
+			Columns[(int)Index.Volume].Width = volumeWidth;
 			Columns[(int)Index.Chapter].Width = 0;
 			Columns[(int)Index.Page].Width = 0;
 			Columns[(int)Index.Pages].Width = 0;
 			Columns[(int)Index.Year].Width = 0;
-			Columns[(int)Index.State].Width = 100;
+			Columns[(int)Index.State].Width = stateWidth;
 			Columns[(int)Index.Comment].Width = 0;
-
-			Columns[(int)Index.Name].Width = (tableSize.Width - 
-				Columns[(int)Index.Author].Width -
-				Columns[(int)Index.Genre].Width - 
-				Columns[(int)Index.Series].Width - 
-				Columns[(int)Index.Volume].Width - 
-				Columns[(int)Index.State].Width - 
-				scrollbarWidth);
 		}
 
 
