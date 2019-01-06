@@ -240,6 +240,8 @@ namespace Notes.AddForms
 			// 
 			// genreTextBox
 			// 
+			this.genreTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.genreTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
 			this.genreTextBox.Location = new System.Drawing.Point(66, 73);
 			this.genreTextBox.Name = "genreTextBox";
 			this.genreTextBox.Size = new System.Drawing.Size(362, 20);
@@ -257,6 +259,8 @@ namespace Notes.AddForms
 			// 
 			// universeTextBox
 			// 
+			this.universeTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.universeTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
 			this.universeTextBox.Location = new System.Drawing.Point(66, 99);
 			this.universeTextBox.Name = "universeTextBox";
 			this.universeTextBox.Size = new System.Drawing.Size(362, 20);
@@ -274,6 +278,8 @@ namespace Notes.AddForms
 			// 
 			// seriesTextBox
 			// 
+			this.seriesTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.seriesTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
 			this.seriesTextBox.Location = new System.Drawing.Point(66, 125);
 			this.seriesTextBox.Name = "seriesTextBox";
 			this.seriesTextBox.Size = new System.Drawing.Size(362, 20);

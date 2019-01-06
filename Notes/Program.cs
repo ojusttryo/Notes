@@ -19,6 +19,8 @@ namespace Notes
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
+
+			// TODO check exception while select max id 
 		}
 	}
 }

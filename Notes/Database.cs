@@ -266,7 +266,7 @@ namespace Notes
 						{
 							using (SQLiteDataReader reader = command.ExecuteReader())
 							{
-								if (reader.Read())
+								while (reader.Read())
 									values.Add(reader.GetString(0));
 							}
 						}
