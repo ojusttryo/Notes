@@ -333,7 +333,7 @@ namespace Notes
 
 		public static List<Note> GetNotes(string tableName)
 		{
-			string commandText = string.Format("SELECT * FROM {0}", tableName);
+			string commandText = string.Format("SELECT * FROM {0} ORDER BY Name", tableName);
             SQLiteCommand command = new SQLiteCommand(commandText);
 			List<Note> notes = ExecuteReader(command, tableName);
 
