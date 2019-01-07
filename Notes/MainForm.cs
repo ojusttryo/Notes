@@ -57,8 +57,9 @@ namespace Notes
 			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation));
 			_noteTables.Add("Bookmarks", new BookmarkTable(noteTableLocation));
 			_noteTables.Add("Meal", new MealTable(noteTableLocation));
+			_noteTables.Add("Programs", new ProgramTable(noteTableLocation));
 
-			SwitchToTable(_noteTables["Meal"]);
+			SwitchToTable(_noteTables["Programs"]);
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
@@ -152,6 +153,7 @@ namespace Notes
 				case "Literature": new LiteratureForm(this, "Add literature", "Add").ShowDialog(); break;
 				case "Bookmarks": new BookmarkForm(this, "Add bookmark", "Add").ShowDialog(); break;
 				case "Meal": new MealForm(this, "Add meal", "Add").ShowDialog(); break;
+				case "Programs": new ProgramForm(this, "Add program", "Add").ShowDialog(); break;
 
 				default: break;
 			}
@@ -205,6 +207,7 @@ namespace Notes
 				case "Literature": new LiteratureForm(this, "Edit literature", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Bookmarks": new BookmarkForm(this, "Edit bookmark", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Meal": new MealForm(this, "Edit meal", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Programs": new ProgramForm(this, "Edit program", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
 			}
@@ -322,7 +325,7 @@ namespace Notes
 
 		private void programsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable(_noteTables["Programs"]);
 		}
 
 		private void serialsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -75,8 +75,8 @@ namespace Notes
 				Id, Name, CurrentState, Comment, Ingredients, Recipe);
 			ExecuteNonQuery(command);
 
-			command = string.Format("CREATE TABLE IF NOT EXISTS Programs ({0}, {1}, {2}, {3}, {4}, {5});", 
-				Id, Name, CurrentState, Comment, DownloadLink, Version);
+			command = string.Format("CREATE TABLE IF NOT EXISTS Programs ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8});", 
+				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email);
 			ExecuteNonQuery(command);
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8});", 
@@ -120,7 +120,8 @@ namespace Notes
 
 				case "Meal":         return InsertOrUpdateMeal(tableName, note);
 
-				case "Programs":     break;
+				case "Programs":     return InsertOrUpdatePrograms(tableName, note);
+
 				case "Games":        break;
 
 				case "People":       break;
@@ -226,6 +227,29 @@ namespace Notes
 				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\", \"{6}\") " + 
 				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Ingredients = \"{5}\", Recipe = \"{6}\";",
 				tableName, note.Id, meal.Name, (int)meal.CurrentState, meal.Comment, meal.Ingredients, meal.Recipe);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		private static int InsertOrUpdatePrograms(string tableName, Note note)
+		{
+			Program program = note as Program;
+			if (program == null)
+			{
+				Log.Error("Try to save incorrect program note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\") " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", " +
+				"DownloadLink = \"{5}\", Version = \"{6}\", Login = \"{7}\", Password = \"{8}\", Email = \"{9}\";", 
+				tableName, note.Id, program.Name, (int)program.CurrentState, program.Comment, program.DownloadLink, 
+				program.Version, program.Login, program.Password, program.Email);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -425,7 +449,7 @@ namespace Notes
 									case "Meal":         notes = ReadMeal(reader); break;
 
 									case "Programs":     notes = ReadPrograms(reader); break;
-									case "Games":        notes = ReadPrograms(reader); break;
+									case "Games":        notes = ReadGames(reader); break;
 
 									case "People":       notes = ReadPeople(reader); break;
 
@@ -485,6 +509,42 @@ namespace Notes
 
 
 		private static List<Note> ReadPrograms(SQLiteDataReader reader)
+		{
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Program program = new Program();
+
+					program.Id = reader.GetInt32(0);
+					program.Name = reader.GetString(1);
+					program.CurrentState = (Note.State)reader.GetInt32(2);
+					program.Comment = reader.GetString(3);
+					program.DownloadLink = reader.GetString(4);
+					program.Version = reader.GetString(5);
+					program.Login = reader.GetString(6);
+					program.Password = reader.GetString(7);
+					program.Email = reader.GetString(8);				
+
+					notes.Add(program);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read program: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
+
+			return null;
+		}
+
+
+		private static List<Note> ReadGames(SQLiteDataReader reader)
 		{
 			return null;
 		}
