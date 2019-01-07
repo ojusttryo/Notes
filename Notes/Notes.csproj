@@ -85,6 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddForms\BookmarkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="AddForms\DatedNoteForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,9 +104,13 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Notes\Bookmark.cs" />
     <Compile Include="Notes\DatedNote.cs" />
     <Compile Include="Notes\Literature.cs" />
     <Compile Include="Notes\Note.cs" />
+    <Compile Include="NoteTables\BookmarkTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NoteTables\DatedNoteTable.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -115,6 +122,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddForms\BookmarkForm.resx">
+      <DependentUpon>BookmarkForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddForms\DatedNoteForm.resx">
       <DependentUpon>DatedNoteForm.cs</DependentUpon>
     </EmbeddedResource>

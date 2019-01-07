@@ -147,6 +147,7 @@ namespace Notes.AddForms
 			// 
 			// DatedNoteForm
 			// 
+			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 224);
 			this.Controls.Add(this.commentRichTextBox);
 			this.Controls.Add(this.stateComboBox);

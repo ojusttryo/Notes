@@ -79,8 +79,8 @@ namespace Notes
 				Id, Name, CurrentState, Comment, DownloadLink, Version);
 			ExecuteNonQuery(command);
 
-			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5});", 
-				Id, Name, CurrentState, Comment, DownloadLink, Version);
+			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8});", 
+				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email);
 			ExecuteNonQuery(command);
 			
 			command = string.Format("CREATE TABLE IF NOT EXISTS People ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9});", 
@@ -116,7 +116,7 @@ namespace Notes
 																			
 				case "Literature":   return InsertOrUpdateLiterature(tableName, note);
 
-				case "Bookmarks":    break;
+				case "Bookmarks":    return InsertOrUpdateBookmark(tableName, note);
 
 				case "Meal":         break;
 
@@ -186,6 +186,30 @@ namespace Notes
 		}
 
 
+		public static int InsertOrUpdateBookmark(string tableName, Note note)
+		{
+			// Id, Name, CurrentState, Comment, URL, Login, Password, Email);
+
+			Bookmark b = note as Bookmark;
+			if (b == null)
+			{
+				Log.Error("Try to save incorrect bookmark note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, URL, Login, Password, Email) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\") " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", " +
+				"URL = \"{5}\", Login = \"{6}\", Password = \"{7}\", Email = \"{8}\";", 
+				tableName, note.Id, b.Name, (int)b.CurrentState, b.Comment, b.URL, b.Login, b.Password, b.Email);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
 		public static bool DeleteNote(string tableName, int id)
 		{
 			string commandText = string.Format("DELETE FROM {0} WHERE Id = {1}", tableName, id);
@@ -241,6 +265,8 @@ namespace Notes
 			}
 			catch (Exception ex)
 			{
+				// Предполагаю, исключение может возникать при попытке добавить новую запись в таблицу. Когда еще нет никаких max id.
+				// Можно игнорировать.
 				Log.Error(string.Format("Can not select max Id from: {0}{1}{2}", tableName, Environment.NewLine, ex.ToString()));
 				return maxId;
 			}
@@ -483,7 +509,34 @@ namespace Notes
 
 		private static List<Note> ReadBookmarks(SQLiteDataReader reader)
 		{
-			return null;
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Bookmark bookmark = new Bookmark();
+
+					bookmark.Id = reader.GetInt32(0);
+					bookmark.Name = reader.GetString(1);
+					bookmark.CurrentState = (Note.State)reader.GetInt32(2);
+					bookmark.Comment = reader.GetString(3);
+					bookmark.URL = reader.GetString(4);
+					bookmark.Login = reader.GetString(5);
+					bookmark.Password = reader.GetString(6);
+					bookmark.Email = reader.GetString(7);				
+
+					notes.Add(bookmark);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read bookmark: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
 		}
 
 
