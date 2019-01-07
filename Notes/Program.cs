@@ -21,6 +21,8 @@ namespace Notes
 			Application.Run(new MainForm());
 
 			// TODO check exception while select max id 
+			// TODO перенос строк в многострочных эдитах
+			// TODO check with PVS Studio
 		}
 	}
 }

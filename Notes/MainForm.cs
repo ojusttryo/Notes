@@ -60,6 +60,8 @@ namespace Notes
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
+
+			
 		}
 
 
@@ -327,6 +329,36 @@ namespace Notes
 			// Verify that the pressed key isn't CTRL or any non-numeric digit
 			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
 				e.Handled = true;
+		}
+
+
+		private void ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// При выборе элемента меню, должны отображаться все заметки с этим состоянием.
+			// Если ранее был выполнен поиск, его результаты игнорируются. Выборка делается по всей таблице.
+			ToolStripMenuItem item = (ToolStripMenuItem)sender;
+			if (item != null && stateToolStripMenuItem.DropDownItems.Contains(item))
+			{
+				int stateIndex = stateToolStripMenuItem.DropDownItems.IndexOf(item);
+				if (stateIndex == 0)
+				{
+					foreach (DataGridViewRow row in _currentNoteTable.Rows)
+						row.Visible = true;
+				}
+				else if (_currentNoteTable.Columns.Contains("State"))
+				{
+					DataGridViewComboBoxColumn column = (DataGridViewComboBoxColumn)_currentNoteTable.Columns["State"];
+					if (column == null)
+						return;
+
+					foreach (DataGridViewRow row in _currentNoteTable.Rows)
+					{
+						DataGridViewComboBoxCell stateCell = row.Cells[column.Index] as DataGridViewComboBoxCell;
+						row.Visible = (stateCell != null && column.Items.IndexOf(stateCell.Value) == stateIndex);
+					}
+				}
+			}
+			searchTextBox.Text = "";
 		}
 	}
 }

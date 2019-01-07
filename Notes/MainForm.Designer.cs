@@ -83,7 +83,7 @@
 			// closeToolStripMenuItem
 			// 
 			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.closeToolStripMenuItem.Text = "Close";
 			this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
 			// 
@@ -108,77 +108,77 @@
 			// animeFilmsToolStripMenuItem
 			// 
 			this.animeFilmsToolStripMenuItem.Name = "animeFilmsToolStripMenuItem";
-			this.animeFilmsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.animeFilmsToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.animeFilmsToolStripMenuItem.Text = "Anime films";
 			this.animeFilmsToolStripMenuItem.Click += new System.EventHandler(this.animeFilmsToolStripMenuItem_Click);
 			// 
 			// animeSerialsToolStripMenuItem
 			// 
 			this.animeSerialsToolStripMenuItem.Name = "animeSerialsToolStripMenuItem";
-			this.animeSerialsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.animeSerialsToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.animeSerialsToolStripMenuItem.Text = "Anime serials";
 			this.animeSerialsToolStripMenuItem.Click += new System.EventHandler(this.animeSerialsToolStripMenuItem_Click);
 			// 
 			// bookmarksToolStripMenuItem
 			// 
 			this.bookmarksToolStripMenuItem.Name = "bookmarksToolStripMenuItem";
-			this.bookmarksToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.bookmarksToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.bookmarksToolStripMenuItem.Text = "Bookmarks";
 			this.bookmarksToolStripMenuItem.Click += new System.EventHandler(this.bookmarksToolStripMenuItem_Click);
 			// 
 			// filmsToolStripMenuItem
 			// 
 			this.filmsToolStripMenuItem.Name = "filmsToolStripMenuItem";
-			this.filmsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.filmsToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.filmsToolStripMenuItem.Text = "Films";
 			this.filmsToolStripMenuItem.Click += new System.EventHandler(this.filmsToolStripMenuItem_Click);
 			// 
 			// gamesToolStripMenuItem
 			// 
 			this.gamesToolStripMenuItem.Name = "gamesToolStripMenuItem";
-			this.gamesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.gamesToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.gamesToolStripMenuItem.Text = "Games";
 			this.gamesToolStripMenuItem.Click += new System.EventHandler(this.gamesToolStripMenuItem_Click);
 			// 
 			// literatureToolStripMenuItem
 			// 
 			this.literatureToolStripMenuItem.Name = "literatureToolStripMenuItem";
-			this.literatureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.literatureToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.literatureToolStripMenuItem.Text = "Literature";
 			this.literatureToolStripMenuItem.Click += new System.EventHandler(this.literatureToolStripMenuItem_Click);
 			// 
 			// performancesToolStripMenuItem
 			// 
 			this.performancesToolStripMenuItem.Name = "performancesToolStripMenuItem";
-			this.performancesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.performancesToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.performancesToolStripMenuItem.Text = "Performances";
 			this.performancesToolStripMenuItem.Click += new System.EventHandler(this.performancesToolStripMenuItem_Click);
 			// 
 			// peopleToolStripMenuItem
 			// 
 			this.peopleToolStripMenuItem.Name = "peopleToolStripMenuItem";
-			this.peopleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.peopleToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.peopleToolStripMenuItem.Text = "People";
 			this.peopleToolStripMenuItem.Click += new System.EventHandler(this.peopleToolStripMenuItem_Click);
 			// 
 			// programsToolStripMenuItem
 			// 
 			this.programsToolStripMenuItem.Name = "programsToolStripMenuItem";
-			this.programsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.programsToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.programsToolStripMenuItem.Text = "Programs";
 			this.programsToolStripMenuItem.Click += new System.EventHandler(this.programsToolStripMenuItem_Click);
 			// 
 			// serialsToolStripMenuItem
 			// 
 			this.serialsToolStripMenuItem.Name = "serialsToolStripMenuItem";
-			this.serialsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.serialsToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.serialsToolStripMenuItem.Text = "Serials";
 			this.serialsToolStripMenuItem.Click += new System.EventHandler(this.serialsToolStripMenuItem_Click);
 			// 
 			// TVshowsToolStripMenuItem
 			// 
 			this.TVshowsToolStripMenuItem.Name = "TVshowsToolStripMenuItem";
-			this.TVshowsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.TVshowsToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
 			this.TVshowsToolStripMenuItem.Text = "TV shows";
 			this.TVshowsToolStripMenuItem.Click += new System.EventHandler(this.TVshowsToolStripMenuItem_Click);
 			// 
@@ -198,38 +198,44 @@
 			// allToolStripMenuItem
 			// 
 			this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-			this.allToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.allToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.allToolStripMenuItem.Text = "All";
+			this.allToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
 			// 
 			// activeToolStripMenuItem
 			// 
 			this.activeToolStripMenuItem.Name = "activeToolStripMenuItem";
-			this.activeToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.activeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.activeToolStripMenuItem.Text = "Active";
+			this.activeToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
 			// 
 			// deletedToolStripMenuItem
 			// 
 			this.deletedToolStripMenuItem.Name = "deletedToolStripMenuItem";
-			this.deletedToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.deletedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.deletedToolStripMenuItem.Text = "Deleted";
+			this.deletedToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
 			// 
 			// finishedToolStripMenuItem
 			// 
 			this.finishedToolStripMenuItem.Name = "finishedToolStripMenuItem";
-			this.finishedToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.finishedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.finishedToolStripMenuItem.Text = "Finished";
+			this.finishedToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
 			// 
 			// postponedToolStripMenuItem
 			// 
 			this.postponedToolStripMenuItem.Name = "postponedToolStripMenuItem";
-			this.postponedToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.postponedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.postponedToolStripMenuItem.Text = "Postponed";
+			this.postponedToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
 			// 
 			// waitingToolStripMenuItem
 			// 
 			this.waitingToolStripMenuItem.Name = "waitingToolStripMenuItem";
-			this.waitingToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.waitingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.waitingToolStripMenuItem.Text = "Waiting";
+			this.waitingToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
 			// 
 			// settingsButton
 			// 
