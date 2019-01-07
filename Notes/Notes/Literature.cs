@@ -12,76 +12,26 @@ namespace Notes.Notes
 	/// </summary>
     class Literature : DatedNote, ICloneable
     {
-		private int MAX_AUTHOR_LEN = 255;
-		private int MAX_UNIVERSE_LEN = 255;
-		private int MAX_SERIES_LEN = 255;
-		private int MAX_GENRE_LEN = 255;
-
-
-		private string _author;
-		private string _universe;
-		private string _series;
-		private string _genre;
 		private int _pages;
 		private int _currentPage;
 		private int _volume;
 		private int _chapter;
 
 
-		public string Author
-		{
-            get { return _author; }
-			set
-			{
-				if (String.IsNullOrEmpty(value))
-					return;
-
-				_author = value.Trim().Truncate(MAX_AUTHOR_LEN);
-			}
-		}
+		public string Author { get; set; }
 
 
 		/// <summary>
 		/// Вселенная, в которой происходят события. 
 		/// Например, могут быть разные серии книг про сталкеров, но это все происходит в одной вселенной - S.T.A.L.K.E.R.
 		/// </summary>
-		public string Universe
-		{
-			get { return _universe; }
-			set
-			{
-				if (value == null)
-					return;
-
-				_universe = value.Trim().Truncate(MAX_UNIVERSE_LEN);
-			}
-		}
+		public string Universe { get; set; }
 
 
-		public string Series
-		{
-			get { return _series; }
-			set
-			{
-				if (value == null)
-					return;
-
-				_series = value.Trim().Truncate(MAX_SERIES_LEN);
-			}
-		}
+		public string Series { get; set; }
 
 
-		public string Genre
-		{
-			get { return _genre; }
-			set
-			{
-				if (value == null)
-					return;
-
-				_genre = value.Trim().Truncate(MAX_GENRE_LEN);
-			}
-		}
+		public string Genre { get; set; }
 
 
 		public int Pages
@@ -100,10 +50,8 @@ namespace Notes.Notes
 			get { return _currentPage; }
 			set
 			{
-				if (value >= 0 && value <= _pages)
+				if (value >= 0)
 					_currentPage = value;
-                else if (value > _pages)
-					_currentPage = _pages;
 			}
 		}
 
@@ -132,10 +80,10 @@ namespace Notes.Notes
 
 		public Literature()
 		{
-			_author = string.Empty;
-			_universe = string.Empty;
-			_series = string.Empty;
-			_genre = string.Empty;
+			Author = string.Empty;
+			Universe = string.Empty;
+			Series = string.Empty;
+			Genre = string.Empty;
 			_pages = 0;
 			_currentPage = 0;
 			_volume = 0;
