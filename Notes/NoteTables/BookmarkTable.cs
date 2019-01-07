@@ -24,8 +24,8 @@ namespace Notes.NoteTables
 		}
 
 
-		public BookmarkTable(Point location, string tableName):
-			base(location, tableName)
+		public BookmarkTable(Point location):
+			base(location, "Bookmarks")
 		{
 
 		}

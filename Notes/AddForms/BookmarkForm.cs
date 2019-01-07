@@ -97,7 +97,7 @@ namespace Notes.AddForms
 			this.submitButton.Location = new System.Drawing.Point(186, 386);
 			this.submitButton.Name = "submitButton";
 			this.submitButton.Size = new System.Drawing.Size(75, 23);
-			this.submitButton.TabIndex = 13;
+			this.submitButton.TabIndex = 7;
 			this.submitButton.Text = "Submit";
 			this.submitButton.UseVisualStyleBackColor = true;
 			this.submitButton.Click += new System.EventHandler(this.submitButton_Click);

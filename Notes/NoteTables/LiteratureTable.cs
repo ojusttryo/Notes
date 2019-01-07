@@ -29,8 +29,8 @@ namespace Notes.NoteTables
 		}
 
 
-		public LiteratureTable(Point location, string tableName):
-			base(location, tableName)
+		public LiteratureTable(Point location):
+			base(location, "Literature")
 		{
 
 		}

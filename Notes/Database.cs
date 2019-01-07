@@ -118,7 +118,7 @@ namespace Notes
 
 				case "Bookmarks":    return InsertOrUpdateBookmark(tableName, note);
 
-				case "Meal":         break;
+				case "Meal":         return InsertOrUpdateMeal(tableName, note);
 
 				case "Programs":     break;
 				case "Games":        break;
@@ -153,6 +153,7 @@ namespace Notes
 			}
 
 			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
 			string commandText = string.Format(
 				"INSERT INTO {0} (Id, Name, Year, CurrentState, Comment) " + 
 				"VALUES ({1}, \"{2}\", {3}, {4}, \"{5}\") " + 
@@ -173,6 +174,7 @@ namespace Notes
 			}
 
 			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
 			string commandText = string.Format(
 				"INSERT INTO {0} (Id,    Name,  Author,   Genre, Universe,  Series, Volume, Chapter, Page, Pages, Year, CurrentState,  Comment) " + 
 				"VALUES         ({1}, \"{2}\", \"{3}\", \"{4}\",  \"{5}\", \"{6}\",    {7},     {8},  {9},  {10}, {11},         {12}, \"{13}\") " + 
@@ -186,10 +188,8 @@ namespace Notes
 		}
 
 
-		public static int InsertOrUpdateBookmark(string tableName, Note note)
+		private static int InsertOrUpdateBookmark(string tableName, Note note)
 		{
-			// Id, Name, CurrentState, Comment, URL, Login, Password, Email);
-
 			Bookmark b = note as Bookmark;
 			if (b == null)
 			{
@@ -205,6 +205,27 @@ namespace Notes
 				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", " +
 				"URL = \"{5}\", Login = \"{6}\", Password = \"{7}\", Email = \"{8}\";", 
 				tableName, note.Id, b.Name, (int)b.CurrentState, b.Comment, b.URL, b.Login, b.Password, b.Email);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		private static int InsertOrUpdateMeal(string tableName, Note note)
+		{
+			Meal meal = note as Meal;
+			if (meal == null)
+			{
+				Log.Error("Try to save incorrect meal note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, Ingredients, Recipe) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\", \"{6}\") " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Ingredients = \"{5}\", Recipe = \"{6}\";",
+				tableName, note.Id, meal.Name, (int)meal.CurrentState, meal.Comment, meal.Ingredients, meal.Recipe);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -542,7 +563,32 @@ namespace Notes
 
 		private static List<Note> ReadMeal(SQLiteDataReader reader)
 		{
-			return null;
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Meal meal = new Meal();
+
+					meal.Id = reader.GetInt32(0);
+					meal.Name = reader.GetString(1);
+					meal.CurrentState = (Note.State)reader.GetInt32(2);
+					meal.Comment = reader.GetString(3);
+					meal.Ingredients = reader.GetString(4);
+					meal.Recipe = reader.GetString(5);		
+
+					notes.Add(meal);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read meal: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
 		}
 
 

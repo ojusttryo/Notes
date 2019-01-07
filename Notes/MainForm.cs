@@ -54,10 +54,11 @@ namespace Notes
 			_noteTables.Add("AnimeFilms", new DatedNoteTable(noteTableLocation, "AnimeFilms"));
 			_noteTables.Add("Films", new DatedNoteTable(noteTableLocation, "Films"));
 			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances"));
-			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation, "Literature"));
-			_noteTables.Add("Bookmarks", new BookmarkTable(noteTableLocation, "Bookmarks"));
+			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation));
+			_noteTables.Add("Bookmarks", new BookmarkTable(noteTableLocation));
+			_noteTables.Add("Meal", new MealTable(noteTableLocation));
 
-			SwitchToTable(_noteTables["Bookmarks"]);
+			SwitchToTable(_noteTables["Meal"]);
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
@@ -150,6 +151,7 @@ namespace Notes
 				case "Performances": new DatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
 				case "Literature": new LiteratureForm(this, "Add literature", "Add").ShowDialog(); break;
 				case "Bookmarks": new BookmarkForm(this, "Add bookmark", "Add").ShowDialog(); break;
+				case "Meal": new MealForm(this, "Add meal", "Add").ShowDialog(); break;
 
 				default: break;
 			}
@@ -202,6 +204,7 @@ namespace Notes
 				case "Performances": new DatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Literature": new LiteratureForm(this, "Edit literature", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Bookmarks": new BookmarkForm(this, "Edit bookmark", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Meal": new MealForm(this, "Edit meal", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
 			}
@@ -300,6 +303,11 @@ namespace Notes
 		private void literatureToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SwitchToTable(_noteTables["Literature"]);
+		}
+
+		private void mealToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SwitchToTable(_noteTables["Meal"]);
 		}
 
 		private void performancesToolStripMenuItem_Click(object sender, EventArgs e)
