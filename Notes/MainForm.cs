@@ -252,11 +252,13 @@ namespace Notes
 					row.Visible = true;
 			}
 
+			// Сделал возможность поиска сразу по нескольким подстрокам, разделенным пробелом. Все подстроки должны содержаться в искомой строке.
 			int columnIndex = _currentNoteTable.Columns[fieldName].Index;
+			string[] searchSubstrings = searchTextBox.Text.Split(' ').Where(x => x.Trim().Length > 0).ToArray();			
 			foreach (DataGridViewRow row in _currentNoteTable.Rows)
 			{
-				if (!Regex.IsMatch(row.Cells[columnIndex].Value.ToString(), searchTextBox.Text, Constant.CommonRegexOptions))
-					row.Visible = false;
+				string rowValue = row.Cells[columnIndex].Value.ToString();
+				row.Visible = searchSubstrings.All(x => Regex.IsMatch(rowValue, x.Trim(), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase));
 			}
 
 			OnResize(null);
