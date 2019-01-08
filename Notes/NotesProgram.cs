@@ -27,6 +27,10 @@ namespace Notes
 			// TODO Придумать шифрование для пароля
 
 			// TODO rename folders
+			// TODO show only active on open
+
+			// TODO в формах добавления исправить stateComboBox.SelectedIndex = (editedNote == null) ? 0 : (int)editedNote.CurrentState;
+
 		}
 	}
 }

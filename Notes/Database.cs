@@ -42,10 +42,9 @@ namespace Notes
 			string Recipe       = "Recipe        TEXT NOT NULL";
 			string DownloadLink = "DownloadLink  TEXT NOT NULL";
 			string Address      = "Address       TEXT NOT NULL";
-			string Birthday     = "Birthday      DATETIME NOT NULL";
+			string Birthdate    = "Birthdate     TEXT NOT NULL";
 			string Nickname     = "Nickname      TEXT NOT NULL";
-			string WebPages     = "WebPages      TEXT NOT NULL";					// List of web pages, separated by ';'
-			string Contacts     = "Contacts      TEXT NOT NULL";					// List of contacts (skype, etc), separated by ';'
+			string Contacts     = "Contacts      TEXT NOT NULL";
 			string Sex          = "Sex           INTEGER NOT NULL DEFAULT 0";		// 0 - not defined, 1 - male, 2 - female
 			string Season       = "Season        INTEGER NOT NULL DEFAULT 0";
 			string Episode      = "Episode       INTEGER NOT NULL DEFAULT 0";
@@ -83,8 +82,8 @@ namespace Notes
 				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre);
 			ExecuteNonQuery(command);
 			
-			command = string.Format("CREATE TABLE IF NOT EXISTS People ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9});", 
-				Id, Name, CurrentState, Comment, Address, Birthday, Nickname, WebPages, Contacts, Sex);
+			command = string.Format("CREATE TABLE IF NOT EXISTS People ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8});", 
+				Id, Name, CurrentState, Comment, Address, Birthdate, Nickname, Contacts, Sex);
 			ExecuteNonQuery(command);
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS Serials ({0}, {1}, {2}, {3}, {4}, {5});", 
@@ -124,7 +123,7 @@ namespace Notes
 
 				case "Games":        return InsertOrUpdateGame(tableName, note);
 
-				case "People":       break;
+				case "People":       return InsertOrUpdatePerson(tableName, note);
 
 				case "Serials":      break;
 				case "AnimeSerials": break;
@@ -273,6 +272,29 @@ namespace Notes
 				"DownloadLink = \"{5}\", Version = \"{6}\", Login = \"{7}\", Password = \"{8}\", Email = \"{9}\", Genre = \"{10}\";", 
 				tableName, note.Id, game.Name, (int)game.CurrentState, game.Comment, game.DownloadLink, 
 				game.Version, game.Login, game.Password, game.Email, game.Genre);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		private static int InsertOrUpdatePerson(string tableName, Note note)
+		{
+			Person person = note as Person;
+			if (person == null)
+			{
+				Log.Error("Try to save incorrect person");
+				return 0;
+			}			
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, Address, Birthdate, Nickname, Contacts, Sex) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", {9}) " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Address = \"{5}\", " +
+				"Birthdate = \"{6}\", Nickname = \"{7}\", Contacts = \"{8}\", Sex = {9};", 
+				tableName, note.Id, person.Name, (int)person.CurrentState, person.Comment, person.Address, 
+				person.Birthdate, person.Nickname, person.Contacts, (int)person.Sex);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -472,6 +494,7 @@ namespace Notes
 									case "Meal":         notes = ReadMeal(reader); break;
 
 									case "Programs":     notes = ReadPrograms(reader); break;
+
 									case "Games":        notes = ReadGames(reader); break;
 
 									case "People":       notes = ReadPeople(reader); break;
@@ -704,7 +727,35 @@ namespace Notes
 
 		private static List<Note> ReadPeople(SQLiteDataReader reader)
 		{
-			return null;
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Person person = new Person();
+
+					person.Id = reader.GetInt32(0);
+					person.Name = reader.GetString(1);					
+					person.CurrentState = (Note.State)reader.GetInt32(2);
+					person.Comment = reader.GetString(3);
+					person.Address = reader.GetString(4);
+					person.Birthdate = reader.GetString(5);
+					person.Nickname = reader.GetString(6);
+					person.Contacts = reader.GetString(7);
+					person.Sex = (Person.PSex)reader.GetInt32(8);
+
+					notes.Add(person);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read people: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
 		}
 
 		private static List<Note> ReadSerials(SQLiteDataReader reader)

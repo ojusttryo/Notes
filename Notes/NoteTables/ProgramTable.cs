@@ -120,15 +120,15 @@ namespace Notes.NoteTables
 				return null;
 			
 			Program program = new Program();
-			program.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
-			program.Name =           CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			program.Version =        CurrentRow.Cells[(int)Index.Version].Value.ToString();
-			program.DownloadLink =   CurrentRow.Cells[(int)Index.DownloadLink].Value.ToString();
-			program.Login =          CurrentRow.Cells[(int)Index.Login].Value.ToString();
-			program.Password =       CurrentRow.Cells[(int)Index.Password].Value.ToString();
-			program.Email =          CurrentRow.Cells[(int)Index.Email].Value.ToString();
-			program.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
-			program.Comment =        CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			program.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			program.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			program.Version =      CurrentRow.Cells[(int)Index.Version].Value.ToString();
+			program.DownloadLink = CurrentRow.Cells[(int)Index.DownloadLink].Value.ToString();
+			program.Login =        CurrentRow.Cells[(int)Index.Login].Value.ToString();
+			program.Password =     CurrentRow.Cells[(int)Index.Password].Value.ToString();
+			program.Email =        CurrentRow.Cells[(int)Index.Email].Value.ToString();
+			program.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			program.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
 			return program;
 		}
@@ -136,10 +136,7 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
-
-			Width = tableSize.Width;
-			Height = tableSize.Height;			
+			Size = tableSize;		
 
 			Columns[(int)Index.Id].Width = 0;
 			Columns[(int)Index.Name].Width = (int)(this.Width * 0.4);
@@ -149,11 +146,7 @@ namespace Notes.NoteTables
 			Columns[(int)Index.Password].Width = 0;
 			Columns[(int)Index.Email].Width = 0;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = this.Width - 
-				Columns[(int)Index.Name].Width - 
-				Columns[(int)Index.Version].Width -
-				Columns[(int)Index.State].Width - 
-				scrollbarWidth;
+			SetRemainingTableWidth((int)Index.Comment);
 		}
 
 

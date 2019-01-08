@@ -143,25 +143,19 @@ namespace Notes.NoteTables
 				return null;
 
 			Literature literature = new Literature();
-			literature.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
-			literature.Name           = CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			literature.Author         = CurrentRow.Cells[(int)Index.Author].Value.ToString();
-			literature.Genre          = CurrentRow.Cells[(int)Index.Genre].Value.ToString();
-			literature.Universe       = CurrentRow.Cells[(int)Index.Universe].Value.ToString();
-			literature.Series         = CurrentRow.Cells[(int)Index.Series].Value.ToString();
-			literature.Volume        = (CurrentRow.Cells[(int)Index.Volume].Value.ToString() == string.Empty) ? 0 : 
-				            Int32.Parse(CurrentRow.Cells[(int)Index.Volume].Value.ToString());
-			literature.Chapter       = (CurrentRow.Cells[(int)Index.Chapter].Value.ToString() == string.Empty) ? 0 : 
-				            Int32.Parse(CurrentRow.Cells[(int)Index.Chapter].Value.ToString());
-			literature.Page          = (CurrentRow.Cells[(int)Index.Page].Value.ToString() == string.Empty) ? 0 : 
-				            Int32.Parse(CurrentRow.Cells[(int)Index.Page].Value.ToString());
-			literature.Pages         = (CurrentRow.Cells[(int)Index.Pages].Value.ToString() == string.Empty) ? 0 : 
-				            Int32.Parse(CurrentRow.Cells[(int)Index.Pages].Value.ToString());
-			literature.Year          = (CurrentRow.Cells[(int)Index.Year].Value.ToString() == string.Empty) ? 0 : 
-				            Int32.Parse(CurrentRow.Cells[(int)Index.Year].Value.ToString());
-			literature.CurrentState = (Note.State)
-				          GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
-			literature.Comment        = CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			literature.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			literature.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			literature.Author =       CurrentRow.Cells[(int)Index.Author].Value.ToString();
+			literature.Genre =        CurrentRow.Cells[(int)Index.Genre].Value.ToString();
+			literature.Universe =     CurrentRow.Cells[(int)Index.Universe].Value.ToString();
+			literature.Series =       CurrentRow.Cells[(int)Index.Series].Value.ToString();
+			literature.Volume =       CurrentRow.Cells[(int)Index.Volume].Value.ToString().ToIntOrDefault();
+			literature.Chapter =      CurrentRow.Cells[(int)Index.Chapter].Value.ToString().ToIntOrDefault();
+			literature.Page =         CurrentRow.Cells[(int)Index.Page].Value.ToString().ToIntOrDefault();
+			literature.Pages =        CurrentRow.Cells[(int)Index.Pages].Value.ToString().ToIntOrDefault();
+			literature.Year =         CurrentRow.Cells[(int)Index.Year].Value.ToString().ToIntOrDefault();
+			literature.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			literature.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
 			return literature;
 		}
@@ -169,31 +163,21 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
-
-			Width = tableSize.Width;
-			Height = tableSize.Height;
-			
-			int authorWidth = (int)(Width * 0.2);
-			int genreWidth = 120;
-			int seriesWidth = (int)(Width * 0.2);
-			int volumeWidth = 45;
-			int stateWidth = 100;
-			int nameWidth = this.Width - scrollbarWidth - authorWidth - genreWidth - seriesWidth - volumeWidth - stateWidth;
+			Size = tableSize;
 
 			Columns[(int)Index.Id].Width = 0;
-			Columns[(int)Index.Name].Width = nameWidth;
-			Columns[(int)Index.Author].Width = authorWidth;
-			Columns[(int)Index.Genre].Width = genreWidth;
+			Columns[(int)Index.Author].Width = (int)(Width * 0.2);
+			Columns[(int)Index.Genre].Width = 120;
 			Columns[(int)Index.Universe].Width = 0;
-			Columns[(int)Index.Series].Width = seriesWidth;
-			Columns[(int)Index.Volume].Width = volumeWidth;
+			Columns[(int)Index.Series].Width = (int)(Width * 0.2);
+			Columns[(int)Index.Volume].Width = 45;
 			Columns[(int)Index.Chapter].Width = 0;
 			Columns[(int)Index.Page].Width = 0;
 			Columns[(int)Index.Pages].Width = 0;
 			Columns[(int)Index.Year].Width = 0;
-			Columns[(int)Index.State].Width = stateWidth;
+			Columns[(int)Index.State].Width = 100;
 			Columns[(int)Index.Comment].Width = 0;
+			SetRemainingTableWidth((int)Index.Name);
 		}
 
 

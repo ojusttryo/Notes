@@ -100,6 +100,9 @@
     <Compile Include="AddForms\MealForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="AddForms\PersonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="AddForms\ProgramForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +123,7 @@
     <Compile Include="Notes\Literature.cs" />
     <Compile Include="Notes\Meal.cs" />
     <Compile Include="Notes\Note.cs" />
+    <Compile Include="Notes\Person.cs" />
     <Compile Include="Notes\Program.cs" />
     <Compile Include="NoteTables\BookmarkTable.cs">
       <SubType>Component</SubType>
@@ -140,6 +144,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NotesProgram.cs" />
+    <Compile Include="NoteTables\PeopleTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NoteTables\ProgramTable.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -158,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddForms\MealForm.resx">
       <DependentUpon>MealForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\PersonForm.resx">
+      <DependentUpon>PersonForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddForms\ProgramForm.resx">
       <DependentUpon>ProgramForm.cs</DependentUpon>

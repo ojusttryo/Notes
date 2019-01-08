@@ -128,16 +128,16 @@ namespace Notes.NoteTables
 				return null;
 			
 			Game game = new Game();
-			game.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
-			game.Name =           CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			game.Version =        CurrentRow.Cells[(int)Index.Version].Value.ToString();
-			game.Genre =          CurrentRow.Cells[(int)Index.Genre].Value.ToString();
-			game.DownloadLink =   CurrentRow.Cells[(int)Index.DownloadLink].Value.ToString();
-			game.Login =          CurrentRow.Cells[(int)Index.Login].Value.ToString();
-			game.Password =       CurrentRow.Cells[(int)Index.Password].Value.ToString();
-			game.Email =          CurrentRow.Cells[(int)Index.Email].Value.ToString();
-			game.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
-			game.Comment =        CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			game.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			game.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			game.Version =      CurrentRow.Cells[(int)Index.Version].Value.ToString();
+			game.Genre =        CurrentRow.Cells[(int)Index.Genre].Value.ToString();
+			game.DownloadLink = CurrentRow.Cells[(int)Index.DownloadLink].Value.ToString();
+			game.Login =        CurrentRow.Cells[(int)Index.Login].Value.ToString();
+			game.Password =     CurrentRow.Cells[(int)Index.Password].Value.ToString();
+			game.Email =        CurrentRow.Cells[(int)Index.Email].Value.ToString();
+			game.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			game.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
 			return game;
 		}
@@ -145,13 +145,9 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
-
-			Width = tableSize.Width;
-			Height = tableSize.Height;			
+			Size = tableSize;		
 
 			Columns[(int)Index.Id].Width = 0;
-			Columns[(int)Index.Name].Width = 0;
 			Columns[(int)Index.Version].Width = 100;
 			Columns[(int)Index.Genre].Width = 200;
 			Columns[(int)Index.DownloadLink].Width = 0;
@@ -160,11 +156,7 @@ namespace Notes.NoteTables
 			Columns[(int)Index.Email].Width = 0;
 			Columns[(int)Index.State].Width = 100;
 			Columns[(int)Index.Comment].Width = 0;
-			Columns[(int)Index.Name].Width = this.Width - 
-				Columns[(int)Index.Version].Width -
-				Columns[(int)Index.State].Width - 
-				Columns[(int)Index.Genre].Width - 
-				scrollbarWidth;
+			SetRemainingTableWidth((int)Index.Name);
 		}
 
 

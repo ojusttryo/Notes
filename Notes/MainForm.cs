@@ -38,9 +38,12 @@ namespace Notes
 		private NoteTable _currentNoteTable;
 
 
+		private ToolStripMenuItem lastClickedStateItem = null;
+
+
 		public MainForm()
 		{
-			InitializeComponent();
+			InitializeComponent();			
 
 			_borderWidth = (this.Width - this.ClientRectangle.Width) / 2;
 			_titleHeight = this.Height - this.ClientRectangle.Height - _borderWidth * 2;
@@ -59,24 +62,25 @@ namespace Notes
 			_noteTables.Add("Meal", new MealTable(noteTableLocation));
 			_noteTables.Add("Programs", new ProgramTable(noteTableLocation));
 			_noteTables.Add("Games", new GameTable(noteTableLocation));
+			_noteTables.Add("People", new PeopleTable(noteTableLocation));
 
-			SwitchToTable(_noteTables["Games"], "Games");
+			SwitchToTable("People");
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
-
-			
 		}
 
 
-		private void SwitchToTable(NoteTable table, string title)
+		private void SwitchToTable(string tableName, string title = null)
 		{
-			this.Text = title;
+			sexToolStripMenuItem.Visible = (tableName == "People");
+
+			this.Text = (string.IsNullOrEmpty(title)) ? tableName : title;
 
 			if (_currentNoteTable != null)
 				Controls.Remove(_currentNoteTable);
 
-			_currentNoteTable = table;
+			_currentNoteTable = _noteTables[tableName];
 			Controls.Add(_currentNoteTable);
 
 			UpdateSearchComboBox();
@@ -158,6 +162,7 @@ namespace Notes
 				case "Meal": new MealForm(this, "Add meal", "Add").ShowDialog(); break;
 				case "Programs": new ProgramForm(this, "Add program", "Add").ShowDialog(); break;
 				case "Games": new GameForm(this, "Add game", "Add").ShowDialog(); break;
+				case "People": new PersonForm(this, "Add person", "Add").ShowDialog(); break;
 
 				default: break;
 			}
@@ -213,6 +218,7 @@ namespace Notes
 				case "Meal": new MealForm(this, "Edit meal", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Programs": new ProgramForm(this, "Edit program", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Games": new GameForm(this, "Edit game", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "People": new PersonForm(this, "Edit person", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
 			}
@@ -285,7 +291,7 @@ namespace Notes
 
 		private void animeFilmsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["AnimeFilms"], "Anime films");
+			SwitchToTable("AnimeFilms", "Anime films");
 		}
 
 		private void animeSerialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -295,42 +301,42 @@ namespace Notes
 
 		private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Bookmarks"], "Bookmarks");
+			SwitchToTable("Bookmarks");
 		}
 
 		private void filmsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Films"], "Films");
+			SwitchToTable("Films");
 		}
 
 		private void gamesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Games"], "Games");
+			SwitchToTable("Games");
 		}
 
 		private void literatureToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Literature"], "Literature");
+			SwitchToTable("Literature");
 		}
 
 		private void mealToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Meal"], "Meal");
+			SwitchToTable("Meal");
 		}
 
 		private void performancesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Performances"], "Performances");
+			SwitchToTable("Performances");
 		}
 
 		private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable("People");
 		}
 
 		private void programsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Programs"], "Programs");
+			SwitchToTable("Programs");
 		}
 
 		private void serialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -353,7 +359,7 @@ namespace Notes
 		}
 
 
-		private void ToolStripMenuItem_Click(object sender, EventArgs e)
+		private void StateToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// При выборе элемента меню, должны отображаться все заметки с этим состоянием.
 			// Если ранее был выполнен поиск, его результаты игнорируются. Выборка делается по всей таблице.
@@ -361,6 +367,7 @@ namespace Notes
 			if (item != null && stateToolStripMenuItem.DropDownItems.Contains(item))
 			{
 				int stateIndex = stateToolStripMenuItem.DropDownItems.IndexOf(item);
+				// Первый пункт меню выбирает все заметки.
 				if (stateIndex == 0)
 				{
 					foreach (DataGridViewRow row in _currentNoteTable.Rows)
@@ -380,6 +387,55 @@ namespace Notes
 				}
 			}
 			searchTextBox.Text = "";
+
+			lastClickedStateItem = item;
+		}
+
+
+		private void settingsButton_Click(object sender, EventArgs e)
+		{
+		
+
+
+		}
+
+		private void SexToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			const string sexColumn = "Sex";
+			if (!_currentNoteTable.Columns.Contains(sexColumn))
+				return;
+
+			// Сначала отображаем все заметки, выбранные предыдущим кликом на меню состояния.
+			if (lastClickedStateItem != null)
+				lastClickedStateItem.PerformClick();
+			else
+				allStatesToolStripMenuItem.PerformClick();
+
+			// Затем уже выбираем заметки по полу.
+			ToolStripMenuItem item = (ToolStripMenuItem)sender;
+			if (item != null && sexToolStripMenuItem.DropDownItems.Contains(item))
+			{
+				int sexIndex = sexToolStripMenuItem.DropDownItems.IndexOf(item);
+				// Нулевой элемент - любой пол.
+				if (sexIndex == 0)
+				{
+					// Ничего не нужно делать. Все уже выбрано состоянием.						
+				}
+				else
+				{
+					DataGridViewColumn column = _currentNoteTable.Columns[sexColumn];
+
+					foreach (DataGridViewRow row in _currentNoteTable.Rows)
+					{
+						// Строки, скрытые по выборке состояния, не нужно изменять.
+						if (row.Visible == false)
+							continue;
+
+						DataGridViewCell sexCell = row.Cells[column.Index];
+						row.Visible = (sexCell != null && sexCell.Value.ToString() == PeopleTable.Sex[sexIndex]);
+					}
+				}
+			}
 		}
 	}
 }

@@ -86,11 +86,11 @@ namespace Notes.NoteTables
 				return null;
 
 			DatedNote datedNote = new DatedNote();
-			datedNote.Id = Int32.Parse(CurrentRow.Cells[0].Value.ToString());
-			datedNote.Name = CurrentRow.Cells[1].Value.ToString();
-			datedNote.Year = (CurrentRow.Cells[2].Value.ToString() == string.Empty) ? 0 : Int32.Parse(CurrentRow.Cells[2].Value.ToString());
-			datedNote.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[3].Value.ToString());
-			datedNote.Comment = CurrentRow.Cells[4].Value.ToString();
+			datedNote.Id =           CurrentRow.Cells[0].Value.ToString().ToIntOrException();
+			datedNote.Name =         CurrentRow.Cells[1].Value.ToString();
+			datedNote.Year =         CurrentRow.Cells[2].Value.ToString().ToIntOrDefault();
+			datedNote.CurrentState = CurrentRow.Cells[3].Value.ToString().ToNoteState();
+			datedNote.Comment =      CurrentRow.Cells[4].Value.ToString();
 
 			return datedNote;
 		}
@@ -98,16 +98,13 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
-
-			Width = tableSize.Width;
-			Height = tableSize.Height;			
+			Size = tableSize;		
 
 			Columns[0].Width = 0;
 			Columns[1].Width = (int)(tableSize.Width * 0.4);
 			Columns[2].Width = 40;
 			Columns[3].Width = 100;
-			Columns[4].Width = this.Width - Columns[1].Width - Columns[2].Width - Columns[3].Width - scrollbarWidth;
+			SetRemainingTableWidth(4);
 		}
 
 

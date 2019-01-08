@@ -117,14 +117,14 @@ namespace Notes.NoteTables
 				return null;
 
 			Bookmark bookmark = new Bookmark();
-			bookmark.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
-			bookmark.Name =           CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			bookmark.URL =            CurrentRow.Cells[(int)Index.URL].Value.ToString();
-			bookmark.Login =          CurrentRow.Cells[(int)Index.Login].Value.ToString();
-			bookmark.Password =       CurrentRow.Cells[(int)Index.Password].Value.ToString();
-			bookmark.Email =          CurrentRow.Cells[(int)Index.Email].Value.ToString();
-			bookmark.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
-			bookmark.Comment =        CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			bookmark.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			bookmark.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			bookmark.URL =          CurrentRow.Cells[(int)Index.URL].Value.ToString();
+			bookmark.Login =        CurrentRow.Cells[(int)Index.Login].Value.ToString();
+			bookmark.Password =     CurrentRow.Cells[(int)Index.Password].Value.ToString();
+			bookmark.Email =        CurrentRow.Cells[(int)Index.Email].Value.ToString();
+			bookmark.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			bookmark.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
 			return bookmark;
 		}
@@ -132,10 +132,7 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
-
-			Width = tableSize.Width;
-			Height = tableSize.Height;			
+			Size = tableSize;			
 
 			Columns[(int)Index.Id].Width = 0;
 			Columns[(int)Index.URL].Width = 0;
@@ -144,7 +141,7 @@ namespace Notes.NoteTables
 			Columns[(int)Index.Email].Width = 0;
 			Columns[(int)Index.State].Width = 100;
 			Columns[(int)Index.Comment].Width = 0;
-			Columns[(int)Index.Name].Width = this.Width - Columns[(int)Index.State].Width - scrollbarWidth;
+			SetRemainingTableWidth((int)Index.Name);
 		}
 
 

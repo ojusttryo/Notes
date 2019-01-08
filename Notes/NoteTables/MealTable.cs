@@ -103,12 +103,12 @@ namespace Notes.NoteTables
 				return null;
 
 			Meal meal = new Meal();
-			meal.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
-			meal.Name           = CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			meal.Ingredients    = CurrentRow.Cells[(int)Index.Ingredients].Value.ToString();
-			meal.Recipe         = CurrentRow.Cells[(int)Index.Recipe].Value.ToString();
-			meal.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
-			meal.Comment        = CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			meal.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			meal.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			meal.Ingredients =  CurrentRow.Cells[(int)Index.Ingredients].Value.ToString();
+			meal.Recipe =       CurrentRow.Cells[(int)Index.Recipe].Value.ToString();
+			meal.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			meal.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
 			return meal;
 		}
@@ -116,17 +116,14 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
-
-			Width = tableSize.Width;
-			Height = tableSize.Height;			
+			Size = tableSize;		
 
 			Columns[(int)Index.Id].Width = 0;
 			Columns[(int)Index.Name].Width = (int)(tableSize.Width * 0.5);
 			Columns[(int)Index.Ingredients].Width = 0;
 			Columns[(int)Index.Recipe].Width = 0;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = this.Width - Columns[(int)Index.Name].Width - Columns[(int)Index.State].Width - scrollbarWidth;
+			SetRemainingTableWidth((int)Index.Comment);
 		}
 
 

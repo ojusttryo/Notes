@@ -112,21 +112,23 @@ namespace Notes.NoteTables
 		}
 
 
-		/// <summary>
-		/// Получить индекс состояния. 
-		/// </summary>
-		/// <param name="state">Строка состояния, как в интерфейсе.</param>
-		/// <returns>Индекс строки состояния или -1, если не найден.</returns>
-		protected int GetStateIndex(string state)
+		protected void SetRemainingTableWidth(int columnIndex)
 		{
-			for (int i = 0; i < States.Length; i++)
+			Columns[columnIndex].Width = 0;
+
+			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;			
+
+			int columnsWidth = 0;
+			foreach (DataGridViewColumn column in Columns)
 			{
-				if (state == States[i])
-					return i;
+				if (column.Visible)
+					columnsWidth += column.Width;
 			}
 
-			return -1;
+			// Columns[columnIndex] минимум 5 пикселей, даже если ставим 0. Нужно не потерять их.
+			Columns[columnIndex].Width = (this.Width - columnsWidth - scrollbarWidth + Columns[columnIndex].Width);
 		}
+
 
 
 		public abstract void CreateColumns();

@@ -10,5 +10,12 @@ namespace Notes.Notes
 		public string Ingredients { get; set; }
 		
 		public string Recipe { get; set; }
+
+
+		public Meal()
+		{
+			Ingredients = string.Empty;
+			Recipe = string.Empty;
+		}
 	}
 }

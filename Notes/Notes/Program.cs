@@ -10,5 +10,12 @@ namespace Notes.Notes
 		public string DownloadLink { get; set; }
 
 		public string Version { get; set; }
+
+
+		public Program()
+		{
+			DownloadLink = string.Empty;
+			Version = string.Empty;
+		}
 	}
 }
