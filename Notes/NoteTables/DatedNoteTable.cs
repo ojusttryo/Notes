@@ -100,7 +100,7 @@ namespace Notes.NoteTables
 		{
 			int scrollbarWidth = VerticalScrollBar.Visible ? VerticalScrollBar.Width : 0;
 
-			Width = tableSize.Width - scrollbarWidth;
+			Width = tableSize.Width;
 			Height = tableSize.Height;			
 
 			Columns[0].Width = 0;

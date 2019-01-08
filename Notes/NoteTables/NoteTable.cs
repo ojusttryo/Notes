@@ -65,7 +65,6 @@ namespace Notes.NoteTables
 			BorderStyle = BorderStyle.None;
 
 			ScrollBars = ScrollBars.Vertical;
-			VerticalScrollBar.Visible = true;
 
 			// События для изменения заметки через главную форму. Можно менять только некоторые столбцы.
 			// Первое событие нужно, т.к. без него не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.

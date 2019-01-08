@@ -7,15 +7,18 @@ using System.Drawing;
 
 using Notes.Notes;
 
+
+
 namespace Notes.NoteTables
 {
-	class ProgramTable : NoteTable
+	class GameTable : NoteTable
 	{
 		enum Index
 		{
 			Id,
 			Name,
 			Version,
+			Genre,
 			DownloadLink,
 			Login,
 			Password,
@@ -25,8 +28,8 @@ namespace Notes.NoteTables
 		}
 		
 
-		public ProgramTable(Point location):
-			base(location, "Programs")
+		public GameTable(Point location):
+			base(location, "Games")
 		{
 
 		}
@@ -42,6 +45,7 @@ namespace Notes.NoteTables
 			Columns.Add(new DataGridViewTextBoxColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
+			Columns.Add(new DataGridViewTextBoxColumn());
 			Columns.Add(CreateStateColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
 
@@ -49,6 +53,7 @@ namespace Notes.NoteTables
 			Columns[(int)Index.Id].Name           = "Id";
 			Columns[(int)Index.Name].Name         = "Name";
 			Columns[(int)Index.Version].Name      = "Version";
+			Columns[(int)Index.Genre].Name        = "Genre";
 			Columns[(int)Index.DownloadLink].Name = "Download link";
 			Columns[(int)Index.Login].Name        = "Login";
 			Columns[(int)Index.Password].Name     = "Password";
@@ -68,6 +73,7 @@ namespace Notes.NoteTables
 			Columns[(int)Index.Login].Visible = false;
 			Columns[(int)Index.Password].Visible = false;
 			Columns[(int)Index.Email].Visible = false;
+			Columns[(int)Index.Comment].Visible = false;
 		}
 
 
@@ -75,19 +81,20 @@ namespace Notes.NoteTables
 		{			
 			if (note is Program)
 			{
-				Program program = note as Program;
+				Game game = note as Game;
 				
 				Rows.Add(new string[] 
 				{
-					program.Id.ToString(),
-					program.Name,
-					program.Version,
-					program.DownloadLink,
-					program.Login,
-					program.Password,
-					program.Email,
-					States[(int)program.CurrentState],
-					program.Comment
+					game.Id.ToString(),
+					game.Name,
+					game.Version,
+					game.Genre,
+					game.DownloadLink,
+					game.Login,
+					game.Password,
+					game.Email,
+					States[(int)game.CurrentState],
+					game.Comment
 				});
 
 				return true;
@@ -99,18 +106,19 @@ namespace Notes.NoteTables
 
 		public override void UpdateNote(Note note)
 		{
-			Program program = note as Program;
-			if (program == null)
+			Game game = note as Game;
+			if (game == null)
 				return;
 
-			CurrentRow.Cells[(int)Index.Name].Value         = program.Name;
-			CurrentRow.Cells[(int)Index.Version].Value      = program.Version;
-			CurrentRow.Cells[(int)Index.DownloadLink].Value = program.DownloadLink;
-			CurrentRow.Cells[(int)Index.Login].Value        = program.Login;
-			CurrentRow.Cells[(int)Index.Password].Value     = program.Password;
-			CurrentRow.Cells[(int)Index.Email].Value        = program.Email;
-			CurrentRow.Cells[(int)Index.State].Value        = States[(int)program.CurrentState];
-			CurrentRow.Cells[(int)Index.Comment].Value      = program.Comment;
+			CurrentRow.Cells[(int)Index.Name].Value         = game.Name;
+			CurrentRow.Cells[(int)Index.Version].Value      = game.Version;
+			CurrentRow.Cells[(int)Index.Genre].Value        = game.Genre;
+			CurrentRow.Cells[(int)Index.DownloadLink].Value = game.DownloadLink;
+			CurrentRow.Cells[(int)Index.Login].Value        = game.Login;
+			CurrentRow.Cells[(int)Index.Password].Value     = game.Password;
+			CurrentRow.Cells[(int)Index.Email].Value        = game.Email;
+			CurrentRow.Cells[(int)Index.State].Value        = States[(int)game.CurrentState];
+			CurrentRow.Cells[(int)Index.Comment].Value      = game.Comment;
 		}
 
 
@@ -119,18 +127,19 @@ namespace Notes.NoteTables
 			if (CurrentRow == null)
 				return null;
 			
-			Program program = new Program();
-			program.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
-			program.Name =           CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			program.Version =        CurrentRow.Cells[(int)Index.Version].Value.ToString();
-			program.DownloadLink =   CurrentRow.Cells[(int)Index.DownloadLink].Value.ToString();
-			program.Login =          CurrentRow.Cells[(int)Index.Login].Value.ToString();
-			program.Password =       CurrentRow.Cells[(int)Index.Password].Value.ToString();
-			program.Email =          CurrentRow.Cells[(int)Index.Email].Value.ToString();
-			program.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
-			program.Comment =        CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			Game game = new Game();
+			game.Id = Int32.Parse(CurrentRow.Cells[(int)Index.Id].Value.ToString());
+			game.Name =           CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			game.Version =        CurrentRow.Cells[(int)Index.Version].Value.ToString();
+			game.Genre =          CurrentRow.Cells[(int)Index.Genre].Value.ToString();
+			game.DownloadLink =   CurrentRow.Cells[(int)Index.DownloadLink].Value.ToString();
+			game.Login =          CurrentRow.Cells[(int)Index.Login].Value.ToString();
+			game.Password =       CurrentRow.Cells[(int)Index.Password].Value.ToString();
+			game.Email =          CurrentRow.Cells[(int)Index.Email].Value.ToString();
+			game.CurrentState = (Note.State)GetStateIndex(CurrentRow.Cells[(int)Index.State].Value.ToString());
+			game.Comment =        CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
-			return program;
+			return game;
 		}
 
 
@@ -142,24 +151,26 @@ namespace Notes.NoteTables
 			Height = tableSize.Height;			
 
 			Columns[(int)Index.Id].Width = 0;
-			Columns[(int)Index.Name].Width = (int)(this.Width * 0.4);
+			Columns[(int)Index.Name].Width = 0;
 			Columns[(int)Index.Version].Width = 100;
+			Columns[(int)Index.Genre].Width = 200;
 			Columns[(int)Index.DownloadLink].Width = 0;
 			Columns[(int)Index.Login].Width = 0;
 			Columns[(int)Index.Password].Width = 0;
 			Columns[(int)Index.Email].Width = 0;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = this.Width - 
-				Columns[(int)Index.Name].Width - 
+			Columns[(int)Index.Comment].Width = 0;
+			Columns[(int)Index.Name].Width = this.Width - 
 				Columns[(int)Index.Version].Width -
 				Columns[(int)Index.State].Width - 
+				Columns[(int)Index.Genre].Width - 
 				scrollbarWidth;
 		}
 
 
 		public override string[] SearchFields
 		{
-			get { return new string[] { "Name", "Email" }; }
+			get { return new string[] { "Name", "Genre", "Email" }; }
 		}
 	}
 }

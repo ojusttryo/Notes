@@ -91,6 +91,9 @@
     <Compile Include="AddForms\DatedNoteForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="AddForms\GameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="AddForms\LiteratureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,6 +116,7 @@
     <Compile Include="Notes\AuthorizationNote.cs" />
     <Compile Include="Notes\Bookmark.cs" />
     <Compile Include="Notes\DatedNote.cs" />
+    <Compile Include="Notes\Game.cs" />
     <Compile Include="Notes\Literature.cs" />
     <Compile Include="Notes\Meal.cs" />
     <Compile Include="Notes\Note.cs" />
@@ -121,6 +125,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NoteTables\DatedNoteTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NoteTables\GameTable.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NoteTables\LiteratureTable.cs">
@@ -142,6 +149,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddForms\DatedNoteForm.resx">
       <DependentUpon>DatedNoteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\GameForm.resx">
+      <DependentUpon>GameForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddForms\LiteratureForm.resx">
       <DependentUpon>LiteratureForm.cs</DependentUpon>

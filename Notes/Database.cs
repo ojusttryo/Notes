@@ -79,8 +79,8 @@ namespace Notes
 				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email);
 			ExecuteNonQuery(command);
 
-			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8});", 
-				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email);
+			command = string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9});", 
+				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre);
 			ExecuteNonQuery(command);
 			
 			command = string.Format("CREATE TABLE IF NOT EXISTS People ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9});", 
@@ -120,9 +120,9 @@ namespace Notes
 
 				case "Meal":         return InsertOrUpdateMeal(tableName, note);
 
-				case "Programs":     return InsertOrUpdatePrograms(tableName, note);
+				case "Programs":     return InsertOrUpdateProgram(tableName, note);
 
-				case "Games":        break;
+				case "Games":        return InsertOrUpdateGame(tableName, note);
 
 				case "People":       break;
 
@@ -232,7 +232,7 @@ namespace Notes
 		}
 
 
-		private static int InsertOrUpdatePrograms(string tableName, Note note)
+		private static int InsertOrUpdateProgram(string tableName, Note note)
 		{
 			Program program = note as Program;
 			if (program == null)
@@ -250,6 +250,29 @@ namespace Notes
 				"DownloadLink = \"{5}\", Version = \"{6}\", Login = \"{7}\", Password = \"{8}\", Email = \"{9}\";", 
 				tableName, note.Id, program.Name, (int)program.CurrentState, program.Comment, program.DownloadLink, 
 				program.Version, program.Login, program.Password, program.Email);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		private static int InsertOrUpdateGame(string tableName, Note note)
+		{
+			Game game = note as Game;
+			if (game == null)
+			{
+				Log.Error("Try to save incorrect program note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\") " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", " +
+				"DownloadLink = \"{5}\", Version = \"{6}\", Login = \"{7}\", Password = \"{8}\", Email = \"{9}\", Genre = \"{10}\";", 
+				tableName, note.Id, game.Name, (int)game.CurrentState, game.Comment, game.DownloadLink, 
+				game.Version, game.Login, game.Password, game.Email, game.Genre);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -526,7 +549,7 @@ namespace Notes
 					program.Version = reader.GetString(5);
 					program.Login = reader.GetString(6);
 					program.Password = reader.GetString(7);
-					program.Email = reader.GetString(8);				
+					program.Email = reader.GetString(8);
 
 					notes.Add(program);
 				}
@@ -539,14 +562,41 @@ namespace Notes
 					Environment.NewLine, ex.ToString()));
 				return new List<Note>();
 			}
-
-			return null;
 		}
 
 
 		private static List<Note> ReadGames(SQLiteDataReader reader)
 		{
-			return null;
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Game game = new Game();
+
+					game.Id = reader.GetInt32(0);
+					game.Name = reader.GetString(1);
+					game.CurrentState = (Note.State)reader.GetInt32(2);
+					game.Comment = reader.GetString(3);
+					game.DownloadLink = reader.GetString(4);
+					game.Version = reader.GetString(5);
+					game.Login = reader.GetString(6);
+					game.Password = reader.GetString(7);
+					game.Email = reader.GetString(8);
+					game.Genre = reader.GetString(9);
+
+					notes.Add(game);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read game: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
 		}
 
 

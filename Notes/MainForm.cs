@@ -58,8 +58,9 @@ namespace Notes
 			_noteTables.Add("Bookmarks", new BookmarkTable(noteTableLocation));
 			_noteTables.Add("Meal", new MealTable(noteTableLocation));
 			_noteTables.Add("Programs", new ProgramTable(noteTableLocation));
+			_noteTables.Add("Games", new GameTable(noteTableLocation));
 
-			SwitchToTable(_noteTables["Programs"]);
+			SwitchToTable(_noteTables["Games"], "Games");
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
@@ -68,8 +69,10 @@ namespace Notes
 		}
 
 
-		private void SwitchToTable(NoteTable table)
+		private void SwitchToTable(NoteTable table, string title)
 		{
+			this.Text = title;
+
 			if (_currentNoteTable != null)
 				Controls.Remove(_currentNoteTable);
 
@@ -135,7 +138,7 @@ namespace Notes
 			// Таблица
 			if (_currentNoteTable != null)
 			{
-				int tableWidth = this.Width;
+				int tableWidth = this.ClientRectangle.Width;
 				int tableHeight = this.ClientRectangle.Height - addButton.Location.Y - addButton.Height - _indentBetweenElements;
 				Size noteTableSize = new Size(tableWidth, tableHeight);
 
@@ -154,6 +157,7 @@ namespace Notes
 				case "Bookmarks": new BookmarkForm(this, "Add bookmark", "Add").ShowDialog(); break;
 				case "Meal": new MealForm(this, "Add meal", "Add").ShowDialog(); break;
 				case "Programs": new ProgramForm(this, "Add program", "Add").ShowDialog(); break;
+				case "Games": new GameForm(this, "Add game", "Add").ShowDialog(); break;
 
 				default: break;
 			}
@@ -208,6 +212,7 @@ namespace Notes
 				case "Bookmarks": new BookmarkForm(this, "Edit bookmark", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Meal": new MealForm(this, "Edit meal", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Programs": new ProgramForm(this, "Edit program", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Games": new GameForm(this, "Edit game", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 
 				default: break;
 			}
@@ -280,7 +285,7 @@ namespace Notes
 
 		private void animeFilmsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["AnimeFilms"]);
+			SwitchToTable(_noteTables["AnimeFilms"], "Anime films");
 		}
 
 		private void animeSerialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -290,32 +295,32 @@ namespace Notes
 
 		private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Bookmarks"]);
+			SwitchToTable(_noteTables["Bookmarks"], "Bookmarks");
 		}
 
 		private void filmsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Films"]);
+			SwitchToTable(_noteTables["Films"], "Films");
 		}
 
 		private void gamesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable(_noteTables["Games"], "Games");
 		}
 
 		private void literatureToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Literature"]);
+			SwitchToTable(_noteTables["Literature"], "Literature");
 		}
 
 		private void mealToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Meal"]);
+			SwitchToTable(_noteTables["Meal"], "Meal");
 		}
 
 		private void performancesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Performances"]);
+			SwitchToTable(_noteTables["Performances"], "Performances");
 		}
 
 		private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -325,7 +330,7 @@ namespace Notes
 
 		private void programsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SwitchToTable(_noteTables["Programs"]);
+			SwitchToTable(_noteTables["Programs"], "Programs");
 		}
 
 		private void serialsToolStripMenuItem_Click(object sender, EventArgs e)
