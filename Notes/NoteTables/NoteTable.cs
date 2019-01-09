@@ -56,6 +56,8 @@ namespace Notes.NoteTables
 			AllowUserToAddRows = false;
 			AllowUserToDeleteRows = false;
 
+			EditMode = DataGridViewEditMode.EditOnEnter;
+
 			DefaultCellStyle.SelectionBackColor = Color.LightCyan;
 			DefaultCellStyle.SelectionForeColor = Color.Black;
 			BackgroundColor = Color.White;
@@ -66,7 +68,8 @@ namespace Notes.NoteTables
 
 			ScrollBars = ScrollBars.Vertical;
 
-			// События для изменения заметки через главную форму. Можно менять только некоторые столбцы.
+
+			// События для изменения заметки через главную форму. Можно менять только некоторые столбцы. Остальные заблокированы.
 			// Первое событие нужно, т.к. без него не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
 			// https://stackoverflow.com/questions/5652957/what-event-catches-a-change-of-value-in-a-combobox-in-a-datagridviewcell
 			CurrentCellDirtyStateChanged += delegate(object o, EventArgs e)
@@ -93,6 +96,9 @@ namespace Notes.NoteTables
 			// Двойное нажатие на клетку таблицы должно вызывать меню редактирования текущей заметки.
 			CellDoubleClick += delegate (object o, DataGridViewCellEventArgs e)
 			{
+				if (!CallCustomEvents)
+					return;
+
 				MainForm mainForm = this.Parent as MainForm;
 				if (mainForm != null)
 					mainForm.StartCurrentNoteEditing();

@@ -278,7 +278,9 @@ namespace Notes
 			foreach (DataGridViewRow row in _currentNoteTable.Rows)
 			{
 				string rowValue = row.Cells[columnIndex].Value.ToString();
-				row.Visible = searchSubstrings.All(x => Regex.IsMatch(rowValue, x.Trim(), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase));
+				// From https://stackoverflow.com/questions/444798/case-insensitive-containsstring
+				CultureInfo culture = CultureInfo.InvariantCulture;
+				row.Visible = searchSubstrings.All(x => culture.CompareInfo.IndexOf(rowValue, x.Trim(), CompareOptions.IgnoreCase) >= 0);
 			}
 
 			OnResize(null);
