@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 using Notes.Notes;
 using Notes.NoteTables;
-using Notes.AddForms;
+using Notes.NoteForms;
 
 namespace Notes
 {

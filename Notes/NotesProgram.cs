@@ -23,14 +23,9 @@ namespace Notes
 			// TODO check with PVS Studio
 			// TODO import from my old sqlite database
 			// TODO import bookmarks from browser export
-			// TODO Переделать поиск для возможности работы с Email, Password, URL
 			// TODO Придумать шифрование для пароля
 
 			// TODO rename folders
-			// TODO show only active on open
-
-			// TODO в формах добавления исправить stateComboBox.SelectedIndex = (editedNote == null) ? 0 : (int)editedNote.CurrentState;
-
 		}
 	}
 }

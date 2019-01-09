@@ -85,25 +85,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddForms\BookmarkForm.cs">
+    <Compile Include="NoteForms\BookmarkForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddForms\DatedNoteForm.cs">
+    <Compile Include="NoteForms\DatedNoteForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddForms\GameForm.cs">
+    <Compile Include="NoteForms\GameForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddForms\LiteratureForm.cs">
+    <Compile Include="NoteForms\LiteratureForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddForms\MealForm.cs">
+    <Compile Include="NoteForms\MealForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddForms\PersonForm.cs">
+    <Compile Include="NoteForms\PersonForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddForms\ProgramForm.cs">
+    <Compile Include="NoteForms\ProgramForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Constants.cs" />
@@ -151,25 +151,25 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AddForms\BookmarkForm.resx">
+    <EmbeddedResource Include="NoteForms\BookmarkForm.resx">
       <DependentUpon>BookmarkForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddForms\DatedNoteForm.resx">
+    <EmbeddedResource Include="NoteForms\DatedNoteForm.resx">
       <DependentUpon>DatedNoteForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddForms\GameForm.resx">
+    <EmbeddedResource Include="NoteForms\GameForm.resx">
       <DependentUpon>GameForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddForms\LiteratureForm.resx">
+    <EmbeddedResource Include="NoteForms\LiteratureForm.resx">
       <DependentUpon>LiteratureForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddForms\MealForm.resx">
+    <EmbeddedResource Include="NoteForms\MealForm.resx">
       <DependentUpon>MealForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddForms\PersonForm.resx">
+    <EmbeddedResource Include="NoteForms\PersonForm.resx">
       <DependentUpon>PersonForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddForms\ProgramForm.resx">
+    <EmbeddedResource Include="NoteForms\ProgramForm.resx">
       <DependentUpon>ProgramForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Notes.Notes;
 using Notes.NoteTables;
 
-namespace Notes.AddForms
+namespace Notes.NoteForms
 {
 	class MealForm : Form
 	{
@@ -35,14 +35,14 @@ namespace Notes.AddForms
 			Text = title;
 			submitButton.Text = buttonText;
 			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = (editedNote == null) ? 0 : (int)editedNote.CurrentState;
+			stateComboBox.SelectedIndex = 0;
 
 			if (_editedNote != null)
 			{
 				nameTextBox.Text = _editedNote.Name;
 				ingredientsRichTextBox.Text = _editedNote.Ingredients;
 				recipeRichTextBox.Text = _editedNote.Recipe;
-				stateComboBox.SelectedValue = NoteTable.States[(int)_editedNote.CurrentState];
+				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
 				commentRichTextBox.Text = _editedNote.Comment;
 			}
 		}

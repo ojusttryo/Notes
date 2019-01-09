@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Notes.Notes;
 using Notes.NoteTables;
 
-namespace Notes.AddForms
+namespace Notes.NoteForms
 {
 	class LiteratureForm : Form
 	{
@@ -68,7 +68,7 @@ namespace Notes.AddForms
 			seriesTextBox.AutoCompleteCustomSource = serieses;
 
 			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = (editedNote == null) ? 0 : (int)editedNote.CurrentState;
+			stateComboBox.SelectedIndex = 0;
 
 			if (_literature != null)
 			{
@@ -82,7 +82,7 @@ namespace Notes.AddForms
 				pageTextBox.Text    = (_literature.Page == 0) ?    "" : _literature.Page.ToString();
 				pagesTextBox.Text   = (_literature.Pages == 0) ?   "" : _literature.Pages.ToString();
 				yearTextBox.Text    = (_literature.Year == 0) ?    "" : _literature.Year.ToString();
-				stateComboBox.SelectedValue = NoteTable.States[(int)_literature.CurrentState];
+				stateComboBox.SelectedIndex = (int)_literature.CurrentState;
 				commentRichTextBox.Text = _literature.Comment;
 			}
 

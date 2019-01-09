@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Notes.Notes;
 using Notes.NoteTables;
 
-namespace Notes.AddForms
+namespace Notes.NoteForms
 {
 	class PersonForm : Form
 	{
