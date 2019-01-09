@@ -72,7 +72,7 @@ namespace Notes.NoteTables
 			// События для изменения заметки через главную форму. Можно менять только некоторые столбцы. Остальные заблокированы.
 			// Первое событие нужно, т.к. без него не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
 			// https://stackoverflow.com/questions/5652957/what-event-catches-a-change-of-value-in-a-combobox-in-a-datagridviewcell
-			CurrentCellDirtyStateChanged += delegate(object o, EventArgs e)
+			CurrentCellDirtyStateChanged += delegate (object o, EventArgs e)
 			{
 				if (!CallCustomEvents)
 					return;
@@ -80,7 +80,7 @@ namespace Notes.NoteTables
 				if (IsCurrentCellDirty)
 					CommitEdit(DataGridViewDataErrorContexts.Commit);
 			};
-			CellValueChanged += delegate(object o, DataGridViewCellEventArgs e) 
+			CellValueChanged += delegate (object o, DataGridViewCellEventArgs e) 
 			{
 				if (!CallCustomEvents)
 					return;
@@ -96,12 +96,24 @@ namespace Notes.NoteTables
 			// Двойное нажатие на клетку таблицы должно вызывать меню редактирования текущей заметки.
 			CellDoubleClick += delegate (object o, DataGridViewCellEventArgs e)
 			{
-				if (!CallCustomEvents)
+				if (!CallCustomEvents || e.RowIndex < 0)
 					return;
 
-				MainForm mainForm = this.Parent as MainForm;
-				if (mainForm != null)
-					mainForm.StartCurrentNoteEditing();
+				if (Columns[e.ColumnIndex].Name == "" && e.ColumnIndex > 0)
+				{
+					// При двойном нажатии на ячейке из столбца с кнопками +, меню редактирования не вызывается. 
+					// Хорошо было б вызвать повторно еще нажатие на кнопку, но код ниже пока не работает. В принципе, не критично.
+
+					// Двойной клик по кнопке + вызывает только одиночный инкремент. Нужно вызвать еще. 
+					//if (Columns[e.ColumnIndex - 1].Name == "Season" || Columns[e.ColumnIndex - 1].Name == "Season")
+					//	OnCellClick(new DataGridViewCellEventArgs(e.ColumnIndex - 1, e.RowIndex));
+				}
+				else
+				{
+					MainForm mainForm = this.Parent as MainForm;
+					if (mainForm != null)
+						mainForm.StartCurrentNoteEditing();
+				}
 			};
 		}
 

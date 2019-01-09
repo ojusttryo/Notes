@@ -79,7 +79,7 @@ namespace Notes.NoteTables
 
 		public override bool AddNote(Note note)
 		{			
-			if (note is Program)
+			if (note is Game)
 			{
 				Game game = note as Game;
 				

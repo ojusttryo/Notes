@@ -116,6 +116,9 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NoteForms\SerialForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Notes\AuthorizationNote.cs" />
     <Compile Include="Notes\Bookmark.cs" />
     <Compile Include="Notes\DatedNote.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="Notes\Note.cs" />
     <Compile Include="Notes\Person.cs" />
     <Compile Include="Notes\Program.cs" />
+    <Compile Include="Notes\Serial.cs" />
     <Compile Include="NoteTables\BookmarkTable.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -148,6 +152,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NoteTables\ProgramTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NoteTables\SerialTable.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,6 +181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoteForms\SerialForm.resx">
+      <DependentUpon>SerialForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

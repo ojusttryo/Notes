@@ -125,14 +125,12 @@ namespace Notes
 
 				case "People":       return InsertOrUpdatePerson(tableName, note);
 
-				case "Serials":      break;
-				case "AnimeSerials": break;
-				case "TVShows":      break;
+				case "Serials":      return InsertOrUpdateSerial(tableName, note);
+				case "AnimeSerials": return InsertOrUpdateSerial(tableName, note);
+				case "TVShows":      return InsertOrUpdateSerial(tableName, note);
 
 				default: return 0;
 			}
-
-			return 0;
 		}
 
 
@@ -295,6 +293,29 @@ namespace Notes
 				"Birthdate = \"{6}\", Nickname = \"{7}\", Contacts = \"{8}\", Sex = {9};", 
 				tableName, note.Id, person.Name, (int)person.CurrentState, person.Comment, person.Address, 
 				person.Birthdate, person.Nickname, person.Contacts, (int)person.Sex);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		public static int InsertOrUpdateSerial(string tableName, Note note)
+		{
+			//Id, Name, CurrentState, Comment, Season, Episode);
+
+			Serial serial = note as Serial;
+			if (serial == null)
+			{
+				Log.Error("Try to save incorrect serial note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, Season, Episode) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", {5}, {6}) " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Season = {5}, Episode = {6};", 
+				tableName, note.Id, serial.Name, (int)serial.CurrentState, serial.Comment, serial.Season, serial.Episode);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -760,7 +781,32 @@ namespace Notes
 
 		private static List<Note> ReadSerials(SQLiteDataReader reader)
 		{
-			return null;
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Serial serial = new Serial();
+
+					serial.Id = reader.GetInt32(0);
+					serial.Name = reader.GetString(1);
+					serial.CurrentState = (Note.State)reader.GetInt32(2);
+					serial.Comment = reader.GetString(3);
+					serial.Season = reader.GetInt32(4);
+					serial.Episode = reader.GetInt32(5);					
+
+					notes.Add(serial);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read serial notes: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
 		}
 	}
 }

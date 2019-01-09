@@ -63,8 +63,11 @@ namespace Notes
 			_noteTables.Add("Programs", new ProgramTable(noteTableLocation));
 			_noteTables.Add("Games", new GameTable(noteTableLocation));
 			_noteTables.Add("People", new PeopleTable(noteTableLocation));
+			_noteTables.Add("Serials", new SerialTable(noteTableLocation, "Serials"));
+			_noteTables.Add("AnimeSerials", new SerialTable(noteTableLocation, "AnimeSerials"));
+			_noteTables.Add("TVShows", new SerialTable(noteTableLocation, "TVShows"));
 
-			SwitchToTable("People");
+			SwitchToTable("Serials");
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
@@ -163,7 +166,9 @@ namespace Notes
 				case "Programs": new ProgramForm(this, "Add program", "Add").ShowDialog(); break;
 				case "Games": new GameForm(this, "Add game", "Add").ShowDialog(); break;
 				case "People": new PersonForm(this, "Add person", "Add").ShowDialog(); break;
-
+				case "Serials": new SerialForm(this, "Add serial", "Add").ShowDialog(); break;
+				case "AnimeSerials": new SerialForm(this, "Add anime serial", "Add").ShowDialog(); break;
+				case "TVShows": new SerialForm(this, "Add TV show", "Add").ShowDialog(); break;
 				default: break;
 			}
 		}
@@ -219,7 +224,9 @@ namespace Notes
 				case "Programs": new ProgramForm(this, "Edit program", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "Games": new GameForm(this, "Edit game", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				case "People": new PersonForm(this, "Edit person", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-
+				case "Serials": new SerialForm(this, "Edit serial", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "AnimeSerials": new SerialForm(this, "Edit anime serial", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "TVShows": new SerialForm(this, "Edit TV show", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				default: break;
 			}
 
@@ -298,7 +305,7 @@ namespace Notes
 
 		private void animeSerialsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable("AnimeSerials", "Anime serials");
 		}
 
 		private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
@@ -343,12 +350,12 @@ namespace Notes
 
 		private void serialsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable("Serials");
 		}
 
 		private void TVshowsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			SwitchToTable("TVShows", "TV shows");
 		}
 
 

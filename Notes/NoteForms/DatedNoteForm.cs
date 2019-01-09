@@ -173,7 +173,7 @@ namespace Notes.NoteForms
 			// Add or update note
 			bool isUpdating = (_editedNote != null);
 
-			DatedNote datedNote = isUpdating ? _editedNote    : new DatedNote();
+			DatedNote datedNote = isUpdating ? _editedNote : new DatedNote();
 			datedNote.Name = nameTextBox.Text;
 			datedNote.Year = (yearTextBox.Text.Trim().Length == 0) ? 0 : Int32.Parse(yearTextBox.Text.Trim());
 			datedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;
