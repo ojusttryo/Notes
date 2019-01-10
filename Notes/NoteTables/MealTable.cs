@@ -53,10 +53,10 @@ namespace Notes.NoteTables
 			// Состояние можно редактировать напрямую.
 			Columns[(int)Index.State].ReadOnly = false;
 
-			// Часть столбцов скрыты
-			Columns[(int)Index.Id].Visible = false;
-			Columns[(int)Index.Ingredients].Visible = false;
-			Columns[(int)Index.Recipe].Visible = false;
+			HideColumn((int)Index.Id);
+			HideColumn((int)Index.Ingredients);
+			HideColumn((int)Index.Recipe);
+			HideColumn((int)Index.Comment);
 		}
 
 
@@ -89,11 +89,11 @@ namespace Notes.NoteTables
 			if (meal == null)
 				return;
 
-			CurrentRow.Cells[(int)Index.Name].Value = meal.Name;
-			CurrentRow.Cells[(int)Index.Ingredients].Value = meal.Ingredients;
-			CurrentRow.Cells[(int)Index.Recipe].Value = meal.Recipe;
+			CurrentRow.Cells[(int)Index.Name].Value =              meal.Name;
+			CurrentRow.Cells[(int)Index.Ingredients].Value =       meal.Ingredients;
+			CurrentRow.Cells[(int)Index.Recipe].Value =            meal.Recipe;
 			CurrentRow.Cells[(int)Index.State].Value = States[(int)meal.CurrentState];
-			CurrentRow.Cells[(int)Index.Comment].Value = meal.Comment;
+			CurrentRow.Cells[(int)Index.Comment].Value =           meal.Comment;
 		}
 
 
@@ -116,14 +116,10 @@ namespace Notes.NoteTables
 
 		public override void ChangeSize(Size tableSize)
 		{
-			Size = tableSize;		
+			Size = tableSize;
 
-			Columns[(int)Index.Id].Width = 0;
-			Columns[(int)Index.Name].Width = (int)(tableSize.Width * 0.5);
-			Columns[(int)Index.Ingredients].Width = 0;
-			Columns[(int)Index.Recipe].Width = 0;
 			Columns[(int)Index.State].Width = 100;
-			SetRemainingTableWidth((int)Index.Comment);
+			SetRemainingTableWidth((int)Index.Name);
 		}
 
 

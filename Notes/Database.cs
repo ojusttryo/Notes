@@ -48,22 +48,23 @@ namespace Notes
 			string Sex          = "Sex           INTEGER NOT NULL DEFAULT 0";		// 0 - not defined, 1 - male, 2 - female
 			string Season       = "Season        INTEGER NOT NULL DEFAULT 0";
 			string Episode      = "Episode       INTEGER NOT NULL DEFAULT 0";
+			string Description  = "Description   TEXT NOT NULL";
 
 		
 			string command = string.Format("CREATE TABLE IF NOT EXISTS Films ({0}, {1}, {2}, {3}, {4});", 
-				Id, Name, Year, CurrentState, Comment);
+				Id, Name, CurrentState, Comment, Year);
 			ExecuteNonQuery(command);
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS AnimeFilms ({0}, {1}, {2}, {3}, {4});", 
-				Id, Name, Year, CurrentState, Comment);
+				Id, Name, CurrentState, Comment, Year);
 			ExecuteNonQuery(command);
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS Performances ({0}, {1}, {2}, {3}, {4});", 
-				Id, Name, Year, CurrentState, Comment);
+				Id, Name, CurrentState, Comment, Year);
 			ExecuteNonQuery(command);
 			
 			command = string.Format("CREATE TABLE IF NOT EXISTS Literature ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12});", 
-				Id, Name, Author, Genre, Universe, Series, Volume, Chapter, Page, Pages, Year, CurrentState, Comment);
+				Id, Name, CurrentState, Comment, Year, Author, Genre, Universe, Series, Volume, Chapter, Page, Pages);
 			ExecuteNonQuery(command);
 
 			command = string.Format("CREATE TABLE IF NOT EXISTS Bookmarks ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7});", 
@@ -97,6 +98,10 @@ namespace Notes
 			command = string.Format("CREATE TABLE IF NOT EXISTS TVShows ({0}, {1}, {2}, {3}, {4}, {5});", 
 				Id, Name, CurrentState, Comment, Season, Episode);
 			ExecuteNonQuery(command);
+
+			command = string.Format("CREATE TABLE IF NOT EXISTS Desires ({0}, {1}, {2}, {3}, {4});",
+				Id, Name, CurrentState, Comment, Description);
+			ExecuteNonQuery(command);
 		}
 
 
@@ -129,6 +134,8 @@ namespace Notes
 				case "AnimeSerials": return InsertOrUpdateSerial(tableName, note);
 				case "TVShows":      return InsertOrUpdateSerial(tableName, note);
 
+				case "Desires":      return InsertOrUpdateDesires(tableName, note);
+
 				default: return 0;
 			}
 		}
@@ -153,10 +160,10 @@ namespace Notes
 			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
 
 			string commandText = string.Format(
-				"INSERT INTO {0} (Id, Name, Year, CurrentState, Comment) " + 
-				"VALUES ({1}, \"{2}\", {3}, {4}, \"{5}\") " + 
-				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", Year = {3}, CurrentState = {4}, Comment = \"{5}\";", 
-				tableName, note.Id, datedNote.Name, datedNote.Year, (int)datedNote.CurrentState, datedNote.Comment);
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, Year) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", {5}) " + 
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Year = {5};", 
+				tableName, note.Id, datedNote.Name, (int)datedNote.CurrentState, datedNote.Comment, datedNote.Year);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -172,15 +179,15 @@ namespace Notes
 			}
 
 			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
-
+			// Id, Name, CurrentState, Comment, Year, Author, Genre, Universe, Series, Volume, Chapter, Page, Pages);
 			string commandText = string.Format(
-				"INSERT INTO {0} (Id,    Name,  Author,   Genre, Universe,  Series, Volume, Chapter, Page, Pages, Year, CurrentState,  Comment) " + 
-				"VALUES         ({1}, \"{2}\", \"{3}\", \"{4}\",  \"{5}\", \"{6}\",    {7},     {8},  {9},  {10}, {11},         {12}, \"{13}\") " + 
-				"ON CONFLICT(Id) DO UPDATE " + 
-				"SET Name = \"{2}\", Author = \"{3}\", Genre = \"{4}\", Universe = \"{5}\", Series = \"{6}\", " + 
-				"Volume = {7}, Chapter = {8}, Page = {9}, Pages = {10}, Year = {11}, CurrentState = {12}, Comment = \"{13}\";", 
-				tableName, note.Id, lit.Name, lit.Author, lit.Genre, lit.Universe, lit.Series, 
-				lit.Volume, lit.Chapter, lit.Page, lit.Pages, lit.Year, (int)lit.CurrentState, lit.Comment);
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, Year, Author, Genre, Universe, Series, Volume, Chapter, Page, Pages) " + 
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", {5}, \"{6}\", \"{7}\", \"{8}\", \"{9}\", {10}, {11}, {12}, {13}) " + 
+				"ON CONFLICT(Id) DO UPDATE " +
+				"SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Year = {5}, Author = \"{6}\", " + 
+				"Genre = \"{7}\", Universe = \"{8}\", Series = \"{9}\", Volume = {10}, Chapter = {11}, Page = {12}, Pages = {13};", 
+				tableName, note.Id, lit.Name, (int)lit.CurrentState, lit.Comment, lit.Year, lit.Author,
+				lit.Genre, lit.Universe, lit.Series, lit.Volume, lit.Chapter, lit.Page, lit.Pages);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -298,10 +305,8 @@ namespace Notes
 		}
 
 
-		public static int InsertOrUpdateSerial(string tableName, Note note)
+		private static int InsertOrUpdateSerial(string tableName, Note note)
 		{
-			//Id, Name, CurrentState, Comment, Season, Episode);
-
 			Serial serial = note as Serial;
 			if (serial == null)
 			{
@@ -316,6 +321,27 @@ namespace Notes
 				"VALUES ({1}, \"{2}\", {3}, \"{4}\", {5}, {6}) " + 
 				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Season = {5}, Episode = {6};", 
 				tableName, note.Id, serial.Name, (int)serial.CurrentState, serial.Comment, serial.Season, serial.Episode);
+
+			return ExecuteNonQuery(commandText);
+		}
+
+
+		private static int InsertOrUpdateDesires(string tableName, Note note)
+		{
+			Desire desire = note as Desire;
+			if (desire == null)
+			{
+				Log.Error("Try to save incorrect desire note");
+				return 0;
+			}
+
+			note.Id = (note.Id >= 0) ? note.Id : (SelectMaxId(tableName) + 1);
+
+			string commandText = string.Format(
+				"INSERT INTO {0} (Id, Name, CurrentState, Comment, Description) " +
+				"VALUES ({1}, \"{2}\", {3}, \"{4}\", \"{5}\") " +
+				"ON CONFLICT(Id) DO UPDATE SET Name = \"{2}\", CurrentState = {3}, Comment = \"{4}\", Description = \"{5}\";",
+				tableName, note.Id, desire.Name, (int)desire.CurrentState, desire.Comment, desire.Description);
 
 			return ExecuteNonQuery(commandText);
 		}
@@ -524,6 +550,8 @@ namespace Notes
 									case "AnimeSerials": notes = ReadSerials(reader); break;
 									case "TVShows":      notes = ReadSerials(reader); break;
 
+									case "Desires":      notes = ReadDesires(reader); break;
+
 									default: break;
 								}
 							}
@@ -556,10 +584,10 @@ namespace Notes
 					DatedNote datedNote = new DatedNote();
 
 					datedNote.Id = reader.GetInt32(0);
-					datedNote.Name = reader.GetString(1);
-					datedNote.Year = reader.GetInt32(2);
-					datedNote.CurrentState = (Note.State)reader.GetInt32(3);
-					datedNote.Comment = reader.GetString(4);					
+					datedNote.Name = reader.GetString(1);					
+					datedNote.CurrentState = (Note.State)reader.GetInt32(2);
+					datedNote.Comment = reader.GetString(3);
+					datedNote.Year = reader.GetInt32(4);
 
 					notes.Add(datedNote);
 				}
@@ -656,17 +684,17 @@ namespace Notes
 
 					literature.Id = reader.GetInt32(0);
 					literature.Name = reader.GetString(1);
-					literature.Author = reader.GetString(2);
-					literature.Genre = reader.GetString(3);
-					literature.Universe = reader.GetString(4);
-					literature.Series = reader.GetString(5);
-					literature.Volume = reader.GetInt32(6);
-					literature.Chapter = reader.GetInt32(7);
-					literature.Page = reader.GetInt32(8);
-					literature.Pages = reader.GetInt32(9);
-					literature.Year = reader.GetInt32(10);
-					literature.CurrentState = (Note.State)reader.GetInt32(11);
-					literature.Comment = reader.GetString(12);					
+					literature.CurrentState = (Note.State)reader.GetInt32(2);
+					literature.Comment = reader.GetString(3);
+					literature.Year = reader.GetInt32(4);
+					literature.Author = reader.GetString(5);
+					literature.Genre = reader.GetString(6);
+					literature.Universe = reader.GetString(7);
+					literature.Series = reader.GetString(8);
+					literature.Volume = reader.GetInt32(9);
+					literature.Chapter = reader.GetInt32(10);
+					literature.Page = reader.GetInt32(11);
+					literature.Pages = reader.GetInt32(12);				
 
 					notes.Add(literature);
 				}
@@ -804,6 +832,36 @@ namespace Notes
 			catch (Exception ex)
 			{
 				Log.Error(string.Format("Can not read serial notes: {0}{1}",
+					Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
+		}
+
+
+		private static List<Note> ReadDesires(SQLiteDataReader reader)
+		{
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Desire desire = new Desire();
+
+					desire.Id = reader.GetInt32(0);
+					desire.Name = reader.GetString(1);
+					desire.CurrentState = (Note.State)reader.GetInt32(2);
+					desire.Comment = reader.GetString(3);
+					desire.Description = reader.GetString(4);
+
+					notes.Add(desire);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read desire notes: {0}{1}",
 					Environment.NewLine, ex.ToString()));
 				return new List<Note>();
 			}

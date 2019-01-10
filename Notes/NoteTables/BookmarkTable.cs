@@ -60,13 +60,12 @@ namespace Notes.NoteTables
 			Columns[(int)Index.State].ReadOnly = false;
 
 			// Большая часть столбцов не отображается.
-			Columns[(int)Index.Id].Visible = false;
-			Columns[(int)Index.URL].Visible = false;
-			Columns[(int)Index.Login].Visible = false;
-			Columns[(int)Index.Password].Visible = false;
-			Columns[(int)Index.Email].Visible = false;
-			Columns[(int)Index.Comment].Visible = false;
-
+			HideColumn((int)Index.Id);
+			HideColumn((int)Index.URL);
+			HideColumn((int)Index.Login);
+			HideColumn((int)Index.Password);
+			HideColumn((int)Index.Email);
+			HideColumn((int)Index.Comment);
 		}
 
 
@@ -134,13 +133,7 @@ namespace Notes.NoteTables
 		{
 			Size = tableSize;			
 
-			Columns[(int)Index.Id].Width = 0;
-			Columns[(int)Index.URL].Width = 0;
-			Columns[(int)Index.Login].Width = 0;
-			Columns[(int)Index.Password].Width = 0;
-			Columns[(int)Index.Email].Width = 0;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = 0;
 			SetRemainingTableWidth((int)Index.Name);
 		}
 

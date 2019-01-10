@@ -23,12 +23,6 @@ namespace Notes.NoteTables
 		public bool CallCustomEvents { get; set; }
 
 
-		static NoteTable()
-		{
-
-		}
-
-
 		private NoteTable()
 		{
 			// Forbidden
@@ -115,6 +109,13 @@ namespace Notes.NoteTables
 						mainForm.StartCurrentNoteEditing();
 				}
 			};
+		}
+
+
+		protected void HideColumn(int index)
+		{
+			Columns[index].Visible = false;
+			Columns[index].Width = 0;
 		}
 
 

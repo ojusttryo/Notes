@@ -73,16 +73,13 @@ namespace Notes.NoteTables
 			// Состояние можно редактировать напрямую.
 			Columns[(int)Index.State].ReadOnly = false;
 
-			// Многие поля просто не влезут в таблицу на экране. Их лучше не отображать.
-			Columns[(int)Index.Id].Visible       = false;
-			Columns[(int)Index.Universe].Visible = false;
-			Columns[(int)Index.Chapter].Visible  = false;
-			Columns[(int)Index.Page].Visible     = false;
-			Columns[(int)Index.Pages].Visible    = false;
-			Columns[(int)Index.Year].Visible     = false;
-			Columns[(int)Index.Comment].Visible  = false;
-
-
+			HideColumn((int)Index.Id);
+			HideColumn((int)Index.Universe);
+			HideColumn((int)Index.Chapter);
+			HideColumn((int)Index.Page);
+			HideColumn((int)Index.Pages);
+			HideColumn((int)Index.Year);
+			HideColumn((int)Index.Comment);
 		}
 
 
@@ -165,18 +162,11 @@ namespace Notes.NoteTables
 		{
 			Size = tableSize;
 
-			Columns[(int)Index.Id].Width = 0;
 			Columns[(int)Index.Author].Width = (int)(Width * 0.2);
 			Columns[(int)Index.Genre].Width = 120;
-			Columns[(int)Index.Universe].Width = 0;
 			Columns[(int)Index.Series].Width = (int)(Width * 0.2);
 			Columns[(int)Index.Volume].Width = 45;
-			Columns[(int)Index.Chapter].Width = 0;
-			Columns[(int)Index.Page].Width = 0;
-			Columns[(int)Index.Pages].Width = 0;
-			Columns[(int)Index.Year].Width = 0;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = 0;
 			SetRemainingTableWidth((int)Index.Name);
 		}
 

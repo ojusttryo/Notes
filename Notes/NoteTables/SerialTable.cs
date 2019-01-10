@@ -64,21 +64,21 @@ namespace Notes.NoteTables
 			// Состояние можно редактировать напрямую.
 			Columns[(int)Index.State].ReadOnly = false;
 
-			// Часть столбцов скрыты
-			Columns[(int)Index.Id].Visible = false;
-			Columns[(int)Index.Comment].Visible = false;
+			HideColumn((int)Index.Id);
+			HideColumn((int)Index.Comment);
 
+			// Здесь обрабатывается только нажатие на кнопку + для увеличения номера серии или сезона.
 			CellContentClick += delegate (object o, DataGridViewCellEventArgs e)
 			{
 				if (!CallCustomEvents)
 					return;
 				
 				// Индекс строки может быть меньше нуля, если кликнули по заголовку. 
-				// Столбец с кнопкой должен всегда иметь слева другой столбец, к которому он привязан.
+				// Столбец с кнопкой должен всегда иметь слева другой столбец, к которому он привязан (серия, сезон).
 				if (e.RowIndex < 0 || e.ColumnIndex < 1)
 					return;
 
-				// При инкременте эпизода просто увеличиваем его на 1. Но при инкременте сезона, номер серии должен сбрасываться в 0,
+				// При инкременте серии просто увеличиваем ее на 1. Но при инкременте сезона, номер серии должен сбрасываться в 0,
 				// ведь выполняется переход на новый сезон, где еще ничего не просмотрено.
 				if (Columns[e.ColumnIndex - 1].Name == "Episode")
 				{
@@ -175,13 +175,11 @@ namespace Notes.NoteTables
 		{
 			Size = tableSize;		
 
-			Columns[(int)Index.Id].Width = 0;
 			Columns[(int)Index.Season].Width = 50;
 			Columns[(int)Index.SeasonButton].Width = 20;
 			Columns[(int)Index.Episode].Width = 50;
 			Columns[(int)Index.EpisodeButton].Width = 20;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = 0;
 			SetRemainingTableWidth((int)Index.Name);
 		}
 

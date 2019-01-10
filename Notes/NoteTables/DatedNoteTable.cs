@@ -11,6 +11,15 @@ namespace Notes.NoteTables
 {
 	class DatedNoteTable : NoteTable
 	{
+		private enum Index
+		{
+			Id,
+			Name,
+			Year,
+			State,
+			Comment
+		}
+
 		public DatedNoteTable(Point location, string tableName):
 			base(location, tableName)
 		{
@@ -28,20 +37,20 @@ namespace Notes.NoteTables
 			Columns.Add(new DataGridViewTextBoxColumn());
 
 			// Columns settings
-			Columns[0].Name = "Id";
-			Columns[1].Name = "Name";			
-			Columns[2].Name = "Year";			
-			Columns[3].Name = "State";			
-			Columns[4].Name = "Comment";
+			Columns[(int)Index.Id].Name = "Id";
+			Columns[(int)Index.Name].Name = "Name";			
+			Columns[(int)Index.Year].Name = "Year";			
+			Columns[(int)Index.State].Name = "State";			
+			Columns[(int)Index.Comment].Name = "Comment";
 
 			foreach (DataGridViewColumn column in Columns)
 				column.ReadOnly = true;
 
 			// Состояние можно редактировать напрямую.
-			Columns[3].ReadOnly = false;
+			Columns[(int)Index.State].ReadOnly = false;
 
-			// Id не отображается.
-			Columns[0].Visible = false;
+			HideColumn((int)Index.Id);
+			HideColumn((int)Index.Comment);
 		}
 
 
@@ -73,10 +82,10 @@ namespace Notes.NoteTables
 			if (datedNote == null)
 				return;
 
-			CurrentRow.Cells[1].Value = datedNote.Name;
-			CurrentRow.Cells[2].Value = (datedNote.Year == 0) ? "" : datedNote.Year.ToString();
-			CurrentRow.Cells[3].Value = States[(int)datedNote.CurrentState];
-			CurrentRow.Cells[4].Value = datedNote.Comment;
+			CurrentRow.Cells[(int)Index.Name].Value =              datedNote.Name;
+			CurrentRow.Cells[(int)Index.Year].Value =             (datedNote.Year == 0) ? "" : datedNote.Year.ToString();
+			CurrentRow.Cells[(int)Index.State].Value = States[(int)datedNote.CurrentState];
+			CurrentRow.Cells[(int)Index.Comment].Value =           datedNote.Comment;
 		}
 
 
@@ -86,11 +95,11 @@ namespace Notes.NoteTables
 				return null;
 
 			DatedNote datedNote = new DatedNote();
-			datedNote.Id =           CurrentRow.Cells[0].Value.ToString().ToIntOrException();
-			datedNote.Name =         CurrentRow.Cells[1].Value.ToString();
-			datedNote.Year =         CurrentRow.Cells[2].Value.ToString().ToIntOrDefault();
-			datedNote.CurrentState = CurrentRow.Cells[3].Value.ToString().ToNoteState();
-			datedNote.Comment =      CurrentRow.Cells[4].Value.ToString();
+			datedNote.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			datedNote.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			datedNote.Year =         CurrentRow.Cells[(int)Index.Year].Value.ToString().ToIntOrDefault();
+			datedNote.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			datedNote.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
 			return datedNote;
 		}
@@ -100,11 +109,9 @@ namespace Notes.NoteTables
 		{
 			Size = tableSize;		
 
-			Columns[0].Width = 0;
-			Columns[1].Width = (int)(tableSize.Width * 0.4);
-			Columns[2].Width = 40;
-			Columns[3].Width = 100;
-			SetRemainingTableWidth(4);
+			Columns[(int)Index.Year].Width = 40;
+			Columns[(int)Index.State].Width = 100;
+			SetRemainingTableWidth((int)Index.Name);
 		}
 
 

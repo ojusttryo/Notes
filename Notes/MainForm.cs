@@ -66,8 +66,9 @@ namespace Notes
 			_noteTables.Add("Serials", new SerialTable(noteTableLocation, "Serials"));
 			_noteTables.Add("AnimeSerials", new SerialTable(noteTableLocation, "AnimeSerials"));
 			_noteTables.Add("TVShows", new SerialTable(noteTableLocation, "TVShows"));
+			_noteTables.Add("Desires", new DesireTable(noteTableLocation));
 
-			SwitchToTable("Serials");
+			SwitchToTable("Desires");
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
@@ -157,18 +158,19 @@ namespace Notes
 		{
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "AnimeFilms": new DatedNoteForm(this, "Add anime film", "Add").ShowDialog(); break;
-				case "Films": new DatedNoteForm(this, "Add film", "Add").ShowDialog(); break;
-				case "Performances": new DatedNoteForm(this, "Add performance", "Add").ShowDialog(); break;
-				case "Literature": new LiteratureForm(this, "Add literature", "Add").ShowDialog(); break;
-				case "Bookmarks": new BookmarkForm(this, "Add bookmark", "Add").ShowDialog(); break;
-				case "Meal": new MealForm(this, "Add meal", "Add").ShowDialog(); break;
-				case "Programs": new ProgramForm(this, "Add program", "Add").ShowDialog(); break;
-				case "Games": new GameForm(this, "Add game", "Add").ShowDialog(); break;
-				case "People": new PersonForm(this, "Add person", "Add").ShowDialog(); break;
-				case "Serials": new SerialForm(this, "Add serial", "Add").ShowDialog(); break;
-				case "AnimeSerials": new SerialForm(this, "Add anime serial", "Add").ShowDialog(); break;
-				case "TVShows": new SerialForm(this, "Add TV show", "Add").ShowDialog(); break;
+				case "AnimeFilms":   new DatedNoteForm( this, "Add anime film", "Add").ShowDialog(); break;
+				case "Films":        new DatedNoteForm( this, "Add film", "Add").ShowDialog(); break;
+				case "Performances": new DatedNoteForm( this, "Add performance", "Add").ShowDialog(); break;
+				case "Literature":   new LiteratureForm(this, "Add literature", "Add").ShowDialog(); break;
+				case "Bookmarks":    new BookmarkForm(  this, "Add bookmark", "Add").ShowDialog(); break;
+				case "Meal":         new MealForm(      this, "Add meal", "Add").ShowDialog(); break;
+				case "Programs":     new ProgramForm(   this, "Add program", "Add").ShowDialog(); break;
+				case "Games":        new GameForm(      this, "Add game", "Add").ShowDialog(); break;
+				case "People":       new PersonForm(    this, "Add person", "Add").ShowDialog(); break;
+				case "Serials":      new SerialForm(    this, "Add serial", "Add").ShowDialog(); break;
+				case "AnimeSerials": new SerialForm(    this, "Add anime serial", "Add").ShowDialog(); break;
+				case "TVShows":      new SerialForm(    this, "Add TV show", "Add").ShowDialog(); break;
+				case "Desires":      new DesireForm(    this, "Add desire", "Add").ShowDialog(); break;
 				default: break;
 			}
 		}
@@ -215,18 +217,19 @@ namespace Notes
 
 			switch (_currentNoteTable.TableNameInDatabase)
 			{
-				case "AnimeFilms": new DatedNoteForm(this, "Edit anime film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Films": new DatedNoteForm(this, "Edit film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Performances": new DatedNoteForm(this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Literature": new LiteratureForm(this, "Edit literature", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Bookmarks": new BookmarkForm(this, "Edit bookmark", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Meal": new MealForm(this, "Edit meal", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Programs": new ProgramForm(this, "Edit program", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Games": new GameForm(this, "Edit game", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "People": new PersonForm(this, "Edit person", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "Serials": new SerialForm(this, "Edit serial", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "AnimeSerials": new SerialForm(this, "Edit anime serial", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
-				case "TVShows": new SerialForm(this, "Edit TV show", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "AnimeFilms":   new DatedNoteForm( this, "Edit anime film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Films":        new DatedNoteForm( this, "Edit film", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Performances": new DatedNoteForm( this, "Edit performance", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Literature":   new LiteratureForm(this, "Edit literature", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Bookmarks":    new BookmarkForm(  this, "Edit bookmark", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Meal":         new MealForm(      this, "Edit meal", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Programs":     new ProgramForm(   this, "Edit program", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Games":        new GameForm(      this, "Edit game", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "People":       new PersonForm(    this, "Edit person", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Serials":      new SerialForm(    this, "Edit serial", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "AnimeSerials": new SerialForm(    this, "Edit anime serial", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "TVShows":      new SerialForm(    this, "Edit TV show", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
+				case "Desires":      new DesireForm(    this, "Edit desires", "Edit", _currentNoteTable.GetNoteFromSelectedRow()).ShowDialog(); break;
 				default: break;
 			}
 
@@ -263,6 +266,7 @@ namespace Notes
 				default: break;
 			}
 		}
+
 
 		private void searchButton_Click(object sender, EventArgs e)
 		{
@@ -311,6 +315,11 @@ namespace Notes
 		private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SwitchToTable("Bookmarks");
+		}
+
+		private void desiresToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SwitchToTable("Desires");
 		}
 
 		private void filmsToolStripMenuItem_Click(object sender, EventArgs e)

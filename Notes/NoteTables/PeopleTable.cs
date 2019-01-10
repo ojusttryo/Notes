@@ -65,11 +65,10 @@ namespace Notes.NoteTables
 			// Состояние можно редактировать напрямую.
 			Columns[(int)Index.State].ReadOnly = false;
 
-			// Часть столбцов не отображаются.
-			Columns[(int)Index.Id].Visible = false;
-			Columns[(int)Index.Address].Visible = false;
-			Columns[(int)Index.Contacts].Visible = false;
-			Columns[(int)Index.Comment].Visible = false;
+			HideColumn((int)Index.Id);
+			HideColumn((int)Index.Address);
+			HideColumn((int)Index.Contacts);
+			HideColumn((int)Index.Comment);		
 		}
 
 
@@ -140,14 +139,10 @@ namespace Notes.NoteTables
 		{
 			Size = tableSize;
 
-			Columns[(int)Index.Id].Width = 0;
 			Columns[(int)Index.Nickname].Width = (int)(tableSize.Width * 0.30);
 			Columns[(int)Index.Birthdate].Width = 65;
-			Columns[(int)Index.Address].Width = 0;
-			Columns[(int)Index.Contacts].Width = 0;
 			Columns[(int)Index.Sex].Width = 80;
 			Columns[(int)Index.State].Width = 100;
-			Columns[(int)Index.Comment].Width = 0;
 			SetRemainingTableWidth((int)Index.Name);
 		}
 
