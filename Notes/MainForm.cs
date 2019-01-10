@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,7 +37,6 @@ namespace Notes
 		private Dictionary<string, NoteTable> _noteTables;
 
 		private NoteTable _currentNoteTable;
-
 
 		private ToolStripMenuItem lastClickedStateItem = null;
 
@@ -454,6 +454,42 @@ namespace Notes
 					}
 				}
 			}
+		}
+
+
+		private void importToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// Код выходит не очень-то оптимальный. Импорт выполнялся несколько минут. Но для одноразового решения хватит.
+
+			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.Filter = "MEDIA.sqlite | MEDIA.sqlite";
+			dialog.Title = "Select old file";
+			if (dialog.ShowDialog() == DialogResult.OK)
+			{
+				string filePath = dialog.FileName;
+
+				Database.Export(filePath, "books");
+				Database.Export(filePath, "films");
+				Database.Export(filePath, "anime");
+				Database.Export(filePath, "serials");
+
+				_noteTables["Literature"].ReloadNotes();
+				_noteTables["Films"].ReloadNotes();
+				_noteTables["AnimeSerials"].ReloadNotes();
+				_noteTables["Serials"].ReloadNotes();
+			}
+		}
+
+
+		private void backupToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+
+		private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

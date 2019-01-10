@@ -37,9 +37,22 @@ namespace Notes.NoteTables
 			Initialize();
 			CreateColumns();
 
+			LoadNotes();
+		}
+
+
+		private void LoadNotes()
+		{
 			List<Note> notes = Database.GetNotes(TableNameInDatabase);
 			foreach (Note note in notes)
 				AddNote(note);
+		}
+
+
+		public void ReloadNotes()
+		{
+			Rows.Clear();
+			LoadNotes();
 		}
 
 
