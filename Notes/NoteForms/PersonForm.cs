@@ -57,7 +57,19 @@ namespace Notes.NoteForms
 				commentRichTextBox.Text = _editedNote.Comment;
 			}
 
-			// TODO событие для нажатия на поле даты
+			birthdateTextBox.KeyPress += new KeyPressEventHandler(CheckDateInput);
+		}
+
+
+		public void CheckDateInput(object sender, KeyPressEventArgs e)
+		{
+			TextBox birthdateTextBox = (TextBox)sender;
+			if (birthdateTextBox == null)
+				return;
+
+			// TODO Можно в будущем сделать проверку на ввод. Но пока не решил, как же лучше. 
+			// Может, \d{2}\.\d{2}\.\d{4}?
+			// Но не хочется жестко фиксировать.
 		}
 		
 
