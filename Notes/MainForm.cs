@@ -72,6 +72,13 @@ namespace Notes
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
+
+			searchTextBox.KeyPress += delegate (object o, KeyPressEventArgs e)
+			{
+				// Выполнить поиск по нажатию Enter
+				if (e.KeyChar == (char)13)
+					search();
+			};
 		}
 
 
@@ -270,6 +277,12 @@ namespace Notes
 
 		private void searchButton_Click(object sender, EventArgs e)
 		{
+			search();
+		}
+
+
+		private void search()
+		{
 			// Можно сделать через запрос к базе. Но как по мне, лучше не перезаписывать данные в таблице новым запросом, а просто скрывать лишнее.
 
 			string fieldName = searchComboBox.GetItemText(searchComboBox.SelectedItem);
@@ -296,6 +309,7 @@ namespace Notes
 
 			OnResize(null);
 		}
+
 
 		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
