@@ -48,6 +48,12 @@ namespace Notes.NoteForms
 
 			seasonTextBox.KeyPress +=  new KeyPressEventHandler(MainForm.CheckNumericInput);
 			episodeTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
+
+			KeyDown += delegate (object o, KeyEventArgs e)
+			{
+				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
+					submitButton.PerformClick();
+			};
 		}
 
 
@@ -184,6 +190,7 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.seasonLabel);
 			this.Controls.Add(this.nameLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.Name = "SerialForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

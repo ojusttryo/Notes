@@ -58,6 +58,12 @@ namespace Notes.NoteForms
 			}
 
 			birthdateTextBox.KeyPress += new KeyPressEventHandler(CheckDateInput);
+
+			KeyDown += delegate (object o, KeyEventArgs e)
+			{
+				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
+					submitButton.PerformClick();
+			};
 		}
 
 
@@ -273,6 +279,7 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.birthdateLabel);
 			this.Controls.Add(this.nameLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.KeyPreview = true;
 			this.Name = "PersonForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Note";

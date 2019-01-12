@@ -103,6 +103,12 @@ namespace Notes.NoteForms
 			pageTextBox.KeyPress    += new KeyPressEventHandler(MainForm.CheckNumericInput);
 			pagesTextBox.KeyPress   += new KeyPressEventHandler(MainForm.CheckNumericInput);
 			yearTextBox.KeyPress    += new KeyPressEventHandler(MainForm.CheckNumericInput);
+
+			KeyDown += delegate (object o, KeyEventArgs e)
+			{
+				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
+					submitButton.PerformClick();
+			};
 		}
 		
 
@@ -397,6 +403,7 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.yearLabel);
 			this.Controls.Add(this.nameLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.Name = "LiteratureForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

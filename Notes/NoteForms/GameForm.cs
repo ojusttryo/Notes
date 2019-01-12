@@ -57,6 +57,12 @@ namespace Notes.NoteForms
 				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
 				commentRichTextBox.Text = _editedNote.Comment;
 			}
+
+			KeyDown += delegate (object o, KeyEventArgs e)
+			{
+				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
+					submitButton.PerformClick();
+			};
 		}
 
 
@@ -277,6 +283,7 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.stateLabel);
 			this.Controls.Add(this.nameLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.Name = "GameForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
