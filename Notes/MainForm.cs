@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -473,25 +475,47 @@ namespace Notes
 
 		private void importToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			// Код выходит не очень-то оптимальный. Импорт выполнялся несколько минут. Но для одноразового решения хватит.
+			// TODO: надо будет пройти профилировщиком и оптимизировать. Выходит долговато.
 
 			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Filter = "MEDIA.sqlite | MEDIA.sqlite";
+			dialog.Filter = "Firefox bookmarks|*.json|Opera bookmarks|*.html|Database|MEDIA.sqlite";
 			dialog.Title = "Select old file";
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				string filePath = dialog.FileName;
+				bool isOldDB = string.Equals(dialog.SafeFileName, "MEDIA.sqlite", StringComparison.CurrentCultureIgnoreCase);
+				bool isJson = string.Equals(Path.GetExtension(dialog.FileName), ".json", StringComparison.CurrentCultureIgnoreCase);
+				bool isHtml = string.Equals(Path.GetExtension(dialog.FileName), ".html", StringComparison.CurrentCultureIgnoreCase);
 
-				Database.Export(filePath, "books");
-				Database.Export(filePath, "films");
-				Database.Export(filePath, "anime");
-				Database.Export(filePath, "serials");
-
-				_noteTables["Literature"].ReloadNotes();
-				_noteTables["Films"].ReloadNotes();
-				_noteTables["AnimeSerials"].ReloadNotes();
-				_noteTables["Serials"].ReloadNotes();
+				if (isOldDB)
+					ImportOldDatabase(dialog.FileName);
+				else if (isJson || isHtml)
+					ImportBookmarks(dialog.FileName);
 			}
+		}
+
+
+		private void ImportOldDatabase(string filePath)
+		{
+			Database.Export(filePath, "books");
+			Database.Export(filePath, "films");
+			Database.Export(filePath, "anime");
+			Database.Export(filePath, "serials");
+
+			_noteTables["Literature"].ReloadNotes();
+			_noteTables["Films"].ReloadNotes();
+			_noteTables["AnimeSerials"].ReloadNotes();
+			_noteTables["Serials"].ReloadNotes();
+		}
+
+
+		private void ImportBookmarks(string fileName)
+		{
+			BookmarksImport import = new BookmarksImport();
+
+			foreach (Bookmark b in import.ImportBookmarks(fileName))
+				Database.InsertOrUpdate("Bookmarks", b);
+
+			_noteTables["Bookmarks"].ReloadNotes();
 		}
 
 
