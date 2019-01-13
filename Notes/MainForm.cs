@@ -73,13 +73,28 @@ namespace Notes
 			SwitchToTable("Desires");
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
-			this.Shown += delegate (object o, EventArgs e) { OnResize(null); };
+			Shown += delegate (object o, EventArgs e) { OnResize(null); };
+
+			KeyDown += delegate (object o, KeyEventArgs e)
+			{
+				if (e.Control && e.KeyCode == Keys.F)
+					ActiveControl = searchTextBox;
+				else if (e.Control && e.KeyCode == Keys.E)
+					editButton.PerformClick();
+				else if (e.KeyCode == Keys.Add)
+					addButton.PerformClick();
+				else if (e.KeyCode == Keys.Delete)
+					deleteButton.PerformClick();
+			};
 
 			searchTextBox.KeyPress += delegate (object o, KeyPressEventArgs e)
 			{
 				// Выполнить поиск по нажатию Enter
 				if (e.KeyChar == (char)13)
+				{
+					e.Handled = true;
 					search();
+				}
 			};
 		}
 

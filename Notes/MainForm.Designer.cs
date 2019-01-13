@@ -427,6 +427,7 @@
 			this.Controls.Add(this.searchButton);
 			this.Controls.Add(this.menu);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.KeyPreview = true;
 			this.MainMenuStrip = this.menu;
 			this.MinimumSize = new System.Drawing.Size(800, 500);
 			this.Name = "MainForm";
