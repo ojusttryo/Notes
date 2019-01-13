@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Net;
+using System.Net.Mail;
 
 using Notes.Notes;
 using Notes.NoteTables;
@@ -536,7 +538,34 @@ namespace Notes
 
 		private void backupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			string email = "mail@mail.ru";
+			string password = "password";
+			string smtpAddress = Regex.Replace(email, @"\A.+@", @"smtp.");
 
+			try
+			{
+				MailAddress from = new MailAddress(email, "Notes");
+				MailAddress to = new MailAddress(email);
+				using (MailMessage message = new MailMessage(from, to))
+				{
+					message.Subject = "Backup";
+					message.Body = "";
+					message.Attachments.Add(new Attachment("notes.sqlite"));
+					using (SmtpClient smtp = new SmtpClient(smtpAddress, 587))
+					{
+						smtp.Credentials = new NetworkCredential(email, password);
+						smtp.EnableSsl = true;
+						smtp.Send(message);
+
+						MessageBox.Show("Backup sent");
+					}
+				}				
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Cannot send backup:{0}{1}", Environment.NewLine, ex.ToString()));
+				MessageBox.Show(string.Format("Cannot send backup:{0}{1}", Environment.NewLine, ex.ToString()));
+			}
 		}
 	}
 }
