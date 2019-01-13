@@ -333,8 +333,6 @@ namespace Notes
 		/// </summary>
 		public static int InsertOrUpdate(string tableName, Note note)
 		{
-			Log.Info(string.Format("Insert or update note with Id = {0} in {1}", note.Id, tableName));
-
 			switch (tableName)
 			{
 				case "AnimeFilms":   return InsertOrUpdateDatedNote(tableName, note, _animeFilmsInsertCommand);

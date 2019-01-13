@@ -72,6 +72,7 @@ namespace Notes.NoteTables
 			RowHeadersVisible = false;
 
 			BorderStyle = BorderStyle.None;
+			AdvancedCellBorderStyle.All = DataGridViewAdvancedCellBorderStyle.None;
 
 			ScrollBars = ScrollBars.Vertical;
 
