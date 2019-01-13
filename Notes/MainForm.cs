@@ -538,11 +538,5 @@ namespace Notes
 		{
 
 		}
-
-
-		private void exportToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-
-		}
 	}
 }
