@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 using Notes.Notes;
 
-namespace Notes
+namespace Notes.Import
 {
 	public class BookmarksImport
 	{

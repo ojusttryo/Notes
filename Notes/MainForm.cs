@@ -18,6 +18,7 @@ using System.Net.Mail;
 using Notes.Notes;
 using Notes.NoteTables;
 using Notes.NoteForms;
+using Notes.Import;
 
 namespace Notes
 {
@@ -506,7 +507,7 @@ namespace Notes
 				if (isOldDB)
 					ImportOldDatabase(dialog.FileName);
 				else if (isJson || isHtml)
-					ImportBookmarks(dialog.FileName);
+					StartBookmarksImport(dialog.FileName);
 			}
 		}
 
@@ -525,14 +526,24 @@ namespace Notes
 		}
 
 
-		private void ImportBookmarks(string fileName)
+		private void StartBookmarksImport(string fileName)
 		{
 			BookmarksImport import = new BookmarksImport();
-
+			BookmarksImportForm importForm = new BookmarksImportForm(this);
 			foreach (Bookmark b in import.ImportBookmarks(fileName))
+				importForm.AddRow(b.Name, b.URL);
+			importForm.ShowDialog();
+		}
+
+
+		public void ImportBookmarks(List<Bookmark> bookmarks)
+		{
+			foreach (Bookmark b in bookmarks)
 				Database.InsertOrUpdate("Bookmarks", b);
 
 			_noteTables["Bookmarks"].ReloadNotes();
+
+			SwitchToTable("Bookmarks");
 		}
 
 

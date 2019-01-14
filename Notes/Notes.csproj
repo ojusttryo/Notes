@@ -92,7 +92,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookmarksImport.cs" />
+    <Compile Include="Import\BookmarksImport.cs" />
+    <Compile Include="Import\BookmarksImportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Import\BookmarksImportTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NoteForms\BookmarkForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +179,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Import\BookmarksImportForm.resx">
+      <DependentUpon>BookmarksImportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NoteForms\BookmarkForm.resx">
       <DependentUpon>BookmarkForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -257,6 +266,7 @@
   <ItemGroup>
     <Content Include="notes.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\System.Data.SQLite.Core.1.0.109.2\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('packages\System.Data.SQLite.Core.1.0.109.2\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
