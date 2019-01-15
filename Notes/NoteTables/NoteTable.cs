@@ -62,6 +62,7 @@ namespace Notes.NoteTables
 
 			AllowUserToAddRows = false;
 			AllowUserToDeleteRows = false;
+			AllowUserToResizeRows = false;
 
 			EditMode = DataGridViewEditMode.EditOnEnter;
 

@@ -19,6 +19,7 @@ using Notes.Notes;
 using Notes.NoteTables;
 using Notes.NoteForms;
 using Notes.Import;
+using Notes.Settings;
 
 namespace Notes
 {
@@ -446,9 +447,8 @@ namespace Notes
 
 		private void settingsButton_Click(object sender, EventArgs e)
 		{
-		
-
-
+			SettingsForm form = new SettingsForm();
+			form.ShowDialog();
 		}
 
 		private void SexToolStripMenuItem1_Click(object sender, EventArgs e)
