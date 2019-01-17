@@ -19,7 +19,7 @@ using Notes.Notes;
 using Notes.NoteTables;
 using Notes.NoteForms;
 using Notes.Import;
-using Notes.Settings;
+using Notes.ProgramSettings;
 
 namespace Notes
 {
@@ -74,13 +74,15 @@ namespace Notes
 			_noteTables.Add("TVShows", new SerialTable(noteTableLocation, "TVShows"));
 			_noteTables.Add("Desires", new DesireTable(noteTableLocation));
 
-			SwitchToTable("Desires");
+			OpenInitialNotes();
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
 			Shown += delegate (object o, EventArgs e) { OnResize(null); };
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
+				DataGridViewCell currentCell = _currentNoteTable.CurrentCell;
+
 				if (e.Control && e.KeyCode == Keys.F)
 					ActiveControl = searchTextBox;
 				else if (e.Control && e.KeyCode == Keys.E)
@@ -89,6 +91,10 @@ namespace Notes
 					addButton.PerformClick();
 				else if (e.KeyCode == Keys.Delete)
 					deleteButton.PerformClick();
+				else if (e.Control && e.KeyCode == Keys.S)
+					settingsButton.PerformClick();
+				else if (e.KeyCode == Keys.Enter && currentCell != null && currentCell.ColumnIndex >= 0 && currentCell.RowIndex >= 0)
+					editButton.PerformClick();
 			};
 
 			searchTextBox.KeyPress += delegate (object o, KeyPressEventArgs e)
@@ -100,6 +106,31 @@ namespace Notes
 					search();
 				}
 			};
+		}
+
+
+		private void OpenInitialNotes()
+		{
+			switch (Settings.InitialNotesTable)
+			{
+				// Отдельно перебираем только пустые элементы или с пробелами, где имя в интерфейсе не соответствует имени в БД.
+				case "": SwitchToTable("AnimeFilms", "Anime films"); break;
+				case "Anime films": SwitchToTable("AnimeFilms", "Anime films"); break;
+				case "Anime serials": SwitchToTable("AnimeSerials", "Anime serials"); break;
+				case "TV shows": SwitchToTable("TVShows", "TV Shows"); break;
+				default: SwitchToTable(Settings.InitialNotesTable); break;
+			}
+
+			switch (Settings.InitialNotesState)
+			{
+				case "All": allStatesToolStripMenuItem.PerformClick(); break;
+				case "Active": activeToolStripMenuItem.PerformClick(); break;
+				case "Deleted": deletedToolStripMenuItem.PerformClick(); break;
+				case "Finished": finishedToolStripMenuItem.PerformClick(); break;
+				case "Postponed": postponedToolStripMenuItem.PerformClick(); break;
+				case "Waiting": waitingToolStripMenuItem.PerformClick(); break;
+				default: allStatesToolStripMenuItem.PerformClick(); break;
+			}
 		}
 
 
@@ -549,8 +580,8 @@ namespace Notes
 
 		private void backupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string email = "mail@mail.ru";
-			string password = "password";
+			string email = Settings.BackupEmail;
+			string password = Settings.BackupPassword;
 			string smtpAddress = Regex.Replace(email, @"\A.+@", @"smtp.");
 
 			try

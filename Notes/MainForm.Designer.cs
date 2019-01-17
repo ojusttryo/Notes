@@ -315,7 +315,7 @@
 			this.searchTextBox.Location = new System.Drawing.Point(128, 29);
 			this.searchTextBox.Name = "searchTextBox";
 			this.searchTextBox.Size = new System.Drawing.Size(432, 20);
-			this.searchTextBox.TabIndex = 7;
+			this.searchTextBox.TabIndex = 4;
 			// 
 			// searchComboBox
 			// 
@@ -327,7 +327,7 @@
 			this.searchComboBox.Location = new System.Drawing.Point(566, 28);
 			this.searchComboBox.Name = "searchComboBox";
 			this.searchComboBox.Size = new System.Drawing.Size(188, 21);
-			this.searchComboBox.TabIndex = 8;
+			this.searchComboBox.TabIndex = 5;
 			// 
 			// settingsButton
 			// 
@@ -340,7 +340,7 @@
 			this.settingsButton.Location = new System.Drawing.Point(97, 25);
 			this.settingsButton.Name = "settingsButton";
 			this.settingsButton.Size = new System.Drawing.Size(24, 24);
-			this.settingsButton.TabIndex = 5;
+			this.settingsButton.TabIndex = 3;
 			this.settingsButton.UseVisualStyleBackColor = true;
 			this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
 			// 
@@ -355,7 +355,7 @@
 			this.editButton.Location = new System.Drawing.Point(68, 25);
 			this.editButton.Name = "editButton";
 			this.editButton.Size = new System.Drawing.Size(24, 24);
-			this.editButton.TabIndex = 4;
+			this.editButton.TabIndex = 2;
 			this.editButton.UseVisualStyleBackColor = true;
 			this.editButton.Click += new System.EventHandler(this.editButton_Click);
 			// 
@@ -370,7 +370,7 @@
 			this.deleteButton.Location = new System.Drawing.Point(39, 25);
 			this.deleteButton.Name = "deleteButton";
 			this.deleteButton.Size = new System.Drawing.Size(24, 24);
-			this.deleteButton.TabIndex = 3;
+			this.deleteButton.TabIndex = 1;
 			this.deleteButton.UseVisualStyleBackColor = true;
 			this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
 			// 
@@ -385,7 +385,7 @@
 			this.addButton.Location = new System.Drawing.Point(10, 25);
 			this.addButton.Name = "addButton";
 			this.addButton.Size = new System.Drawing.Size(24, 24);
-			this.addButton.TabIndex = 2;
+			this.addButton.TabIndex = 0;
 			this.addButton.UseVisualStyleBackColor = true;
 			this.addButton.Click += new System.EventHandler(this.addButton_Click);
 			// 
@@ -400,7 +400,7 @@
 			this.searchButton.Location = new System.Drawing.Point(755, 25);
 			this.searchButton.Name = "searchButton";
 			this.searchButton.Size = new System.Drawing.Size(24, 24);
-			this.searchButton.TabIndex = 0;
+			this.searchButton.TabIndex = 6;
 			this.searchButton.UseVisualStyleBackColor = true;
 			this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
 			// 

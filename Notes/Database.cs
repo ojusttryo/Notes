@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.SQLite;
+using System.Windows.Forms;
 
 using Notes.Notes;
+using Notes.ProgramSettings;
 
 namespace Notes
 {
 	public class Database
 	{
-		public static string FileName = "notes.sqlite";
-
 		private static SQLiteCommand _animeFilmsInsertCommand;
 		private static SQLiteCommand _animeSerialsInsertCommand;
 		private static SQLiteCommand _bookmarksInsertCommand;
@@ -26,13 +26,90 @@ namespace Notes
 		private static SQLiteCommand _programsInsertCommand;
 		private static SQLiteCommand _serialsInsertCommand;
 		private static SQLiteCommand _TVShowsInsertCommand;
-		
+		private static SQLiteCommand _settingsInsertCommand;
+
+
+		public static string FileName = "notes.sqlite";
+
+		public static bool IsPasswordProtected { get; private set; }
+
 
 		public static void Create()
 		{
 			CreateDatabase();
 			CreateTables();
 			CreateInsertCommands();
+		}
+
+
+		public static void CheckPassword()
+		{
+			try
+			{
+				using (SQLiteConnection con = CreateConnection())
+				{
+					con.Open();
+
+					// Для проверки, что БД содержит пароль, нужно выполнить какую-то команду, 
+					// т.к. иначе con.State будет Open, а con.ResultCode() == Ok даже при установленном пароле.
+					using (SQLiteCommand command = new SQLiteCommand("PRAGMA schema_version;", con))
+					{
+						command.ExecuteScalar();
+					}
+
+					IsPasswordProtected = false;
+				}
+			}
+			catch (Exception)
+			{
+				IsPasswordProtected = true;
+			}
+		}
+
+
+		public static bool PasswordIsOk()
+		{
+			try
+			{
+				using (SQLiteConnection con = CreateConnection())
+				{
+					con.Open();
+
+					// Для проверки, что БД содержит пароль, нужно выполнить какую-то команду, 
+					// т.к. иначе con.State будет Open, а con.ResultCode() == Ok даже при установленном пароле.
+					using (SQLiteCommand command = new SQLiteCommand("PRAGMA schema_version;", con))
+					{
+						command.ExecuteScalar();
+					}
+
+					return true;
+				}
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+
+		public static void ChangePassword(string password)
+		{
+			try
+			{
+				password = password.Trim();
+				// Один раз поставили, дальше уже только менять. Может потом сделаю возможность сброса, но это не желательно.
+				if (string.IsNullOrEmpty(password))
+					return;
+
+				SQLiteConnection con = CreateConnection();
+				con.Open();
+				con.ChangePassword(password);
+				con.Close();
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Cannot change password:{0}{1}", Environment.NewLine, ex.ToString()));
+			}
 		}
 
 
@@ -128,7 +205,10 @@ namespace Notes
 
 			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS TVShows ({0}, {1}, {2}, {3}, {4}, {5});", 
 				Id, Name, CurrentState, Comment, Season, Episode));
-			ExecuteNonQuery(command);			
+			ExecuteNonQuery(command);
+
+			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Settings (Name TEXT PRIMARY KEY NOT NULL, Value TEXT NOT NULL);"));
+			ExecuteNonQuery(command);
 		}
 
 
@@ -147,6 +227,7 @@ namespace Notes
 			CreateProgramsInsertCommand();
 			CreateSerialsInsertCommand("Serials", out _serialsInsertCommand);
 			CreateSerialsInsertCommand("TVShows", out _TVShowsInsertCommand);
+			CreateSettingsInsertCommand();
 		}
 
 
@@ -325,6 +406,19 @@ namespace Notes
 			_programsInsertCommand.Parameters.Add("@Login", System.Data.DbType.String);
 			_programsInsertCommand.Parameters.Add("@Password", System.Data.DbType.String);
 			_programsInsertCommand.Parameters.Add("@Email", System.Data.DbType.String);
+		}
+
+
+		private static void CreateSettingsInsertCommand()
+		{
+			_settingsInsertCommand = new SQLiteCommand();
+
+			_settingsInsertCommand.CommandText = 
+				"INSERT INTO Settings (Name, Value) VALUES (@Name, @Value) " +
+				"ON CONFLICT (Name) DO UPDATE SET Value = @Value";
+
+			_settingsInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			_settingsInsertCommand.Parameters.Add("@Value", System.Data.DbType.String);
 		}
 
 
@@ -684,12 +778,25 @@ namespace Notes
 		}
 
 
+		/// <summary>
+		/// Create connection to SQLite database. Filename always the same, except you try to use old database from previous program.
+		/// </summary>
+		/// <param name="fileName">Filename of the MEDIA program.</param>
+		/// <returns>Prepared connection to SQLite database. Not opened.</returns>
 		public static SQLiteConnection CreateConnection(string fileName = null)
 		{
 			if (fileName == null)
-				return new SQLiteConnection(string.Format("Data source=\"{0}\"; Version={1}", Database.FileName, 3));
+			{
+				SQLiteConnection connection = new SQLiteConnection(string.Format("Data source=\"{0}\"; Version={1}", Database.FileName, 3));
+				if (IsPasswordProtected)
+					connection.SetPassword(Settings.DatabasePassword);
+				return connection;
+			}
 			else
+			{
+				// Just for old database file. It has no password protection.
 				return new SQLiteConnection(string.Format("Data source=\"{0}\"; Version={1}", fileName, 3));
+			}
 		}
 
 
@@ -1246,6 +1353,55 @@ namespace Notes
 			}
 
 			return notes;
+		}
+
+
+		public static void SaveSetting(string name, string value)
+		{
+			_settingsInsertCommand.Parameters[0].Value = name;
+			_settingsInsertCommand.Parameters[1].Value = value;
+
+			_settingsInsertCommand.Prepare();
+				
+			ExecuteNonQuery(_settingsInsertCommand);
+		}
+
+
+		public static string ReadSetting(string name)
+		{
+			string value = string.Empty;
+
+			try
+			{
+				using (SQLiteConnection con = CreateConnection())
+				{
+					using (SQLiteCommand command = new SQLiteCommand())
+					{
+						command.CommandText = "SELECT Value FROM Settings WHERE Name = @Name";
+						command.Parameters.Add("@Name", System.Data.DbType.String);
+						command.Parameters[0].Value = name;
+
+						con.Open();
+						command.Connection = con;
+
+						using (SQLiteDataReader reader = command.ExecuteReader())
+						{
+							if (reader.Read() && reader.HasRows)
+								value = reader.GetString(0);
+						}
+
+						command.Connection = null;
+					}
+
+					con.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Cannot read setting:{0}{1}", Environment.NewLine, ex.ToString()));
+			}
+
+			return value;
 		}
 	}
 }

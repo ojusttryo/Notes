@@ -7,7 +7,7 @@ using System.Drawing;
 
 using Notes.NoteTables;
 
-namespace Notes.Settings
+namespace Notes.ProgramSettings
 {
 	public class SettingsForm : Form
 	{
@@ -15,16 +15,18 @@ namespace Notes.Settings
 		private Label securityLabel;
 		private Label emailLabel;
 		private Label passwordLabel;
-		private ComboBox openOnStartComboBox;
-		private Label label1;
+		private ComboBox initialNotesComboBox;
+		private Label initialNotesLabel;
 		private TextBox backupEmailTextBox;
 		private TextBox backupPasswordTextBox;
 		private Panel menuPanel;
 		private TextBox newPasswordTextBox;
 		private Label label2;
-		private Button button1;
+		private Button saveButton;
 		private Panel panel1;
 		private Panel panel2;
+		private ComboBox initialStateComboBox;
+		private Label initialStateLabel;
 		private Label backupLabel;
 
 
@@ -32,24 +34,39 @@ namespace Notes.Settings
 		{
 			InitializeComponent();
 			
-			openOnStartComboBox.Items.Add("Last");
-			openOnStartComboBox.Items.Add("Anime films");
-			openOnStartComboBox.Items.Add("Anime serials");
-			openOnStartComboBox.Items.Add("Bookmarks");
-			openOnStartComboBox.Items.Add("Desires");
-			openOnStartComboBox.Items.Add("Films");
-			openOnStartComboBox.Items.Add("Games");
-			openOnStartComboBox.Items.Add("Literature");
-			openOnStartComboBox.Items.Add("Meal");
-			openOnStartComboBox.Items.Add("Performances");
-			openOnStartComboBox.Items.Add("People");
-			openOnStartComboBox.Items.Add("Programs");
-			openOnStartComboBox.Items.Add("Serials");
-			openOnStartComboBox.Items.Add("TV shows");
+			initialNotesComboBox.Items.Add("Anime films");
+			initialNotesComboBox.Items.Add("Anime serials");
+			initialNotesComboBox.Items.Add("Bookmarks");
+			initialNotesComboBox.Items.Add("Desires");
+			initialNotesComboBox.Items.Add("Films");
+			initialNotesComboBox.Items.Add("Games");
+			initialNotesComboBox.Items.Add("Literature");
+			initialNotesComboBox.Items.Add("Meal");
+			initialNotesComboBox.Items.Add("Performances");
+			initialNotesComboBox.Items.Add("People");
+			initialNotesComboBox.Items.Add("Programs");
+			initialNotesComboBox.Items.Add("Serials");
+			initialNotesComboBox.Items.Add("TV shows");
+			initialNotesComboBox.SelectedIndex = 0;
+			if (Settings.InitialNotesTable.Length > 0)
+				initialNotesComboBox.SelectedIndex = initialNotesComboBox.FindString(Settings.InitialNotesTable);
 
-			openOnStartComboBox.SelectedIndex = 0;
+			initialStateComboBox.Items.AddRange(NoteTable.States);
+			initialStateComboBox.Items[0] = "All";
+			initialStateComboBox.SelectedIndex = 0;
+			if (Settings.InitialNotesState.Length > 0)
+				initialStateComboBox.SelectedIndex = initialStateComboBox.FindString(Settings.InitialNotesState);
 
+			backupEmailTextBox.Text = Settings.BackupEmail;
+			backupPasswordTextBox.Text = Settings.BackupPassword;
 
+			KeyDown += delegate (object o, KeyEventArgs e)
+			{
+				if (e.KeyCode == Keys.Enter)
+					saveButton.PerformClick();
+				else if (e.KeyCode == Keys.Escape)
+					Close();
+			};
 		}
 
 
@@ -60,14 +77,16 @@ namespace Notes.Settings
 			this.backupLabel = new System.Windows.Forms.Label();
 			this.emailLabel = new System.Windows.Forms.Label();
 			this.passwordLabel = new System.Windows.Forms.Label();
-			this.openOnStartComboBox = new System.Windows.Forms.ComboBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.initialNotesComboBox = new System.Windows.Forms.ComboBox();
+			this.initialNotesLabel = new System.Windows.Forms.Label();
 			this.backupEmailTextBox = new System.Windows.Forms.TextBox();
 			this.backupPasswordTextBox = new System.Windows.Forms.TextBox();
 			this.menuPanel = new System.Windows.Forms.Panel();
+			this.initialStateComboBox = new System.Windows.Forms.ComboBox();
+			this.initialStateLabel = new System.Windows.Forms.Label();
 			this.newPasswordTextBox = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
+			this.saveButton = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.menuPanel.SuspendLayout();
@@ -89,7 +108,7 @@ namespace Notes.Settings
 			// 
 			this.securityLabel.AutoSize = true;
 			this.securityLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.securityLabel.Location = new System.Drawing.Point(13, 191);
+			this.securityLabel.Location = new System.Drawing.Point(13, 212);
 			this.securityLabel.Name = "securityLabel";
 			this.securityLabel.Size = new System.Drawing.Size(56, 16);
 			this.securityLabel.TabIndex = 1;
@@ -99,7 +118,7 @@ namespace Notes.Settings
 			// 
 			this.backupLabel.AutoSize = true;
 			this.backupLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.backupLabel.Location = new System.Drawing.Point(13, 89);
+			this.backupLabel.Location = new System.Drawing.Point(13, 110);
 			this.backupLabel.Name = "backupLabel";
 			this.backupLabel.Size = new System.Drawing.Size(54, 16);
 			this.backupLabel.TabIndex = 2;
@@ -123,55 +142,78 @@ namespace Notes.Settings
 			this.passwordLabel.TabIndex = 4;
 			this.passwordLabel.Text = "Password";
 			// 
-			// openOnStartComboBox
+			// initialNotesComboBox
 			// 
-			this.openOnStartComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.openOnStartComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.openOnStartComboBox.FormattingEnabled = true;
-			this.openOnStartComboBox.Location = new System.Drawing.Point(97, 13);
-			this.openOnStartComboBox.Name = "openOnStartComboBox";
-			this.openOnStartComboBox.Size = new System.Drawing.Size(297, 21);
-			this.openOnStartComboBox.TabIndex = 0;
+			this.initialNotesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.initialNotesComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.initialNotesComboBox.FormattingEnabled = true;
+			this.initialNotesComboBox.Location = new System.Drawing.Point(97, 13);
+			this.initialNotesComboBox.Name = "initialNotesComboBox";
+			this.initialNotesComboBox.Size = new System.Drawing.Size(297, 21);
+			this.initialNotesComboBox.TabIndex = 0;
 			// 
-			// label1
+			// initialNotesLabel
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(6, 17);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(71, 13);
-			this.label1.TabIndex = 9;
-			this.label1.Text = "Open on start";
+			this.initialNotesLabel.AutoSize = true;
+			this.initialNotesLabel.Location = new System.Drawing.Point(6, 17);
+			this.initialNotesLabel.Name = "initialNotesLabel";
+			this.initialNotesLabel.Size = new System.Drawing.Size(60, 13);
+			this.initialNotesLabel.TabIndex = 9;
+			this.initialNotesLabel.Text = "Initial notes";
 			// 
 			// backupEmailTextBox
 			// 
 			this.backupEmailTextBox.Location = new System.Drawing.Point(96, 12);
 			this.backupEmailTextBox.Name = "backupEmailTextBox";
 			this.backupEmailTextBox.Size = new System.Drawing.Size(297, 20);
-			this.backupEmailTextBox.TabIndex = 1;
+			this.backupEmailTextBox.TabIndex = 2;
 			// 
 			// backupPasswordTextBox
 			// 
 			this.backupPasswordTextBox.Location = new System.Drawing.Point(96, 38);
 			this.backupPasswordTextBox.Name = "backupPasswordTextBox";
+			this.backupPasswordTextBox.PasswordChar = '*';
 			this.backupPasswordTextBox.Size = new System.Drawing.Size(297, 20);
-			this.backupPasswordTextBox.TabIndex = 2;
+			this.backupPasswordTextBox.TabIndex = 3;
 			// 
 			// menuPanel
 			// 
 			this.menuPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.menuPanel.Controls.Add(this.openOnStartComboBox);
-			this.menuPanel.Controls.Add(this.label1);
+			this.menuPanel.Controls.Add(this.initialStateComboBox);
+			this.menuPanel.Controls.Add(this.initialStateLabel);
+			this.menuPanel.Controls.Add(this.initialNotesComboBox);
+			this.menuPanel.Controls.Add(this.initialNotesLabel);
 			this.menuPanel.Location = new System.Drawing.Point(10, 33);
 			this.menuPanel.Name = "menuPanel";
-			this.menuPanel.Size = new System.Drawing.Size(422, 49);
-			this.menuPanel.TabIndex = 12;
+			this.menuPanel.Size = new System.Drawing.Size(422, 68);
+			this.menuPanel.TabIndex = 0;
+			// 
+			// initialStateComboBox
+			// 
+			this.initialStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.initialStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.initialStateComboBox.FormattingEnabled = true;
+			this.initialStateComboBox.Location = new System.Drawing.Point(97, 39);
+			this.initialStateComboBox.Name = "initialStateComboBox";
+			this.initialStateComboBox.Size = new System.Drawing.Size(297, 21);
+			this.initialStateComboBox.TabIndex = 1;
+			// 
+			// initialStateLabel
+			// 
+			this.initialStateLabel.AutoSize = true;
+			this.initialStateLabel.Location = new System.Drawing.Point(6, 42);
+			this.initialStateLabel.Name = "initialStateLabel";
+			this.initialStateLabel.Size = new System.Drawing.Size(57, 13);
+			this.initialStateLabel.TabIndex = 11;
+			this.initialStateLabel.Text = "Initial state";
 			// 
 			// newPasswordTextBox
 			// 
 			this.newPasswordTextBox.Location = new System.Drawing.Point(98, 12);
 			this.newPasswordTextBox.Name = "newPasswordTextBox";
+			this.newPasswordTextBox.PasswordChar = '*';
 			this.newPasswordTextBox.Size = new System.Drawing.Size(296, 20);
-			this.newPasswordTextBox.TabIndex = 3;
+			this.newPasswordTextBox.TabIndex = 4;
 			// 
 			// label2
 			// 
@@ -182,15 +224,16 @@ namespace Notes.Settings
 			this.label2.TabIndex = 14;
 			this.label2.Text = "New password";
 			// 
-			// button1
+			// saveButton
 			// 
-			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button1.Location = new System.Drawing.Point(187, 278);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "Save";
-			this.button1.UseVisualStyleBackColor = true;
+			this.saveButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.saveButton.Location = new System.Drawing.Point(187, 299);
+			this.saveButton.Name = "saveButton";
+			this.saveButton.Size = new System.Drawing.Size(75, 23);
+			this.saveButton.TabIndex = 5;
+			this.saveButton.Text = "Save";
+			this.saveButton.UseVisualStyleBackColor = true;
+			this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
 			// 
 			// panel1
 			// 
@@ -199,33 +242,34 @@ namespace Notes.Settings
 			this.panel1.Controls.Add(this.emailLabel);
 			this.panel1.Controls.Add(this.passwordLabel);
 			this.panel1.Controls.Add(this.backupPasswordTextBox);
-			this.panel1.Location = new System.Drawing.Point(11, 112);
+			this.panel1.Location = new System.Drawing.Point(11, 133);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(422, 69);
-			this.panel1.TabIndex = 16;
+			this.panel1.TabIndex = 1;
 			// 
 			// panel2
 			// 
 			this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panel2.Controls.Add(this.newPasswordTextBox);
 			this.panel2.Controls.Add(this.label2);
-			this.panel2.Location = new System.Drawing.Point(10, 215);
+			this.panel2.Location = new System.Drawing.Point(10, 236);
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(422, 49);
-			this.panel2.TabIndex = 13;
+			this.panel2.TabIndex = 2;
 			// 
 			// SettingsForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
-			this.ClientSize = new System.Drawing.Size(444, 313);
+			this.ClientSize = new System.Drawing.Size(444, 333);
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.viewLabel);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.saveButton);
 			this.Controls.Add(this.backupLabel);
 			this.Controls.Add(this.securityLabel);
 			this.Controls.Add(this.menuPanel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "SettingsForm";
@@ -240,6 +284,23 @@ namespace Notes.Settings
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
+		}
+
+		private void saveButton_Click(object sender, EventArgs e)
+		{
+			// View
+			Settings.InitialNotesTable = initialNotesComboBox.GetItemText(initialNotesComboBox.SelectedItem);
+			Settings.InitialNotesState = initialStateComboBox.GetItemText(initialStateComboBox.SelectedItem);
+
+			// Backup
+			Settings.BackupEmail = backupEmailTextBox.Text;
+			Settings.BackupPassword = backupPasswordTextBox.Text;
+
+			// Security
+			string password = newPasswordTextBox.Text.Trim();
+			Settings.SetNewPassword(password);
+
+			Close();
 		}
 	}
 }

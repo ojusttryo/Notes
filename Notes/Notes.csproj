@@ -178,9 +178,12 @@
     <Compile Include="NoteTables\SerialTable.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ProgramSettings\PasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Settings\SettingsForm.cs">
+    <Compile Include="ProgramSettings\Settings.cs" />
+    <Compile Include="ProgramSettings\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Import\BookmarksImportForm.resx">
@@ -216,6 +219,9 @@
     <EmbeddedResource Include="NoteForms\SerialForm.resx">
       <DependentUpon>SerialForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProgramSettings\PasswordForm.resx">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -226,7 +232,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Settings\SettingsForm.resx">
+    <EmbeddedResource Include="ProgramSettings\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

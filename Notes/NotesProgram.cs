@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Notes.ProgramSettings;
+
 namespace Notes
 {
 	static class NotesProgram
@@ -14,22 +16,30 @@ namespace Notes
 		[STAThread]
 		static void Main()
 		{
-			Database.Create();
-			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+
+			Database.CheckPassword();
+			if (Database.IsPasswordProtected)
+			{
+				PasswordForm form = new PasswordForm();
+				form.ShowDialog();
+
+				if (!Database.PasswordIsOk())
+					return;
+			}
+			
+			Database.Create();
+			Settings.LoadFromDatabase();
+
 			Application.Run(new MainForm());
 			
 			/*
 			 * TODO:
 			 * Проверить PVS Studio.
-			 * Окно для выбора импортируемых закладок (чекбокс, имя, ссылка) с кнопками "выбрать все", "снять выбор", "инвертировать".
-			 * Добавить пароль и шифрование некоторых полей. 
 			 * Для закладок можно сделать меню при нажатии правой кнопки на закладке для открытия ссылки в браузере.
-			 * Фото людей?
-			 * Бэкап файла БД (например, сохранение в 7z архив и отправка на почту, введенную в настройках).
-			 * Сохранение последней открытой вкладки
-			 * При наведении на строку с заметкой выводить подсказку со всеми полями? 
+			 * Импорт из оперы и IE
+			 * Перенести чтение настроек в БД одним запросом?
 			*/ 
 		}
 	}

@@ -48,6 +48,8 @@ namespace Notes.NoteForms
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
+				else if (e.KeyCode == Keys.Escape)
+					Close();
 			};
 		}
 
