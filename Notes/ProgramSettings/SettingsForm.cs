@@ -29,10 +29,13 @@ namespace Notes.ProgramSettings
 		private Label initialStateLabel;
 		private Label backupLabel;
 
+		private Settings _settings;
 
-		public SettingsForm()
+
+		public SettingsForm(Settings settings)
 		{
 			InitializeComponent();
+			_settings = settings;
 			
 			initialNotesComboBox.Items.Add("Anime films");
 			initialNotesComboBox.Items.Add("Anime serials");
@@ -48,17 +51,17 @@ namespace Notes.ProgramSettings
 			initialNotesComboBox.Items.Add("Serials");
 			initialNotesComboBox.Items.Add("TV shows");
 			initialNotesComboBox.SelectedIndex = 0;
-			if (Settings.InitialNotesTable.Length > 0)
-				initialNotesComboBox.SelectedIndex = initialNotesComboBox.FindString(Settings.InitialNotesTable);
+			if (_settings.InitialNotesTable.Length > 0)
+				initialNotesComboBox.SelectedIndex = initialNotesComboBox.FindString(_settings.InitialNotesTable);
 
 			initialStateComboBox.Items.AddRange(NoteTable.States);
 			initialStateComboBox.Items[0] = "All";
 			initialStateComboBox.SelectedIndex = 0;
-			if (Settings.InitialNotesState.Length > 0)
-				initialStateComboBox.SelectedIndex = initialStateComboBox.FindString(Settings.InitialNotesState);
+			if (_settings.InitialNotesState.Length > 0)
+				initialStateComboBox.SelectedIndex = initialStateComboBox.FindString(_settings.InitialNotesState);
 
-			backupEmailTextBox.Text = Settings.BackupEmail;
-			backupPasswordTextBox.Text = Settings.BackupPassword;
+			backupEmailTextBox.Text = _settings.BackupEmail;
+			backupPasswordTextBox.Text = _settings.BackupPassword;
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
@@ -289,16 +292,16 @@ namespace Notes.ProgramSettings
 		private void saveButton_Click(object sender, EventArgs e)
 		{
 			// View
-			Settings.InitialNotesTable = initialNotesComboBox.GetItemText(initialNotesComboBox.SelectedItem);
-			Settings.InitialNotesState = initialStateComboBox.GetItemText(initialStateComboBox.SelectedItem);
+			_settings.InitialNotesTable = initialNotesComboBox.GetItemText(initialNotesComboBox.SelectedItem);
+			_settings.InitialNotesState = initialStateComboBox.GetItemText(initialStateComboBox.SelectedItem);
 
 			// Backup
-			Settings.BackupEmail = backupEmailTextBox.Text;
-			Settings.BackupPassword = backupPasswordTextBox.Text;
+			_settings.BackupEmail = backupEmailTextBox.Text;
+			_settings.BackupPassword = backupPasswordTextBox.Text;
 
 			// Security
 			string password = newPasswordTextBox.Text.Trim();
-			Settings.SetNewPassword(password);
+			_settings.SetNewPassword(password);
 
 			Close();
 		}

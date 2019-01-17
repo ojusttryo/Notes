@@ -20,6 +20,7 @@ using Notes.NoteTables;
 using Notes.NoteForms;
 using Notes.Import;
 using Notes.ProgramSettings;
+using Notes.DB;
 
 namespace Notes
 {
@@ -46,10 +47,13 @@ namespace Notes
 
 		private ToolStripMenuItem lastClickedStateItem = null;
 
+		private Settings _settings;
 
-		public MainForm()
+
+		public MainForm(Settings settings)
 		{
-			InitializeComponent();			
+			InitializeComponent();
+			_settings = settings;
 
 			_borderWidth = (this.Width - this.ClientRectangle.Width) / 2;
 			_titleHeight = this.Height - this.ClientRectangle.Height - _borderWidth * 2;
@@ -111,17 +115,17 @@ namespace Notes
 
 		private void OpenInitialNotes()
 		{
-			switch (Settings.InitialNotesTable)
+			switch (_settings.InitialNotesTable)
 			{
 				// Отдельно перебираем только пустые элементы или с пробелами, где имя в интерфейсе не соответствует имени в БД.
 				case "": SwitchToTable("AnimeFilms", "Anime films"); break;
 				case "Anime films": SwitchToTable("AnimeFilms", "Anime films"); break;
 				case "Anime serials": SwitchToTable("AnimeSerials", "Anime serials"); break;
 				case "TV shows": SwitchToTable("TVShows", "TV Shows"); break;
-				default: SwitchToTable(Settings.InitialNotesTable); break;
+				default: SwitchToTable(_settings.InitialNotesTable); break;
 			}
 
-			switch (Settings.InitialNotesState)
+			switch (_settings.InitialNotesState)
 			{
 				case "All": allStatesToolStripMenuItem.PerformClick(); break;
 				case "Active": activeToolStripMenuItem.PerformClick(); break;
@@ -478,7 +482,7 @@ namespace Notes
 
 		private void settingsButton_Click(object sender, EventArgs e)
 		{
-			SettingsForm form = new SettingsForm();
+			SettingsForm form = new SettingsForm(_settings);
 			form.ShowDialog();
 		}
 
@@ -545,10 +549,10 @@ namespace Notes
 
 		private void ImportOldDatabase(string filePath)
 		{
-			Database.Export(filePath, "books");
-			Database.Export(filePath, "films");
-			Database.Export(filePath, "anime");
-			Database.Export(filePath, "serials");
+			Database.Import(filePath, "books");
+			Database.Import(filePath, "films");
+			Database.Import(filePath, "anime");
+			Database.Import(filePath, "serials");
 
 			_noteTables["Literature"].ReloadNotes();
 			_noteTables["Films"].ReloadNotes();
@@ -580,8 +584,8 @@ namespace Notes
 
 		private void backupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string email = Settings.BackupEmail;
-			string password = Settings.BackupPassword;
+			string email = _settings.BackupEmail;
+			string password = _settings.BackupPassword;
 			string smtpAddress = Regex.Replace(email, @"\A.+@", @"smtp.");
 
 			try

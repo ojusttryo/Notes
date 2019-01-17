@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+using Notes.DB;
+
 namespace Notes.ProgramSettings
 {
 	public class PasswordForm : Form
@@ -13,10 +15,12 @@ namespace Notes.ProgramSettings
 		private Label wrongPasswordLabel;
 		private Label label1;
 
+		private Settings _settings;
 
-		public PasswordForm()
+		public PasswordForm(Settings settings)
 		{
 			InitializeComponent();
+			_settings = settings;
 			wrongPasswordLabel.Visible = false;
 
 			KeyPress += delegate (object o, KeyPressEventArgs e)
@@ -102,7 +106,7 @@ namespace Notes.ProgramSettings
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			Settings.SetCurrentPassword(passwordTextBox.Text);
+			_settings.SetCurrentPassword(passwordTextBox.Text);
 
 			if (Database.PasswordIsOk())
 				Close();

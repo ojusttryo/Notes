@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using Notes.Notes;
+using Notes.DB;
 
 namespace Notes.NoteTables
 {

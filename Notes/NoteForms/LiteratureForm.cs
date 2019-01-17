@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.DB;
 
 namespace Notes.NoteForms
 {

@@ -5,18 +5,20 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+using Notes.DB;
+
 namespace Notes.ProgramSettings
 {
 	public class Settings
 	{
-		private static string _initialNotesTable;		
-		private static string _initialNotesState;
-		private static string _databasePassword;
-		private static string _backupEmail;
-		private static string _backupPassword;
+		private string _initialNotesTable;		
+		private string _initialNotesState;
+		private string _databasePassword;
+		private string _backupEmail;
+		private string _backupPassword;
 
 
-		static Settings()
+		public Settings()
 		{
 			_initialNotesTable = string.Empty;
 			_initialNotesState = string.Empty;
@@ -26,7 +28,7 @@ namespace Notes.ProgramSettings
 		}
 
 
-		public static string InitialNotesTable
+		public string InitialNotesTable
 		{
 			get { return _initialNotesTable; }
 			set
@@ -40,7 +42,7 @@ namespace Notes.ProgramSettings
 			}
 		}
 		
-		public static string InitialNotesState
+		public string InitialNotesState
 		{
 			get { return _initialNotesState; }
 			set
@@ -54,12 +56,12 @@ namespace Notes.ProgramSettings
 			}
 		}
 
-		public static string DatabasePassword
+		public string DatabasePassword
 		{
 			get { return _databasePassword; }
 		}
 
-		public static string BackupEmail
+		public string BackupEmail
 		{
 			get { return _backupEmail; }
 			set
@@ -73,7 +75,7 @@ namespace Notes.ProgramSettings
 			}
 		}
 
-		public static string BackupPassword
+		public string BackupPassword
 		{
 			get { return _backupPassword; }
 			set
@@ -88,22 +90,22 @@ namespace Notes.ProgramSettings
 		}
 
 
-		public static void LoadFromDatabase()
+		public void InitializeFromDatabase(string initialNotesTable, string initialNotesState, string backupEmail, string backupPassword)
 		{
-			_initialNotesTable = Database.ReadSetting("InitialNotesTable");
-			_initialNotesState = Database.ReadSetting("InitialNotesState");
-			_backupEmail = Database.ReadSetting("BackupEmail");
-			_backupPassword = Database.ReadSetting("BackupPassword");
+			_initialNotesTable = initialNotesTable;
+			_initialNotesState = initialNotesState;
+			_backupEmail = backupEmail;
+			_backupPassword = backupPassword;
 		}
 
 
-		public static void SetCurrentPassword(string password)
+		public void SetCurrentPassword(string password)
 		{
 			_databasePassword = password;
 		}
 
 
-		public static void SetNewPassword(string password)
+		public void SetNewPassword(string password)
 		{
 			// В пароле не должно быть пробельных символов.
 			password = Regex.Replace(password, @"\s+", "");

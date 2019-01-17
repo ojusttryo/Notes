@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Notes.ProgramSettings;
+using Notes.DB;
 
 namespace Notes
 {
@@ -19,10 +20,13 @@ namespace Notes
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
+			Settings settings = new Settings();
+			Database.SetSettings(settings);
+
 			Database.CheckPassword();
 			if (Database.IsPasswordProtected)
 			{
-				PasswordForm form = new PasswordForm();
+				PasswordForm form = new PasswordForm(settings);
 				form.ShowDialog();
 
 				if (!Database.PasswordIsOk())
@@ -30,9 +34,9 @@ namespace Notes
 			}
 			
 			Database.Create();
-			Settings.LoadFromDatabase();
+			Database.ReadSetting();
 
-			Application.Run(new MainForm());
+			Application.Run(new MainForm(settings));
 			
 			/*
 			 * TODO:

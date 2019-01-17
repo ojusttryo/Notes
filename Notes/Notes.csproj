@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>notes.ico</ApplicationIcon>
+    <ApplicationIcon>Resources/notes.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -92,6 +92,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\DatabaseCreate.cs" />
+    <Compile Include="DB\DatabaseExport.cs" />
+    <Compile Include="DB\DatabaseInsert.cs" />
+    <Compile Include="DB\DatabaseProtection.cs" />
+    <Compile Include="DB\DatabaseSelect.cs" />
     <Compile Include="Import\BookmarksImport.cs" />
     <Compile Include="Import\BookmarksImportForm.cs">
       <SubType>Form</SubType>
@@ -123,8 +128,7 @@
     <Compile Include="NoteForms\ProgramForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="DB\Database.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MainForm.cs">
@@ -277,7 +281,7 @@
     <None Include="Resources\settings_20x20.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="notes.ico" />
+    <Content Include="Resources\notes.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

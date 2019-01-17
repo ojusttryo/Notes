@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 using Notes.Notes;
+using Notes.DB;
 
 namespace Notes.NoteTables
 {
@@ -43,7 +44,7 @@ namespace Notes.NoteTables
 
 		private void LoadNotes()
 		{
-			List<Note> notes = Database.GetNotes(TableNameInDatabase);
+			List<Note> notes = Database.SelectNotes(TableNameInDatabase);
 			foreach (Note note in notes)
 				AddNote(note);
 		}
