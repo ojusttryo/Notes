@@ -567,7 +567,9 @@ namespace Notes
 		{
 			BookmarksImport import = new BookmarksImport(fileName);
 			BookmarksImportForm importForm = new BookmarksImportForm(this);
-			foreach (Bookmark b in import.ImportBookmarks())
+			List<Bookmark> bookmarks = import.ImportBookmarks();
+			bookmarks = Database.CheckForDuplicates(bookmarks);
+			foreach (Bookmark b in bookmarks)
 				importForm.AddRow(b.Name, b.URL);
 			importForm.ShowDialog();
 		}

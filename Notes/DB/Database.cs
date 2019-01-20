@@ -6,6 +6,7 @@ using System.Text;
 using System.Data.SQLite;
 
 using Notes.ProgramSettings;
+using Notes.Notes;
 
 namespace Notes.DB
 {
@@ -196,6 +197,59 @@ namespace Notes.DB
 			{
 				return (reader.Read() && reader.FieldCount > 0) ? reader.GetString(0) : string.Empty;
 			}
+		}
+
+
+		public static List<Bookmark> CheckForDuplicates(List<Bookmark> bookmarks)
+		{
+			List<Bookmark> bookmarksWithoutDuplicates = new List<Bookmark>();
+			
+			try
+			{
+				using (SQLiteCommand command = new SQLiteCommand("SELECT COUNT(*) FROM Bookmarks WHERE URL = @URL;"))
+				{
+					command.Parameters.Add("@URL", System.Data.DbType.String);
+
+					using (SQLiteConnection connection = Database.CreateConnection())
+					{
+						connection.Open();
+						if (connection.State != System.Data.ConnectionState.Open)
+							return bookmarksWithoutDuplicates;
+
+						command.Connection = connection;
+
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
+						{
+							foreach (Bookmark b in bookmarks)
+							{
+								command.Parameters[0].Value = b.URL;
+								command.Prepare();
+								SQLiteDataReader reader = command.ExecuteReader();
+								if (reader.Read() && reader.FieldCount > 0)
+								{
+									bool exists = (reader.GetInt32(0) > 0);
+									if (!exists)
+										bookmarksWithoutDuplicates.Add(b);
+
+									reader.Close();
+								}
+							}
+
+							transaction.Commit();
+						}
+
+						connection.Close();
+						command.Connection = null;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not check for duplicates: {0}{1}", Environment.NewLine, ex.ToString()));
+				return bookmarksWithoutDuplicates;
+			}
+
+			return bookmarksWithoutDuplicates;
 		}
 	}
 }
