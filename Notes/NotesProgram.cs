@@ -44,8 +44,6 @@ namespace Notes
 			 * https://www.codeproject.com/Articles/3273/ContainerListView-and-TreeListView-Writing-VS-NET
 			 * https://sourceforge.net/projects/treeviewadv/
 			 * Также неплохо было б избавиться от лишних библиотек, если найдутся нормальные стандартные средства для парсинга json и html.
-			 * Для закладок можно сделать выбор по диапазону (выбор одной, шифт, выбор второй, 
-			 * выделение их цветом, открыть контекстное меню правой кнопкой - выбрать все | отменить все)
 			 * 
 			 * TODO:
 			 * Проверить PVS Studio.

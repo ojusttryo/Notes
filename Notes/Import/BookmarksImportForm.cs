@@ -111,13 +111,13 @@ namespace Notes.Import
 		private void selectAllButton_Click(object sender, EventArgs e)
 		{
 			foreach (DataGridViewRow row in bookmarksTable.Rows)
-				bookmarksTable.Rows[row.Index].SetValues(true);
+				bookmarksTable.Rows[row.Index].Cells[0].Value = true;
 		}
 
 		private void deselectAllButton_Click(object sender, EventArgs e)
 		{
 			foreach (DataGridViewRow row in bookmarksTable.Rows)
-				bookmarksTable.Rows[row.Index].SetValues(false);
+				bookmarksTable.Rows[row.Index].Cells[0].Value = false;
 		}
 
 		private void importButton_Click(object sender, EventArgs e)
