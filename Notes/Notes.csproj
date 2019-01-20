@@ -97,7 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\DatabaseCreate.cs" />
-    <Compile Include="DB\DatabaseExport.cs" />
+    <Compile Include="DB\DatabaseImport.cs" />
     <Compile Include="DB\DatabaseInsert.cs" />
     <Compile Include="DB\DatabaseProtection.cs" />
     <Compile Include="DB\DatabaseSelect.cs" />
