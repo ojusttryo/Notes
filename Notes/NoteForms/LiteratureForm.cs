@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
@@ -11,7 +12,9 @@ using Notes.DB;
 
 namespace Notes.NoteForms
 {
-	class LiteratureForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	class LiteratureForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private ComboBox stateComboBox;
@@ -39,18 +42,13 @@ namespace Notes.NoteForms
 		private Label pageLabel;
 		private Label nameLabel;
 
-
-		private MainForm _mainForm;
-		private Literature _literature;
-
-		public LiteratureForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public LiteratureForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base (mainForm, editedTable, mode)
 		{
 			InitializeComponent();
 
-			_mainForm = parent;
-			_literature = editedNote as Literature;
-			Text = title;
-			submitButton.Text = buttonText;
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 
 			AutoCompleteStringCollection authors = new AutoCompleteStringCollection();
 			authors.AddRange(Database.SelectUniqueValues("Literature", "Author").ToArray());
@@ -71,24 +69,25 @@ namespace Notes.NoteForms
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_literature != null)
+			Literature lit = _editedNote as Literature;
+			if (lit != null)
 			{
-				nameTextBox.Text     = _literature.Name;
-				authorTextBox.Text   = _literature.Author;
-				genreTextBox.Text    = _literature.Genre;
-				universeTextBox.Text = _literature.Universe;
-				seriesTextBox.Text   = _literature.Series;
-				volumeTextBox.Text  = (_literature.Volume == 0) ?  "" : _literature.Volume.ToString();
-				chapterTextBox.Text = (_literature.Chapter == 0) ? "" : _literature.Chapter.ToString();
-				pageTextBox.Text    = (_literature.Page == 0) ?    "" : _literature.Page.ToString();
-				pagesTextBox.Text   = (_literature.Pages == 0) ?   "" : _literature.Pages.ToString();
-				yearTextBox.Text    = (_literature.Year == 0) ?    "" : _literature.Year.ToString();
-				stateComboBox.SelectedIndex = (int)_literature.CurrentState;
-				commentRichTextBox.Text = _literature.Comment;
+				nameTextBox.Text     = lit.Name;
+				authorTextBox.Text   = lit.Author;
+				genreTextBox.Text    = lit.Genre;
+				universeTextBox.Text = lit.Universe;
+				seriesTextBox.Text   = lit.Series;
+				volumeTextBox.Text  = (lit.Volume == 0) ?  "" : lit.Volume.ToString();
+				chapterTextBox.Text = (lit.Chapter == 0) ? "" : lit.Chapter.ToString();
+				pageTextBox.Text    = (lit.Page == 0) ?    "" : lit.Page.ToString();
+				pagesTextBox.Text   = (lit.Pages == 0) ?   "" : lit.Pages.ToString();
+				yearTextBox.Text    = (lit.Year == 0) ?    "" : lit.Year.ToString();
+				stateComboBox.SelectedIndex = (int)lit.CurrentState;
+				commentRichTextBox.Text = lit.Comment;
 			}
 
-			// Делаю возможность при добавлении новых книг вводить диапазон значений для добавления нескольких томов за раз.
-			if (_literature != null)
+			// При редактировании вносится только 1 том, а при добавлении можно указать сразу диапазон. 
+			if (lit != null)
 			{
 				volumeTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
 			}
@@ -109,8 +108,6 @@ namespace Notes.NoteForms
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 		
@@ -418,17 +415,14 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_literature != null);
-
-			Literature literature = isUpdating ? _literature : new Literature();
+			Literature literature = (_editedNote != null && _editedNote is Literature) ? _editedNote as Literature : new Literature();
 
 			literature.Name     = nameTextBox.Text;
 			literature.Author   = authorTextBox.Text;
 			literature.Genre    = genreTextBox.Text;
 			literature.Universe = universeTextBox.Text;
 			literature.Series   = seriesTextBox.Text;
-			// Volume below
+			// Volume skipped. It's below.
 			literature.Chapter = (chapterTextBox.Text.Trim().Length == 0) ? 0 : Int32.Parse(chapterTextBox.Text.Trim());
 			literature.Page    = (pageTextBox.Text.Trim().Length == 0) ?    0 : Int32.Parse(pageTextBox.Text.Trim());
 			literature.Pages   = (pagesTextBox.Text.Trim().Length == 0) ?   0 : Int32.Parse(pagesTextBox.Text.Trim());
@@ -448,7 +442,7 @@ namespace Notes.NoteForms
 				literature.Volume = Int32.Parse(volume);
 				_mainForm.AddOrUpdateNote(literature);
 			}
-			else if (!isUpdating && Regex.IsMatch(volume, @"\A\d+-\d+\Z", RegexOptions.CultureInvariant))
+			else if (OpenMode == Mode.Add && Regex.IsMatch(volume, @"\A\d+-\d+\Z", RegexOptions.CultureInvariant))
 			{
 				MatchCollection matches = Regex.Matches(volume, @"\d+", RegexOptions.CultureInvariant);
 				int firstVolume = Int32.Parse(matches[0].Value);
@@ -465,6 +459,7 @@ namespace Notes.NoteForms
 					{
 						Literature literatureCopy = (Literature)literature.Clone();
 						literatureCopy.Volume = i;
+						// TODO: optimize
 						_mainForm.AddOrUpdateNote(literatureCopy);
 					}
 				}

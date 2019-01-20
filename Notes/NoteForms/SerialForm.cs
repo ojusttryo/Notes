@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	public class SerialForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	public class SerialForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private ComboBox stateComboBox;
@@ -23,27 +26,24 @@ namespace Notes.NoteForms
 		private Label episodeLabel;
 		private Label nameLabel;
 
-		private MainForm _mainForm;
-		private Serial _editedNote;
-
-		public SerialForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public SerialForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base (mainForm, editedTable, mode)
 		{
 			InitializeComponent();
 
-			_mainForm = parent;
-			_editedNote = editedNote as Serial;
-			Text = title;
-			submitButton.Text = buttonText;
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			Serial serial = _editedNote as Serial;
+			if (serial != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				seasonTextBox.Text = _editedNote.Season.ToString();
-				episodeTextBox.Text = _editedNote.Episode.ToString();
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = serial.Name;
+				seasonTextBox.Text = serial.Season.ToString();
+				episodeTextBox.Text = serial.Episode.ToString();
+				stateComboBox.SelectedIndex = (int)serial.CurrentState;
+				commentRichTextBox.Text = serial.Comment;
 			}
 
 			seasonTextBox.KeyPress +=  new KeyPressEventHandler(MainForm.CheckNumericInput);
@@ -53,8 +53,6 @@ namespace Notes.NoteForms
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -204,10 +202,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Serial serial = isUpdating ? _editedNote : new Serial();
+			Serial serial = (_editedNote != null && _editedNote is Serial) ? _editedNote as Serial : new Serial();
 			serial.Name = nameTextBox.Text;
 			serial.Season = (seasonTextBox.Text.Trim().Length == 0) ? 0 : Int32.Parse(seasonTextBox.Text.Trim());
 			serial.Episode = (episodeTextBox.Text.Trim().Length == 0) ? 0 : Int32.Parse(episodeTextBox.Text.Trim());

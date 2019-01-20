@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	class MealForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	class MealForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private ComboBox stateComboBox;
@@ -23,35 +26,31 @@ namespace Notes.NoteForms
 		private Label recipeLabel;
 		private Label nameLabel;
 		
-		private MainForm _mainForm;
-		private Meal _editedNote;
 
-		public MealForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public MealForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base (mainForm, editedTable, mode)
 		{
 			InitializeComponent();
 
-			_mainForm = parent;
-			_editedNote = editedNote as Meal;
-			Text = title;
-			submitButton.Text = buttonText;
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			Meal meal = _editedNote as Meal;
+			if (meal != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				ingredientsRichTextBox.Text = _editedNote.Ingredients;
-				recipeRichTextBox.Text = _editedNote.Recipe;
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = meal.Name;
+				ingredientsRichTextBox.Text = meal.Ingredients;
+				recipeRichTextBox.Text = meal.Recipe;
+				stateComboBox.SelectedIndex = (int)meal.CurrentState;
+				commentRichTextBox.Text = meal.Comment;
 			}
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -203,10 +202,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Meal meal = isUpdating ? _editedNote : new Meal();
+			Meal meal = (_editedNote != null && _editedNote is Meal) ? _editedNote as Meal : new Meal();
 			meal.Name = nameTextBox.Text;
 			meal.Ingredients = ingredientsRichTextBox.Text;
 			meal.Recipe = recipeRichTextBox.Text;

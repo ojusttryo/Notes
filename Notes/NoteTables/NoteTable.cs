@@ -15,6 +15,9 @@ namespace Notes.NoteTables
 		public string TableNameInDatabase { get; protected set; }
 
 
+		public string TableName { get; protected set; }
+
+
 		public static string[] States = { "Not selected", "Active", "Deleted", "Finished", "Postponed", "Waiting" };
 
 
@@ -30,10 +33,11 @@ namespace Notes.NoteTables
 		}
 
 
-		protected NoteTable(Point location, string tableName)
+		protected NoteTable(Point location, string tableNameInDB, string tableName)
 		{
 			Location = location;
-			TableNameInDatabase = tableName;
+			TableNameInDatabase = tableNameInDB;
+			TableName = tableName;
 
 			Initialize();
 			CreateColumns();

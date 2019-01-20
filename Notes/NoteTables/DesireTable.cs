@@ -22,7 +22,7 @@ namespace Notes.NoteTables
 
 
 		public DesireTable(Point location):
-			base(location, "Desires")
+			base(location, "Desires", "Desires")
 		{
 
 		}

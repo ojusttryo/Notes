@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	class BookmarkForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	class BookmarkForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private ComboBox stateComboBox;
@@ -27,37 +30,33 @@ namespace Notes.NoteForms
 		private Label emailLabel;
 		private Label nameLabel;
 
-		private MainForm _mainForm;
-		private Bookmark _editedNote;
 
-		public BookmarkForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public BookmarkForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base(mainForm, editedTable, mode)
 		{
 			InitializeComponent();
 
-			_mainForm = parent;
-			_editedNote = editedNote as Bookmark;
-			Text = title;
-			submitButton.Text = buttonText;
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			Bookmark b = _editedNote as Bookmark;
+			if (b != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				URLRichTextBox.Text = _editedNote.URL;
-				loginTextBox.Text = _editedNote.Login;
-				passwordTextBox.Text = _editedNote.Password;
-				emailTextBox.Text = _editedNote.Email;
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = b.Name;
+				URLRichTextBox.Text = b.URL;
+				loginTextBox.Text = b.Login;
+				passwordTextBox.Text = b.Password;
+				emailTextBox.Text = b.Email;
+				stateComboBox.SelectedIndex = (int)b.CurrentState;
+				commentRichTextBox.Text = b.Comment;
 			}
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -249,10 +248,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Bookmark bookmark = isUpdating ? _editedNote : new Bookmark();
+			Bookmark bookmark = (_editedNote != null && _editedNote is Bookmark) ? _editedNote as Bookmark : new Bookmark();
 			bookmark.Name = nameTextBox.Text;
 			bookmark.URL = URLRichTextBox.Text;
 			bookmark.Login = loginTextBox.Text;

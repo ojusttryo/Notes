@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	class ProgramForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	class ProgramForm : NoteForm
 	{
 		private TextBox emailTextBox;
 		private Label emailLabel;
@@ -29,38 +32,33 @@ namespace Notes.NoteForms
 		private Label versionLabel;
 		private Label nameLabel;
 
-		private MainForm _mainForm;
-		private Program _editedNote;
-
-		public ProgramForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public ProgramForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base (mainForm, editedTable, mode)
 		{
 			InitializeComponent();
 
-			_mainForm = parent;
-			_editedNote = editedNote as Program;
-			Text = title;
-			submitButton.Text = buttonText;
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			Program program = _editedNote as Program;
+			if (program != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				linkRichTextBox.Text = _editedNote.DownloadLink;
-				versionTextBox.Text = _editedNote.Version;
-				loginTextBox.Text = _editedNote.Login;
-				passwordTextBox.Text = _editedNote.Password;
-				emailTextBox.Text = _editedNote.Email;
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = program.Name;
+				linkRichTextBox.Text = program.DownloadLink;
+				versionTextBox.Text = program.Version;
+				loginTextBox.Text = program.Login;
+				passwordTextBox.Text = program.Password;
+				emailTextBox.Text = program.Email;
+				stateComboBox.SelectedIndex = (int)program.CurrentState;
+				commentRichTextBox.Text = program.Comment;
 			}
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -273,10 +271,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Program program = isUpdating ? _editedNote : new Program();
+			Program program = (_editedNote != null && _editedNote is Program) ? _editedNote as Program : new Program();
 			program.Name = nameTextBox.Text;
 			program.Version = versionTextBox.Text;
 			program.DownloadLink = linkRichTextBox.Text;

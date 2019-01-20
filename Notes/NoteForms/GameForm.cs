@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	class GameForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	class GameForm : NoteForm
 	{
 		private TextBox versionTextBox;
 		private Label versionLabel;
@@ -31,39 +34,34 @@ namespace Notes.NoteForms
 		private TextBox genreTextBox;
 		private Label genreLabel;
 
-		private MainForm _mainForm;
-		private Game _editedNote;
-
-		public GameForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public GameForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base (mainForm, editedTable, mode)
 		{
 			InitializeComponent();
 
-			_mainForm = parent;
-			_editedNote = editedNote as Game;
-			Text = title;
-			submitButton.Text = buttonText;
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			Game game = _editedNote as Game;
+			if (game != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				linkRichTextBox.Text = _editedNote.DownloadLink;
-				versionTextBox.Text = _editedNote.Version;
-				genreTextBox.Text = _editedNote.Genre;
-				loginTextBox.Text = _editedNote.Login;
-				passwordTextBox.Text = _editedNote.Password;
-				emailTextBox.Text = _editedNote.Email;
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = game.Name;
+				linkRichTextBox.Text = game.DownloadLink;
+				versionTextBox.Text = game.Version;
+				genreTextBox.Text = game.Genre;
+				loginTextBox.Text = game.Login;
+				passwordTextBox.Text = game.Password;
+				emailTextBox.Text = game.Email;
+				stateComboBox.SelectedIndex = (int)game.CurrentState;
+				commentRichTextBox.Text = game.Comment;
 			}
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -297,10 +295,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Game game = isUpdating ? _editedNote : new Game();
+			Game game = (_editedNote != null && _editedNote is Game) ? _editedNote as Game : new Game();
 			game.Name = nameTextBox.Text;
 			game.Version = versionTextBox.Text;
 			game.Genre = versionTextBox.Text;

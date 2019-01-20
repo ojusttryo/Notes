@@ -26,7 +26,7 @@ namespace Notes.NoteTables
 		
 
 		public ProgramTable(Point location):
-			base(location, "Programs")
+			base(location, "Programs", "Programs")
 		{
 
 		}

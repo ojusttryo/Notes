@@ -20,8 +20,8 @@ namespace Notes.NoteTables
 			Comment
 		}
 
-		public DatedNoteTable(Point location, string tableName):
-			base(location, tableName)
+		public DatedNoteTable(Point location, string tableNameInDB, string tableName):
+			base(location, tableNameInDB, tableName)
 		{
 
 		}

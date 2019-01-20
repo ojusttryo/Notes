@@ -25,8 +25,8 @@ namespace Notes.NoteTables
 		}
 
 
-		public SerialTable(Point location, string tableName):
-			base(location, tableName)
+		public SerialTable(Point location, string tableNameInDB, string tableName):
+			base(location, tableNameInDB, tableName)
 		{
 
 		}

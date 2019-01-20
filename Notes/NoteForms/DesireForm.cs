@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	public class DesireForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	public class DesireForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private ComboBox stateComboBox;
@@ -22,34 +25,29 @@ namespace Notes.NoteForms
 		private RichTextBox descriptionRichTextBox;
 		private Label nameLabel;
 
-		private MainForm _mainForm;
-		private Desire _editedNote;
-
-		public DesireForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public DesireForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base(mainForm, editedTable, mode)
 		{
 			InitializeComponent();
-
-			_mainForm = parent;
-			_editedNote = editedNote as Desire;
-			Text = title;
-			submitButton.Text = buttonText;
+			
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			Desire desire = _editedNote as Desire;
+			if (desire != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				descriptionRichTextBox.Text = _editedNote.Description;
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = desire.Name;
+				descriptionRichTextBox.Text = desire.Description;
+				stateComboBox.SelectedIndex = (int)desire.CurrentState;
+				commentRichTextBox.Text = desire.Comment;
 			}
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -178,10 +176,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Desire desire = isUpdating ? _editedNote : new Desire();
+			Desire desire = (_editedNote != null && _editedNote is Desire) ? _editedNote as Desire : new Desire();
 			desire.Name = nameTextBox.Text;
 			desire.Description = descriptionRichTextBox.Text;
 			desire.CurrentState = (Note.State)stateComboBox.SelectedIndex;

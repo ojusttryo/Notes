@@ -29,7 +29,7 @@ namespace Notes.NoteTables
 
 
 		public PeopleTable(Point location):
-			base(location, "People")
+			base(location, "People", "People")
 		{
 
 		}

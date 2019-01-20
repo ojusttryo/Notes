@@ -30,7 +30,7 @@ namespace Notes.NoteTables
 
 
 		public LiteratureTable(Point location):
-			base(location, "Literature")
+			base(location, "Literature", "Literature")
 		{
 
 		}

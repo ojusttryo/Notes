@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	class PersonForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	class PersonForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private ComboBox stateComboBox;
@@ -27,34 +30,31 @@ namespace Notes.NoteForms
 		private Label nicknameLabel;
 		private RichTextBox contactsRichTextBox;
 		private Label nameLabel;
-
-		private MainForm _mainForm;
 		private ComboBox sexComboBox;
-		private Person _editedNote;
 
-		public PersonForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public PersonForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base (mainForm, editedTable, mode)
 		{
 			InitializeComponent();
-
-			_mainForm = parent;
-			_editedNote = editedNote as Person;
-			Text = title;
-			submitButton.Text = buttonText;
+						
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 			sexComboBox.Items.AddRange(PeopleTable.Sex);
 			sexComboBox.SelectedIndex = 0;
 			
-			if (_editedNote != null)
+			Person person = _editedNote as Person;
+			if (person != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				nicknameTextBox.Text = _editedNote.Nickname;
-				sexComboBox.SelectedIndex = (int)_editedNote.Sex;
-				birthdateTextBox.Text = _editedNote.Birthdate;
-				addressTextBox.Text = _editedNote.Address;
-				contactsRichTextBox.Text = _editedNote.Contacts;
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = person.Name;
+				nicknameTextBox.Text = person.Nickname;
+				sexComboBox.SelectedIndex = (int)person.Sex;
+				birthdateTextBox.Text = person.Birthdate;
+				addressTextBox.Text = person.Address;
+				contactsRichTextBox.Text = person.Contacts;
+				stateComboBox.SelectedIndex = (int)person.CurrentState;
+				commentRichTextBox.Text = person.Comment;
 			}
 
 			birthdateTextBox.KeyPress += new KeyPressEventHandler(CheckDateInput);
@@ -63,8 +63,6 @@ namespace Notes.NoteForms
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -292,10 +290,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			Person person = isUpdating ? _editedNote : new Person();
+			Person person = (_editedNote != null && _editedNote is Person) ? _editedNote as Person : new Person();
 			person.Name = nameTextBox.Text;
 			person.Nickname = nicknameTextBox.Text;
 			person.Sex = (Person.PSex)sexComboBox.SelectedIndex;

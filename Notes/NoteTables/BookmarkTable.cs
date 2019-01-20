@@ -26,7 +26,7 @@ namespace Notes.NoteTables
 
 
 		public BookmarkTable(Point location):
-			base(location, "Bookmarks")
+			base(location, "Bookmarks", "Bookmarks")
 		{
 			// Меню при нажатии правой кнопкой мыши по строке таблицы.
 			// Правда, нажатие правой не подсвечивает строку как выбранную, но это не страшно.

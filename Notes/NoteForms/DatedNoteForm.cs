@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
 
 namespace Notes.NoteForms
 {
-	// TODO: переименовать класс и кнопку, т.к. используется для добавления и изменения.
-	public class DatedNoteForm : Form
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	public class DatedNoteForm : NoteForm
 	{
 		private Label yearLabel;
 		private Label stateLabel;
@@ -22,26 +24,23 @@ namespace Notes.NoteForms
 		private RichTextBox commentRichTextBox;
 		private Label nameLabel;
 
-		private MainForm _mainForm;
-		private DatedNote _editedNote;
-
-		public DatedNoteForm(MainForm parent, string title, string buttonText, Note editedNote = null)
+		public DatedNoteForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+			base(mainForm, editedTable, mode)
 		{
 			InitializeComponent();
-
-			_mainForm = parent;
-			_editedNote = editedNote as DatedNote;
-			Text = title;
-			submitButton.Text = buttonText;
+			
+			Text = GetFormText();
+			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
 
-			if (_editedNote != null)
+			DatedNote datedNote = _editedNote as DatedNote;
+			if (datedNote != null)
 			{
-				nameTextBox.Text = _editedNote.Name;
-				yearTextBox.Text = (_editedNote.Year == 0) ? "" : _editedNote.Year.ToString();
-				stateComboBox.SelectedIndex = (int)_editedNote.CurrentState;
-				commentRichTextBox.Text = _editedNote.Comment;
+				nameTextBox.Text = datedNote.Name;
+				yearTextBox.Text = (datedNote.Year == 0) ? "" : datedNote.Year.ToString();
+				stateComboBox.SelectedIndex = (int)datedNote.CurrentState;
+				commentRichTextBox.Text = datedNote.Comment;
 			}
 
 			yearTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
@@ -50,8 +49,6 @@ namespace Notes.NoteForms
 			{
 				if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Control)
 					submitButton.PerformClick();
-				else if (e.KeyCode == Keys.Escape)
-					Close();
 			};
 		}
 
@@ -179,10 +176,7 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			// Add or update note
-			bool isUpdating = (_editedNote != null);
-
-			DatedNote datedNote = isUpdating ? _editedNote : new DatedNote();
+			DatedNote datedNote = (_editedNote != null && _editedNote is DatedNote) ? _editedNote as DatedNote : new DatedNote();
 			datedNote.Name = nameTextBox.Text;
 			datedNote.Year = (yearTextBox.Text.Trim().Length == 0) ? 0 : Int32.Parse(yearTextBox.Text.Trim());
 			datedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;

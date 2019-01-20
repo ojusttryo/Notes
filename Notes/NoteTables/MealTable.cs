@@ -23,7 +23,7 @@ namespace Notes.NoteTables
 
 
 		public MealTable(Point location):
-			base(location, "Meal")
+			base(location, "Meal", "Meal")
 		{
 
 		}

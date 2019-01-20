@@ -126,6 +126,9 @@
     <Compile Include="NoteForms\MealForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="NoteForms\NoteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NoteForms\PersonForm.cs">
       <SubType>Form</SubType>
     </Compile>
