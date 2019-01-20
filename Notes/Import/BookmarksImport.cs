@@ -5,26 +5,71 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CsQuery.HtmlParser;
 
 using Notes.Notes;
+using Notes;
 
 namespace Notes.Import
 {
 	public class BookmarksImport
 	{
+		private string FileName { get; set; }
+
+
+		public BookmarksImport(string fileName)
+		{
+			FileName = fileName;
+		}
+
+
 		/// <summary>
-		/// Импортирует закладки из браузеров. Работает с экспортом Firefox 64.0.2 в формате json.
+		/// Импортирует закладки из браузеров. 
+		/// Работа проверена на Firefox 64.0.2 (json), IE 11.0.9600, Opera 57.0.3098.
 		/// </summary>
-		public List<Bookmark> ImportBookmarks(string fileName)
+		public List<Bookmark> ImportBookmarks()
+		{
+			if (IsMozillaBookmarks())
+				return ImportFromMozillaJson();
+			else if (IsInternetExplorerBookmarks() || IsOperaBookmarks())
+				return ImportFromHtml();
+			else
+				return new List<Bookmark>();
+		}
+
+
+		private bool IsMozillaBookmarks()
+		{
+			if (!FileName.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase))
+				return false;
+
+			JObject json = JObject.Parse(File.ReadAllText(FileName));
+
+			return (json.Properties().Any(x => x.Name == "type" && x.Value.ToString() == "text/x-moz-place-container"));
+		}
+
+
+		private bool IsInternetExplorerBookmarks()
+		{
+			// Пока других особых признаков не нашел.
+			return (FileName.EndsWith(".htm", StringComparison.InvariantCultureIgnoreCase));
+		}
+
+
+		private bool IsOperaBookmarks()
+		{
+			// Пока других особых признаков не нашел.
+			return (FileName.EndsWith(".html", StringComparison.InvariantCultureIgnoreCase));
+		}
+
+
+		private List<Bookmark> ImportFromMozillaJson()
 		{
 			List<Bookmark> bookmarks = new List<Bookmark>();
 
 			try
-			{
-				JObject json = JObject.Parse(File.ReadAllText(fileName));
-
-				if (!IsMozillaBookmarks(json))
-					return bookmarks;
+			{				
+				JObject json = JObject.Parse(File.ReadAllText(FileName));
 
 				// Нужно найти все объекты, у которых нет потомков (скорей всего закладка) и есть свойства title и uri
 
@@ -98,10 +143,32 @@ namespace Notes.Import
 			return bookmarks;
 		}
 
-
-		private bool IsMozillaBookmarks(JObject jsonRootObject)
+		
+		private List<Bookmark> ImportFromHtml()
 		{
-			return (jsonRootObject.Properties().Any(x => x.Name == "type" && x.Value.ToString() == "text/x-moz-place-container"));
+			// Для парсинга html выбрана библиотека CsQuery, т.к. другие варианты немного не подходят. 
+			// AngleSharp требует более высокую версию .NET Framework, а HtmlAgilityPack содержит баги и больше не поддерживается.
+			// https://habr.com/en/post/273807/#AngleSharp
+			// https://ru.stackoverflow.com/questions/420354/%D0%9A%D0%B0%D0%BA-%D1%80%D0%B0%D1%81%D0%BF%D0%B0%D1%80%D1%81%D0%B8%D1%82%D1%8C-html-%D0%B2-net
+
+			List<Bookmark> bookmarks = new List<Bookmark>();
+
+			CsQuery.CQ cq = CsQuery.CQ.Create(File.ReadAllText(FileName));
+			foreach (CsQuery.IDomObject obj in cq.Find("a"))
+			{
+				if (obj.HasAttribute("href"))
+				{
+					Bookmark b = new Bookmark();
+
+					b.URL = obj.GetAttribute("href");
+					// Не английский текст выводится в виде кодов символов. Нужно декодировать.
+					b.Name = System.Net.WebUtility.HtmlDecode(obj.InnerText);
+
+					bookmarks.Add(b);
+				}				
+			}
+
+			return bookmarks;
 		}
 	}
 }

@@ -28,30 +28,25 @@ namespace Notes.NoteTables
 		public BookmarkTable(Point location):
 			base(location, "Bookmarks")
 		{
-
-
 			// Меню при нажатии правой кнопкой мыши по строке таблицы.
 			// Правда, нажатие правой не подсвечивает строку как выбранную, но это не страшно.
 			CellMouseDown += delegate (object o, DataGridViewCellMouseEventArgs e)
-			{
+			{				
+				string uri = Rows[e.RowIndex].Cells[(int)Index.URL].Value.ToString();
+				Uri uriResult;
+				bool isValidUri = Uri.TryCreate(uri, UriKind.Absolute, out uriResult)
+					&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+				// Меню открывается только при наличии правильной ссылки.
+				if (!isValidUri)
+					return;
+
 				if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && e.Button == MouseButtons.Right)
 				{
 					ContextMenu menu = new ContextMenu();
-
 					MenuItem item = new MenuItem("Open in default browser");
-					item.Click += delegate (object io, EventArgs ie)
-					{
-						string uri = Rows[e.RowIndex].Cells[(int)Index.URL].Value.ToString();
-
-						Uri uriResult;
-						bool isValidUri = Uri.TryCreate(uri, UriKind.Absolute, out uriResult)
-							&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-						if (isValidUri)
-							Process.Start(uri);
-					};
+					item.Click += delegate (object io, EventArgs ie) { Process.Start(uri); };
 					menu.MenuItems.Add(item);
-
 					menu.Show(this, this.PointToClient(Cursor.Position));
 				}
 			};

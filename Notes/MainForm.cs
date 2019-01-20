@@ -531,18 +531,21 @@ namespace Notes
 			// TODO: надо будет пройти профилировщиком и оптимизировать. Выходит долговато.
 
 			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Filter = "Firefox bookmarks|*.json|Opera bookmarks|*.html|Database|MEDIA.sqlite";
+			dialog.Filter = "Firefox bookmarks|*.json|Opera bookmarks|*.html|IE bookmarks|*.htm|Database|MEDIA.sqlite";
 			dialog.Title = "Select old file";
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				bool isOldDB = string.Equals(dialog.SafeFileName, "MEDIA.sqlite", StringComparison.CurrentCultureIgnoreCase);
-				bool isJson = string.Equals(Path.GetExtension(dialog.FileName), ".json", StringComparison.CurrentCultureIgnoreCase);
-				bool isHtml = string.Equals(Path.GetExtension(dialog.FileName), ".html", StringComparison.CurrentCultureIgnoreCase);
+				string extension = Path.GetExtension(dialog.FileName);
+
+				bool isOldDB = dialog.SafeFileName.EqualsInvariantCI("MEDIA.sqlite");
+				bool isJson = Path.GetExtension(dialog.FileName).EqualsInvariantCI(".json");
+				bool isHtm = Path.GetExtension(dialog.FileName).EqualsInvariantCI(".htm");
+				bool isHtml = Path.GetExtension(dialog.FileName).EqualsInvariantCI(".html");
 
 				if (isOldDB)
 					ImportOldDatabase(dialog.FileName);
-				else if (isJson || isHtml)
-					StartBookmarksImport(dialog.FileName);
+				else if (isJson || isHtml || isHtm)
+					ShowImportingBookmarks(dialog.FileName);
 			}
 		}
 
@@ -561,11 +564,11 @@ namespace Notes
 		}
 
 
-		private void StartBookmarksImport(string fileName)
+		private void ShowImportingBookmarks(string fileName)
 		{
-			BookmarksImport import = new BookmarksImport();
+			BookmarksImport import = new BookmarksImport(fileName);
 			BookmarksImportForm importForm = new BookmarksImportForm(this);
-			foreach (Bookmark b in import.ImportBookmarks(fileName))
+			foreach (Bookmark b in import.ImportBookmarks())
 				importForm.AddRow(b.Name, b.URL);
 			importForm.ShowDialog();
 		}
