@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 
 using Notes.Notes;
 
@@ -28,6 +29,32 @@ namespace Notes.NoteTables
 			base(location, "Bookmarks")
 		{
 
+
+			// Меню при нажатии правой кнопкой мыши по строке таблицы.
+			// Правда, нажатие правой не подсвечивает строку как выбранную, но это не страшно.
+			CellMouseDown += delegate (object o, DataGridViewCellMouseEventArgs e)
+			{
+				if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && e.Button == MouseButtons.Right)
+				{
+					ContextMenu menu = new ContextMenu();
+
+					MenuItem item = new MenuItem("Open in default browser");
+					item.Click += delegate (object io, EventArgs ie)
+					{
+						string uri = Rows[e.RowIndex].Cells[(int)Index.URL].Value.ToString();
+
+						Uri uriResult;
+						bool isValidUri = Uri.TryCreate(uri, UriKind.Absolute, out uriResult)
+							&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+						if (isValidUri)
+							Process.Start(uri);
+					};
+					menu.MenuItems.Add(item);
+
+					menu.Show(this, this.PointToClient(Cursor.Position));
+				}
+			};
 		}
 
 

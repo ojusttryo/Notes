@@ -98,7 +98,6 @@ namespace Notes.NoteTables
 				switch (Columns[e.ColumnIndex].Name)
 				{
 					case "State": Database.InsertOrUpdate(TableNameInDatabase, GetNoteFromSelectedRow()); break;
-					// TODO: обработка	 кнопок плюс/минус для серий и сезонов.
 					default: break;
 				}
 			};
