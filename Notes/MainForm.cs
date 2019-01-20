@@ -253,8 +253,10 @@ namespace Notes
 				return;
 
 			int id = Int32.Parse(currentRow.Cells[0].Value.ToString());     // Там всегда корректный Id. Пользователь не имеет доступа к ячейке.
+			List<int> identifiers = new List<int>();
+			identifiers.Add(id);
 
-			bool deleted = Database.DeleteNote(_currentNoteTable.TableNameInDatabase, id);
+			bool deleted = Database.DeleteNotes(_currentNoteTable.TableNameInDatabase, identifiers);
 			if (!deleted)
 				MessageBox.Show("Unknown error. Cannot delete note.");
 			else

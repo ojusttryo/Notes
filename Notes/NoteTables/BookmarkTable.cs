@@ -28,27 +28,40 @@ namespace Notes.NoteTables
 		public BookmarkTable(Point location):
 			base(location, "Bookmarks", "Bookmarks")
 		{
-			// Меню при нажатии правой кнопкой мыши по строке таблицы.
-			// Правда, нажатие правой не подсвечивает строку как выбранную, но это не страшно.
-			CellMouseDown += delegate (object o, DataGridViewCellMouseEventArgs e)
-			{				
-				string uri = Rows[e.RowIndex].Cells[(int)Index.URL].Value.ToString();
+			// В openItem.Click и ContextMenu.Popup используется SelectedRows[0] вместо CurrentRow, т.к. не удается установить
+			// в качестве CurrentRow ту, на которую нажали правой кнопкой мыши.
+
+			// Меню для открытия закладки из заметки в браузере.
+			MenuItem openItem = new MenuItem("Open in default browser");
+			openItem.Click += delegate (object io, EventArgs ie) 
+			{
+				// Правильность uri проверяем при открытии меню (ContextMenu.Popup). Здесь считаем, что все ОК.
+				string uri = SelectedRows[0].Cells[(int)Index.URL].Value.ToString();
+				Process.Start(uri);
+			};
+			this.ContextMenu.MenuItems.Add(openItem);
+
+			// Меню открывается только при наличии правильной ссылки.
+			this.ContextMenu.Popup += delegate (object o, EventArgs e)
+			{
+				if (SelectedRows == null || SelectedRows.Count != 1)
+				{
+					this.ContextMenu.MenuItems[1].Visible = false;
+					return;
+				}
+
+				string uri = SelectedRows[0].Cells[(int)Index.URL].Value.ToString();
 				Uri uriResult;
 				bool isValidUri = Uri.TryCreate(uri, UriKind.Absolute, out uriResult)
 					&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-				// Меню открывается только при наличии правильной ссылки.
+				
 				if (!isValidUri)
-					return;
-
-				if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && e.Button == MouseButtons.Right)
 				{
-					ContextMenu menu = new ContextMenu();
-					MenuItem item = new MenuItem("Open in default browser");
-					item.Click += delegate (object io, EventArgs ie) { Process.Start(uri); };
-					menu.MenuItems.Add(item);
-					menu.Show(this, this.PointToClient(Cursor.Position));
+					this.ContextMenu.MenuItems[1].Visible = false;
+					return;
 				}
+
+				this.ContextMenu.MenuItems[1].Visible = true;
 			};
 		}
 

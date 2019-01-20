@@ -83,12 +83,50 @@ namespace Notes.DB
 		}
 
 
-		public static bool DeleteNote(string tableName, int id)
+		public static bool DeleteNotes(string tableName, List<int> identifiers)
 		{
-			SQLiteCommand command = new SQLiteCommand(string.Format("DELETE FROM {0} WHERE Id = {1}", tableName, id));
-			int deletedRows = ExecuteNonQuery(command);
+			bool deleted = false;
 
-			return (deletedRows == 1);
+			try
+			{
+				using (SQLiteCommand command = new SQLiteCommand("DELETE FROM " + tableName + " WHERE Id = @Id;"))
+				{
+					command.Parameters.Add("@Id", System.Data.DbType.Int32);
+
+					using (SQLiteConnection connection = Database.CreateConnection())
+					{
+						connection.Open();
+						if (connection.State != System.Data.ConnectionState.Open)
+							return false;
+
+						command.Connection = connection;
+
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
+						{
+							foreach (int id in identifiers)
+							{
+								command.Parameters[0].Value = id;
+								command.Prepare();
+								command.ExecuteNonQuery();
+							}
+
+							transaction.Commit();
+						}
+
+						connection.Close();
+						command.Connection = null;
+
+						deleted = true;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not delete note: {0}{1}", Environment.NewLine, ex.ToString()));
+				deleted = false;
+			}
+
+			return deleted;
 		}
 		
 
