@@ -209,7 +209,7 @@ namespace Notes.NoteForms
 			meal.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			meal.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(meal);
+			SubmitNote(meal);
 
 			Close();
 		}

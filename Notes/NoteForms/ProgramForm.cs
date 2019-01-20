@@ -281,7 +281,7 @@ namespace Notes.NoteForms
 			program.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			program.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(program);
+			SubmitNote(program);
 
 			Close();
 		}

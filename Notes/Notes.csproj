@@ -96,11 +96,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\DatabaseCreateCommands.cs" />
     <Compile Include="DB\DatabaseCreate.cs" />
     <Compile Include="DB\DatabaseImport.cs" />
     <Compile Include="DB\DatabaseInsert.cs" />
     <Compile Include="DB\DatabaseProtection.cs" />
     <Compile Include="DB\DatabaseSelect.cs" />
+    <Compile Include="DB\DatabaseUpdate.cs" />
     <Compile Include="Import\BookmarksImport.cs" />
     <Compile Include="Import\BookmarksImportForm.cs">
       <SubType>Form</SubType>

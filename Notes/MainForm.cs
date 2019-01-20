@@ -66,7 +66,7 @@ namespace Notes
 			_noteTables = new Dictionary<string, NoteTable>();
 			_noteTables.Add("AnimeFilms", new DatedNoteTable(noteTableLocation, "AnimeFilms", "Anime films"));
 			_noteTables.Add("Films", new DatedNoteTable(noteTableLocation, "Films", "Films"));
-			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances", "Perfomances"));
+			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances", "Performances"));
 			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation));
 			_noteTables.Add("Bookmarks", new BookmarkTable(noteTableLocation));
 			_noteTables.Add("Meal", new MealTable(noteTableLocation));
@@ -300,34 +300,31 @@ namespace Notes
 		}
 
 
-		/// <summary>
-		/// Добавляет или обновляет заметку.
-		/// </summary>
-		/// <param name="note"></param>
-		public void AddOrUpdateNote(Note note)
+		public void AddNote(Note note)
 		{
-			// Заметка должна добавиться как в базу данных, так и в таблицу. Если куда-то не удалось, то вообще не добавлять.
-			int result = Database.InsertOrUpdate(_currentNoteTable.TableNameInDatabase, note);
-			switch (result)
+			List<Note> notes = new List<Note>();
+			notes.Add(note);
+			AddNotes(notes);
+		}
+
+
+		public void AddNotes(List<Note> notes)
+		{
+			bool successful = Database.Insert(_currentNoteTable.TableNameInDatabase, notes);
+			if (successful)
 			{
-				// Ничего не добавлено. Если из-за исключения, то это в данный момент не проверяется. Можно посмотреть в логе.
-				case 0: break;
-				// Добавлена или обновлена 1 строка. В MySQL при обновлении будет результат 2, но в SQLite возвращает также 1.
-				case 1:
-				{
-					if (_currentNoteTable.CurrentRow != null && Int32.Parse(_currentNoteTable.CurrentRow.Cells[0].Value.ToString()) == note.Id)
-					{
-						_currentNoteTable.UpdateNote(note);
-					}
-					else
-					{
-						_currentNoteTable.AddNote(note);
-						OnResize(null);
-					}
-					break;
-				}
-				default: break;
+				foreach (Note note in notes)
+					_currentNoteTable.AddNote(note);
+				OnResize(null);
 			}
+		}
+
+
+		public void UpdateNote(Note note)
+		{
+			bool successful = Database.Update(_currentNoteTable.TableNameInDatabase, note);
+			if (successful)
+				_currentNoteTable.UpdateNote(note);
 		}
 
 
@@ -576,12 +573,10 @@ namespace Notes
 
 		public void ImportBookmarks(List<Bookmark> bookmarks)
 		{
-			foreach (Bookmark b in bookmarks)
-				Database.InsertOrUpdate("Bookmarks", b);
-
-			_noteTables["Bookmarks"].ReloadNotes();
-
+			List<Note> notes = new List<Note>(bookmarks);
 			SwitchToTable("Bookmarks");
+			AddNotes(notes);
+			_noteTables["Bookmarks"].ReloadNotes();			
 		}
 
 

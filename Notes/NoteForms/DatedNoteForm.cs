@@ -182,7 +182,7 @@ namespace Notes.NoteForms
 			datedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			datedNote.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(datedNote);
+			SubmitNote(datedNote);
 
 			Close();
 		}

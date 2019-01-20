@@ -306,7 +306,7 @@ namespace Notes.NoteForms
 			game.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			game.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(game);
+			SubmitNote(game);
 
 			Close();
 		}

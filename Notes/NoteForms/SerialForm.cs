@@ -209,7 +209,7 @@ namespace Notes.NoteForms
 			serial.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			serial.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(serial);
+			SubmitNote(serial);
 
 			Close();
 		}

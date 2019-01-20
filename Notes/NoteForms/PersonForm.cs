@@ -300,7 +300,7 @@ namespace Notes.NoteForms
 			person.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			person.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(person);
+			SubmitNote(person);
 
 			Close();
 		}

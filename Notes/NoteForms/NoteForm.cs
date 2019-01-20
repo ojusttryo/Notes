@@ -67,5 +67,15 @@ namespace Notes.NoteForms
 				default: return "Submit";
 			}
 		}
+
+
+		protected void SubmitNote(Note note)
+		{
+			switch (OpenMode)
+			{
+				case Mode.Add:  _mainForm.AddNote(note); break;
+				case Mode.Edit: _mainForm.UpdateNote(note); break;
+			}
+		}
 	}
 }

@@ -257,7 +257,7 @@ namespace Notes.NoteForms
 			bookmark.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			bookmark.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(bookmark);
+			SubmitNote(bookmark);
 
 			Close();
 		}

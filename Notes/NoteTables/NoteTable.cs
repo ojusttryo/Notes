@@ -101,7 +101,7 @@ namespace Notes.NoteTables
 
 				switch (Columns[e.ColumnIndex].Name)
 				{
-					case "State": Database.InsertOrUpdate(TableNameInDatabase, GetNoteFromSelectedRow()); break;
+					case "State": Database.Update(TableNameInDatabase, GetNoteFromSelectedRow()); break;
 					default: break;
 				}
 			};

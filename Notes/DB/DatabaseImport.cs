@@ -24,30 +24,11 @@ namespace Notes.DB
 
 			switch (tableName)
 			{
-				case "anime":
-				{
-					foreach (Note note in SelectFromOldTable(filePath, "anime", oldStates))
-						InsertOrUpdateSerial("AnimeSerials", note, _animeSerialsInsertCommand);
-					break;
-				}
-				case "serials":
-				{
-					foreach (Note note in SelectFromOldTable(filePath, "serials", oldStates))
-						InsertOrUpdateSerial("Serials", note, _serialsInsertCommand);
-					break;
-				}
-				case "books":
-				{
-					foreach (Note note in SelectFromOldTable(filePath, "books", oldStates))
-						InsertOrUpdateLiterature("Literature", note);
-					break;
-				}
-				case "films":
-				{
-					foreach (Note note in SelectFromOldTable(filePath, "films", oldStates))
-						InsertOrUpdateDatedNote("Films", note, _filmsInsertCommand);
-					break;
-				}
+				case "anime": Insert("AnimeSerials", SelectFromOldTable(filePath, "anime", oldStates)); break;
+				case "serials": Insert("Serials", SelectFromOldTable(filePath, "serials", oldStates)); break;
+				case "books": Insert("Literature", SelectFromOldTable(filePath, "books", oldStates)); break;
+				case "films": Insert("Films", SelectFromOldTable(filePath, "films", oldStates)); break;
+				default: break;
 			}		
 		}
 

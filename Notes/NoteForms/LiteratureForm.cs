@@ -435,33 +435,37 @@ namespace Notes.NoteForms
 			if (volume.Length == 0)
 			{
 				literature.Volume = 0;
-				_mainForm.AddOrUpdateNote(literature);
+				SubmitNote(literature);
 			}
 			else if (Regex.IsMatch(volume, @"\A\d+\Z", RegexOptions.CultureInvariant))
 			{
 				literature.Volume = Int32.Parse(volume);
-				_mainForm.AddOrUpdateNote(literature);
+				SubmitNote(literature);
 			}
 			else if (OpenMode == Mode.Add && Regex.IsMatch(volume, @"\A\d+-\d+\Z", RegexOptions.CultureInvariant))
 			{
 				MatchCollection matches = Regex.Matches(volume, @"\d+", RegexOptions.CultureInvariant);
 				int firstVolume = Int32.Parse(matches[0].Value);
 				int lastVolume = Int32.Parse(matches[1].Value);
+				
 				if (firstVolume > lastVolume)
 				{
 					literature.Volume = firstVolume;
-					_mainForm.AddOrUpdateNote(literature);
+					SubmitNote(literature);
 				}
 				else
 				{
+					List<Note> notes = new List<Note>();
+
 					// Добавляем несколько книг с томами firstVolume-lastVolume.
 					for (int i = firstVolume; i <= lastVolume; i++)
 					{
 						Literature literatureCopy = (Literature)literature.Clone();
 						literatureCopy.Volume = i;
-						// TODO: optimize
-						_mainForm.AddOrUpdateNote(literatureCopy);
+						notes.Add(literatureCopy);
 					}
+
+					_mainForm.AddNotes(notes);
 				}
 			}
 

@@ -182,7 +182,7 @@ namespace Notes.NoteForms
 			desire.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			desire.Comment = commentRichTextBox.Text;
 
-			_mainForm.AddOrUpdateNote(desire);
+			SubmitNote(desire);
 
 			Close();
 		}

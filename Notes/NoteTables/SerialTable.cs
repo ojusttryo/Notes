@@ -84,13 +84,13 @@ namespace Notes.NoteTables
 				if (Columns[e.ColumnIndex - 1].Name == "Episode")
 				{
 					IncrementCellValue(e.RowIndex, e.ColumnIndex - 1);
-					Database.InsertOrUpdate(TableNameInDatabase, GetNoteFromSelectedRow());
+					Database.Update(TableNameInDatabase, GetNoteFromSelectedRow());
 				}
 				else if (Columns[e.ColumnIndex - 1].Name == "Season")
 				{
 					IncrementCellValue(e.RowIndex, e.ColumnIndex - 1);
 					SetCellValue("Episode", e.RowIndex, 0);
-					Database.InsertOrUpdate(TableNameInDatabase, GetNoteFromSelectedRow());
+					Database.Update(TableNameInDatabase, GetNoteFromSelectedRow());
 				}
 			};
 		}

@@ -11,21 +11,6 @@ namespace Notes.DB
 {
 	public partial class Database
 	{
-		private static SQLiteCommand _animeFilmsInsertCommand;
-		private static SQLiteCommand _animeSerialsInsertCommand;
-		private static SQLiteCommand _bookmarksInsertCommand;
-		private static SQLiteCommand _desiresInsertCommand;
-		private static SQLiteCommand _filmsInsertCommand;
-		private static SQLiteCommand _gamesInsertCommand;
-		private static SQLiteCommand _literatureInsertCommand;
-		private static SQLiteCommand _mealInsertCommand;
-		private static SQLiteCommand _perfomancesInsertCommand;
-		private static SQLiteCommand _peopleInsertCommand;
-		private static SQLiteCommand _programsInsertCommand;
-		private static SQLiteCommand _serialsInsertCommand;
-		private static SQLiteCommand _TVShowsInsertCommand;
-		private static SQLiteCommand _settingsInsertCommand;
-
 		private static Settings _settings;
 
 		public static string FileName = "notes.sqlite";
@@ -75,7 +60,7 @@ namespace Notes.DB
 				using (SQLiteConnection connection = Database.CreateConnection())
 				{
 					int affectedRows = -1;
-
+					
 					connection.Open();
 					command.Connection = connection;
 
@@ -112,12 +97,12 @@ namespace Notes.DB
 		/// </summary>
 		public static void SaveSetting(string name, string value)
 		{
-			_settingsInsertCommand.Parameters[0].Value = name;
-			_settingsInsertCommand.Parameters[1].Value = value;
+			_settingsInsertOrUpdateCommand.Parameters[0].Value = name;
+			_settingsInsertOrUpdateCommand.Parameters[1].Value = value;
 
-			_settingsInsertCommand.Prepare();
+			_settingsInsertOrUpdateCommand.Prepare();
 				
-			ExecuteNonQuery(_settingsInsertCommand);
+			ExecuteNonQuery(_settingsInsertOrUpdateCommand);
 		}
 
 
