@@ -45,26 +45,31 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							DatedNote datedNote = note as DatedNote;
-							if (datedNote == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								DatedNote datedNote = note as DatedNote;
+								if (datedNote == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								datedNoteInsertCommand.Parameters[0].Value = datedNote.Name;
+								datedNoteInsertCommand.Parameters[1].Value = (int)datedNote.CurrentState;
+								datedNoteInsertCommand.Parameters[2].Value = datedNote.Comment;
+								datedNoteInsertCommand.Parameters[3].Value = datedNote.Year;
+
+								datedNoteInsertCommand.Prepare();
+								datedNoteInsertCommand.ExecuteNonQuery();
+
+								datedNote.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							datedNoteInsertCommand.Parameters[0].Value = datedNote.Name;
-							datedNoteInsertCommand.Parameters[1].Value = (int)datedNote.CurrentState;
-							datedNoteInsertCommand.Parameters[2].Value = datedNote.Comment;
-							datedNoteInsertCommand.Parameters[3].Value = datedNote.Year;
-
-							datedNoteInsertCommand.Prepare();
-							datedNoteInsertCommand.ExecuteNonQuery();
-
-							datedNote.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -98,27 +103,32 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Serial serial = note as Serial;
-							if (serial == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Serial serial = note as Serial;
+								if (serial == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								serialsInsertCommand.Parameters[0].Value = serial.Name;
+								serialsInsertCommand.Parameters[1].Value = (int)serial.CurrentState;
+								serialsInsertCommand.Parameters[2].Value = serial.Comment;
+								serialsInsertCommand.Parameters[3].Value = serial.Season;
+								serialsInsertCommand.Parameters[4].Value = serial.Episode;
+
+								serialsInsertCommand.Prepare();
+								serialsInsertCommand.ExecuteNonQuery();
+
+								serial.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							serialsInsertCommand.Parameters[0].Value = serial.Name;
-							serialsInsertCommand.Parameters[1].Value = (int)serial.CurrentState;
-							serialsInsertCommand.Parameters[2].Value = serial.Comment;
-							serialsInsertCommand.Parameters[3].Value = serial.Season;
-							serialsInsertCommand.Parameters[4].Value = serial.Episode;
-
-							serialsInsertCommand.Prepare();
-							serialsInsertCommand.ExecuteNonQuery();
-
-							serial.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -152,29 +162,34 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Bookmark b = note as Bookmark;
-							if (b == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Bookmark b = note as Bookmark;
+								if (b == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_bookmarksInsertCommand.Parameters[0].Value = b.Name;
+								_bookmarksInsertCommand.Parameters[1].Value = (int)b.CurrentState;
+								_bookmarksInsertCommand.Parameters[2].Value = b.Comment;
+								_bookmarksInsertCommand.Parameters[3].Value = b.URL;
+								_bookmarksInsertCommand.Parameters[4].Value = b.Login;
+								_bookmarksInsertCommand.Parameters[5].Value = b.Password;
+								_bookmarksInsertCommand.Parameters[6].Value = b.Email;
+
+								_bookmarksInsertCommand.Prepare();
+								_bookmarksInsertCommand.ExecuteNonQuery();
+
+								b.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_bookmarksInsertCommand.Parameters[0].Value = b.Name;
-							_bookmarksInsertCommand.Parameters[1].Value = (int)b.CurrentState;
-							_bookmarksInsertCommand.Parameters[2].Value = b.Comment;
-							_bookmarksInsertCommand.Parameters[3].Value = b.URL;
-							_bookmarksInsertCommand.Parameters[4].Value = b.Login;
-							_bookmarksInsertCommand.Parameters[5].Value = b.Password;
-							_bookmarksInsertCommand.Parameters[6].Value = b.Email;
-
-							_bookmarksInsertCommand.Prepare();
-							_bookmarksInsertCommand.ExecuteNonQuery();
-
-							b.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -208,26 +223,31 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Desire desire = note as Desire;
-							if (desire == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Desire desire = note as Desire;
+								if (desire == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_desiresInsertCommand.Parameters[0].Value = desire.Name;
+								_desiresInsertCommand.Parameters[1].Value = (int)desire.CurrentState;
+								_desiresInsertCommand.Parameters[2].Value = desire.Comment;
+								_desiresInsertCommand.Parameters[3].Value = desire.Description;
+
+								_desiresInsertCommand.Prepare();
+								_desiresInsertCommand.ExecuteNonQuery();
+
+								desire.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_desiresInsertCommand.Parameters[0].Value = desire.Name;
-							_desiresInsertCommand.Parameters[1].Value = (int)desire.CurrentState;
-							_desiresInsertCommand.Parameters[2].Value = desire.Comment;
-							_desiresInsertCommand.Parameters[3].Value = desire.Description;
-
-							_desiresInsertCommand.Prepare();
-							_desiresInsertCommand.ExecuteNonQuery();
-
-							desire.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -261,31 +281,36 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Game game = note as Game;
-							if (game == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Game game = note as Game;
+								if (game == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_gamesInsertCommand.Parameters[0].Value = game.Name;
+								_gamesInsertCommand.Parameters[1].Value = (int)game.CurrentState;
+								_gamesInsertCommand.Parameters[2].Value = game.Comment;
+								_gamesInsertCommand.Parameters[3].Value = game.DownloadLink;
+								_gamesInsertCommand.Parameters[4].Value = game.Version;
+								_gamesInsertCommand.Parameters[5].Value = game.Login;
+								_gamesInsertCommand.Parameters[6].Value = game.Password;
+								_gamesInsertCommand.Parameters[7].Value = game.Email;
+								_gamesInsertCommand.Parameters[8].Value = game.Genre;
+
+								_gamesInsertCommand.Prepare();
+								_gamesInsertCommand.ExecuteNonQuery();
+
+								game.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_gamesInsertCommand.Parameters[0].Value = game.Name;
-							_gamesInsertCommand.Parameters[1].Value = (int)game.CurrentState;
-							_gamesInsertCommand.Parameters[2].Value = game.Comment;
-							_gamesInsertCommand.Parameters[3].Value = game.DownloadLink;
-							_gamesInsertCommand.Parameters[4].Value = game.Version;
-							_gamesInsertCommand.Parameters[5].Value = game.Login;
-							_gamesInsertCommand.Parameters[6].Value = game.Password;
-							_gamesInsertCommand.Parameters[7].Value = game.Email;
-							_gamesInsertCommand.Parameters[8].Value = game.Genre;
-
-							_gamesInsertCommand.Prepare();
-							_gamesInsertCommand.ExecuteNonQuery();
-
-							game.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -319,34 +344,39 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Literature lit = note as Literature;
-							if (lit == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Literature lit = note as Literature;
+								if (lit == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_literatureInsertCommand.Parameters[0].Value = lit.Name;
+								_literatureInsertCommand.Parameters[1].Value = (int)lit.CurrentState;
+								_literatureInsertCommand.Parameters[2].Value = lit.Comment;
+								_literatureInsertCommand.Parameters[3].Value = lit.Year;
+								_literatureInsertCommand.Parameters[4].Value = lit.Author;
+								_literatureInsertCommand.Parameters[5].Value = lit.Genre;
+								_literatureInsertCommand.Parameters[6].Value = lit.Universe;
+								_literatureInsertCommand.Parameters[7].Value = lit.Series;
+								_literatureInsertCommand.Parameters[8].Value = lit.Volume;
+								_literatureInsertCommand.Parameters[9].Value = lit.Chapter;
+								_literatureInsertCommand.Parameters[10].Value = lit.Page;
+								_literatureInsertCommand.Parameters[11].Value = lit.Pages;
+
+								_literatureInsertCommand.Prepare();
+								_literatureInsertCommand.ExecuteNonQuery();
+
+								lit.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_literatureInsertCommand.Parameters[0].Value  = lit.Name;
-							_literatureInsertCommand.Parameters[1].Value  = (int)lit.CurrentState;
-							_literatureInsertCommand.Parameters[2].Value  = lit.Comment;
-							_literatureInsertCommand.Parameters[3].Value  = lit.Year;
-							_literatureInsertCommand.Parameters[4].Value  = lit.Author;
-							_literatureInsertCommand.Parameters[5].Value  = lit.Genre;
-							_literatureInsertCommand.Parameters[6].Value  = lit.Universe;
-							_literatureInsertCommand.Parameters[7].Value  = lit.Series;
-							_literatureInsertCommand.Parameters[8].Value  = lit.Volume;
-							_literatureInsertCommand.Parameters[9].Value  = lit.Chapter;
-							_literatureInsertCommand.Parameters[10].Value = lit.Page;
-							_literatureInsertCommand.Parameters[11].Value = lit.Pages;
-
-							_literatureInsertCommand.Prepare();
-							_literatureInsertCommand.ExecuteNonQuery();
-
-							lit.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -380,27 +410,32 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Meal meal = note as Meal;
-							if (meal == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Meal meal = note as Meal;
+								if (meal == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_mealInsertCommand.Parameters[0].Value = meal.Name;
+								_mealInsertCommand.Parameters[1].Value = (int)meal.CurrentState;
+								_mealInsertCommand.Parameters[2].Value = meal.Comment;
+								_mealInsertCommand.Parameters[3].Value = meal.Ingredients;
+								_mealInsertCommand.Parameters[4].Value = meal.Recipe;
+
+								_mealInsertCommand.Prepare();
+								_mealInsertCommand.ExecuteNonQuery();
+
+								meal.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_mealInsertCommand.Parameters[0].Value = meal.Name;
-							_mealInsertCommand.Parameters[1].Value = (int)meal.CurrentState;
-							_mealInsertCommand.Parameters[2].Value = meal.Comment;
-							_mealInsertCommand.Parameters[3].Value = meal.Ingredients;
-							_mealInsertCommand.Parameters[4].Value = meal.Recipe;
-
-							_mealInsertCommand.Prepare();
-							_mealInsertCommand.ExecuteNonQuery();
-
-							meal.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -434,30 +469,35 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Person person = note as Person;
-							if (person == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Person person = note as Person;
+								if (person == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_peopleInsertCommand.Parameters[0].Value = person.Name;
+								_peopleInsertCommand.Parameters[1].Value = (int)person.CurrentState;
+								_peopleInsertCommand.Parameters[2].Value = person.Comment;
+								_peopleInsertCommand.Parameters[3].Value = person.Address;
+								_peopleInsertCommand.Parameters[4].Value = person.Birthdate;
+								_peopleInsertCommand.Parameters[5].Value = person.Nickname;
+								_peopleInsertCommand.Parameters[6].Value = person.Contacts;
+								_peopleInsertCommand.Parameters[7].Value = person.Sex;
+
+								_peopleInsertCommand.Prepare();
+								_peopleInsertCommand.ExecuteNonQuery();
+
+								person.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_peopleInsertCommand.Parameters[0].Value = person.Name;
-							_peopleInsertCommand.Parameters[1].Value = (int)person.CurrentState;
-							_peopleInsertCommand.Parameters[2].Value = person.Comment;
-							_peopleInsertCommand.Parameters[3].Value = person.Address;
-							_peopleInsertCommand.Parameters[4].Value = person.Birthdate;
-							_peopleInsertCommand.Parameters[5].Value = person.Nickname;
-							_peopleInsertCommand.Parameters[6].Value = person.Contacts;
-							_peopleInsertCommand.Parameters[7].Value = person.Sex;
-
-							_peopleInsertCommand.Prepare();
-							_peopleInsertCommand.ExecuteNonQuery();
-
-							person.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
@@ -491,30 +531,35 @@ namespace Notes.DB
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
-						foreach (Note note in notes)
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
 						{
-							Program program = note as Program;
-							if (program == null)
+							foreach (Note note in notes)
 							{
-								Log.Error("Try to insert incorrect note");
-								continue;
+								Program program = note as Program;
+								if (program == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_programsInsertCommand.Parameters[0].Value = program.Name;
+								_programsInsertCommand.Parameters[1].Value = (int)program.CurrentState;
+								_programsInsertCommand.Parameters[2].Value = program.Comment;
+								_programsInsertCommand.Parameters[3].Value = program.DownloadLink;
+								_programsInsertCommand.Parameters[4].Value = program.Version;
+								_programsInsertCommand.Parameters[5].Value = program.Login;
+								_programsInsertCommand.Parameters[6].Value = program.Password;
+								_programsInsertCommand.Parameters[7].Value = program.Email;
+
+								_programsInsertCommand.Prepare();
+								_programsInsertCommand.ExecuteNonQuery();
+
+								program.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
 							}
 
-							_programsInsertCommand.Parameters[0].Value = program.Name;
-							_programsInsertCommand.Parameters[1].Value = (int)program.CurrentState;
-							_programsInsertCommand.Parameters[2].Value = program.Comment;
-							_programsInsertCommand.Parameters[3].Value = program.DownloadLink;
-							_programsInsertCommand.Parameters[4].Value = program.Version;
-							_programsInsertCommand.Parameters[5].Value = program.Login;
-							_programsInsertCommand.Parameters[6].Value = program.Password;
-							_programsInsertCommand.Parameters[7].Value = program.Email;
-
-							_programsInsertCommand.Prepare();
-							_programsInsertCommand.ExecuteNonQuery();
-
-							program.Id = (int)connection.LastInsertRowId;
-
-							inserted = true;
+							transaction.Commit();
 						}
 					}
 
