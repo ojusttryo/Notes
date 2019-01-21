@@ -23,10 +23,7 @@ namespace Notes.ProgramSettings
 			_settings = settings;
 			wrongPasswordLabel.Visible = false;
 
-			KeyPress += delegate (object o, KeyPressEventArgs e)
-			{
-				// TODO: запрет ввода определенных символов.
-			};
+			KeyPress += new KeyPressEventHandler(MainForm.CheckPasword);
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
@@ -36,6 +33,10 @@ namespace Notes.ProgramSettings
 					submitButton.PerformClick();
 			};
 		}
+
+
+
+
 
 		private void InitializeComponent()
 		{

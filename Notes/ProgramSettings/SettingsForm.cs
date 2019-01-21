@@ -63,6 +63,8 @@ namespace Notes.ProgramSettings
 			backupEmailTextBox.Text = _settings.BackupEmail;
 			backupPasswordTextBox.Text = _settings.BackupPassword;
 
+			newPasswordTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckPasword);
+
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				if (e.KeyCode == Keys.Enter)

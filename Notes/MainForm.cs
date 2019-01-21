@@ -446,6 +446,14 @@ namespace Notes
 		}
 
 
+		public static void CheckPasword(object sender, KeyPressEventArgs e)
+		{
+			// Пока запрещу только табы и пробелы.
+			if (char.IsWhiteSpace(e.KeyChar))
+				e.Handled = true;
+		}
+
+
 		private void StateToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// При выборе элемента меню, должны отображаться все заметки с этим состоянием.
@@ -527,8 +535,6 @@ namespace Notes
 
 		private void importToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			// TODO: надо будет пройти профилировщиком и оптимизировать. Выходит долговато.
-
 			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.Filter = "Firefox bookmarks|*.json|Opera bookmarks|*.html|IE bookmarks|*.htm|Database|MEDIA.sqlite";
 			dialog.Title = "Select old file";

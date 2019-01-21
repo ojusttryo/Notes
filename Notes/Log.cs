@@ -34,7 +34,12 @@ namespace Notes
 				_logObject = new object();
 
 				if (!File.Exists(FileName))
-					File.Create(FileName);
+				{
+					using (FileStream fs = File.Create(FileName))
+					{
+						fs.Close();
+					}
+				}
 			}
 			catch (Exception)
 			{

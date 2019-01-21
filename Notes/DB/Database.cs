@@ -77,7 +77,7 @@ namespace Notes.DB
 			catch (Exception ex)
 			{
 				Log.Error(string.Format("Can not execute command: {0}{1}{2}{3}", 
-					Environment.NewLine, (command != null) ? command.CommandText : "", 
+					Environment.NewLine, command.CommandText, 
 					Environment.NewLine, ex.ToString()));
 				return 0;
 			}

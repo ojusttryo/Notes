@@ -44,9 +44,6 @@ namespace Notes
 			 * https://www.codeproject.com/Articles/3273/ContainerListView-and-TreeListView-Writing-VS-NET
 			 * https://sourceforge.net/projects/treeviewadv/
 			 * Также неплохо было б избавиться от лишних библиотек, если найдутся нормальные стандартные средства для парсинга json и html.
-			 * 
-			 * TODO:
-			 * Проверить PVS Studio.
 			*/ 
 		}
 	}

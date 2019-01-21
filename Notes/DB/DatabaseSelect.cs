@@ -25,9 +25,6 @@ namespace Notes.DB
 				{
 					using (SQLiteConnection connection = CreateConnection())
 					{
-						if (command == null)
-							return maxId;
-
 						connection.Open();
 						command.Connection = connection;
 						if (connection.State == System.Data.ConnectionState.Open)
@@ -67,9 +64,6 @@ namespace Notes.DB
 				{
 					using (SQLiteConnection connection = CreateConnection())
 					{
-						if (command == null)
-							return values;
-
 						connection.Open();
 						command.Connection = connection;
 						if (connection.State == System.Data.ConnectionState.Open)
@@ -155,7 +149,7 @@ namespace Notes.DB
 
 						connection.Close();
 
-						return (notes == null) ? new List<Note>() : notes;
+						return notes;
 					}
 				}
 			}
