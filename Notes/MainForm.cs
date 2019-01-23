@@ -86,6 +86,8 @@ namespace Notes
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
 				DataGridViewCell currentCell = _currentNoteTable.CurrentCell;
+				bool currentCellIsIsNotHeader = (currentCell != null && currentCell.ColumnIndex >= 0 && currentCell.RowIndex >= 0);
+				bool tableIsActive = (_currentNoteTable == ActiveControl);
 
 				if (e.Control && e.KeyCode == Keys.F)
 					ActiveControl = searchTextBox;
@@ -93,11 +95,11 @@ namespace Notes
 					editButton.PerformClick();
 				else if (e.KeyCode == Keys.Add)
 					addButton.PerformClick();
-				else if (e.KeyCode == Keys.Delete)
+				else if (e.KeyCode == Keys.Delete && tableIsActive)
 					deleteButton.PerformClick();
 				else if (e.Control && e.KeyCode == Keys.S)
 					settingsButton.PerformClick();
-				else if (e.KeyCode == Keys.Enter && currentCell != null && currentCell.ColumnIndex >= 0 && currentCell.RowIndex >= 0)
+				else if (e.KeyCode == Keys.Enter && currentCellIsIsNotHeader && tableIsActive)
 					editButton.PerformClick();
 			};
 
