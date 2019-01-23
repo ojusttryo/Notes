@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.DB;
 
 namespace Notes.NoteForms
 {
@@ -43,6 +44,10 @@ namespace Notes.NoteForms
 			submitButton.Text = GetSubmitButtonText();
 			stateComboBox.Items.AddRange(NoteTable.States);
 			stateComboBox.SelectedIndex = 0;
+
+			AutoCompleteStringCollection genres = new AutoCompleteStringCollection();
+			genres.AddRange(Database.SelectUniqueValues("Games", "Genre").Where(x => x != "").ToArray());
+			genreTextBox.AutoCompleteCustomSource = genres;
 
 			Game game = _editedNote as Game;
 			if (game != null)
@@ -244,6 +249,8 @@ namespace Notes.NoteForms
 			// 
 			// genreTextBox
 			// 
+			this.genreTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.genreTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
 			this.genreTextBox.Location = new System.Drawing.Point(70, 67);
 			this.genreTextBox.Name = "genreTextBox";
 			this.genreTextBox.Size = new System.Drawing.Size(362, 20);
@@ -298,7 +305,7 @@ namespace Notes.NoteForms
 			Game game = (_editedNote != null && _editedNote is Game) ? _editedNote as Game : new Game();
 			game.Name = nameTextBox.Text;
 			game.Version = versionTextBox.Text;
-			game.Genre = versionTextBox.Text;
+			game.Genre = genreTextBox.Text;
 			game.DownloadLink = linkRichTextBox.Text;
 			game.Login = loginTextBox.Text;
 			game.Password = passwordTextBox.Text;

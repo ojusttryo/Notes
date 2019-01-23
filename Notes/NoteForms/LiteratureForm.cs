@@ -51,19 +51,19 @@ namespace Notes.NoteForms
 			submitButton.Text = GetSubmitButtonText();
 
 			AutoCompleteStringCollection authors = new AutoCompleteStringCollection();
-			authors.AddRange(Database.SelectUniqueValues("Literature", "Author").ToArray());
+			authors.AddRange(Database.SelectUniqueValues("Literature", "Author").Where(x => x != "").ToArray());
 			authorTextBox.AutoCompleteCustomSource = authors;
 
 			AutoCompleteStringCollection genres = new AutoCompleteStringCollection();
-			genres.AddRange(Database.SelectUniqueValues("Literature", "Genre").ToArray());
+			genres.AddRange(Database.SelectUniqueValues("Literature", "Genre").Where(x => x != "").ToArray());
 			genreTextBox.AutoCompleteCustomSource = genres;
 
 			AutoCompleteStringCollection universes = new AutoCompleteStringCollection();
-			universes.AddRange(Database.SelectUniqueValues("Literature", "Universe").ToArray());
+			universes.AddRange(Database.SelectUniqueValues("Literature", "Universe").Where(x => x != "").ToArray());
 			universeTextBox.AutoCompleteCustomSource = universes;
 
 			AutoCompleteStringCollection serieses = new AutoCompleteStringCollection();
-			serieses.AddRange(Database.SelectUniqueValues("Literature", "Series").ToArray());
+			serieses.AddRange(Database.SelectUniqueValues("Literature", "Series").Where(x => x != "").ToArray());
 			seriesTextBox.AutoCompleteCustomSource = serieses;
 
 			stateComboBox.Items.AddRange(NoteTable.States);
