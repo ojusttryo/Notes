@@ -150,6 +150,10 @@ namespace Notes
 				Controls.Remove(_currentNoteTable);
 
 			_currentNoteTable = _noteTables[tableName];
+			// При переключении вкладок нужно чтоб у открытой всегда был правильный порядок.
+			// Когда добавляем новую запись в конец, таблица все еще считается отсортированной, поэтому нужно всегда вызвать метод,
+			// а не проверять условия предыдущей сортировки.
+			_currentNoteTable.Sort(_currentNoteTable.Columns[1], ListSortDirection.Ascending);
 			Controls.Add(_currentNoteTable);
 
 			UpdateSearchComboBox();
@@ -243,28 +247,7 @@ namespace Notes
 
 		private void deleteButton_Click(object sender, EventArgs e)
 		{
-			// Обработка для пустой таблицы.
-			DataGridViewRow currentRow = _currentNoteTable.CurrentRow;
-			if (currentRow == null)
-				return;
-
-			// Подразумевается, что пользователь будет в основном менять состояние заметки на Deleted, а не физически удалять из базы.
-			// Поэтому здесь можно спросить подтверждение. Это должно происходить довольно редко и не будет напрягать.
-			DialogResult answer = MessageBox.Show("Are you sure you want to delete?", "Confirmation", MessageBoxButtons.YesNo);
-			if (answer == DialogResult.No)
-				return;
-
-			int id = Int32.Parse(currentRow.Cells[0].Value.ToString());     // Там всегда корректный Id. Пользователь не имеет доступа к ячейке.
-			List<int> identifiers = new List<int>();
-			identifiers.Add(id);
-
-			bool deleted = Database.DeleteNotes(_currentNoteTable.TableNameInDatabase, identifiers);
-			if (!deleted)
-				MessageBox.Show("Unknown error. Cannot delete note.");
-			else
-				_currentNoteTable.Rows.RemoveAt(currentRow.Index);
-
-			OnResize(null);
+			_currentNoteTable.DeleteSelectedNotes();
 		}
 
 

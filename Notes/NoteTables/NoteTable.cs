@@ -136,31 +136,7 @@ namespace Notes.NoteTables
 
 			this.ContextMenu = new ContextMenu();
 			MenuItem deleteItem = new MenuItem("Delete");
-			deleteItem.Click += delegate (object o, EventArgs e)
-			{
-				if (SelectedRows == null)
-					return;
-
-				DialogResult answer = MessageBox.Show("Are you sure you want to delete?", "Confirmation", MessageBoxButtons.YesNo);
-				if (answer == DialogResult.No)
-					return;
-
-				List<int> identifiers = new List<int>();
-				foreach (DataGridViewRow row in SelectedRows)
-					identifiers.Add(row.Cells[0].Value.ToString().ToIntOrException());
-
-				bool deleted = Database.DeleteNotes(TableNameInDatabase, identifiers);
-				if (!deleted)
-				{
-					MessageBox.Show("Unknown error. Cannot delete notes.");
-					return;
-				}
-
-				foreach (DataGridViewRow row in SelectedRows)
-					Rows.RemoveAt(row.Index);
-
-				OnResize(null);
-			};
+			deleteItem.Click += delegate (object o, EventArgs e) { DeleteSelectedNotes(); };
 			this.ContextMenu.MenuItems.Add(deleteItem);
 
 
@@ -189,6 +165,35 @@ namespace Notes.NoteTables
 				if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && e.Button == MouseButtons.Right)
 					this.ContextMenu.Show(this, cursorPosition);
 			};
+		}
+
+
+		public void DeleteSelectedNotes()
+		{
+			if (SelectedRows == null)
+				return;
+
+			// Подразумевается, что пользователь будет в основном менять состояние заметки на Deleted, а не физически удалять из базы.
+			// Поэтому здесь можно спросить подтверждение. Это должно происходить довольно редко и не будет напрягать.
+			DialogResult answer = MessageBox.Show("Are you sure you want to delete?", "Confirmation", MessageBoxButtons.YesNo);
+			if (answer == DialogResult.No)
+				return;
+			
+			List<int> identifiers = new List<int>();
+			foreach (DataGridViewRow row in SelectedRows)
+				identifiers.Add(row.Cells[0].Value.ToString().ToIntOrException());
+
+			bool deleted = Database.DeleteNotes(TableNameInDatabase, identifiers);
+			if (!deleted)
+			{
+				MessageBox.Show("Unknown error. Cannot delete notes.");
+				return;
+			}
+
+			foreach (DataGridViewRow row in SelectedRows)
+				Rows.RemoveAt(row.Index);
+
+			OnResize(null);
 		}
 
 
