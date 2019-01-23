@@ -139,6 +139,7 @@ namespace Notes.DB
 			_gamesUpdateCommand.Parameters[7].Value = game.Password;
 			_gamesUpdateCommand.Parameters[8].Value = game.Email;
 			_gamesUpdateCommand.Parameters[9].Value = game.Genre;
+			_gamesUpdateCommand.Parameters[10].Value = (int)game.Players;
 
 			_gamesUpdateCommand.Prepare();
 

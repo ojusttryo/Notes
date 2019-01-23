@@ -7,6 +7,24 @@ namespace Notes.Notes
 {
 	public class Game: Program
 	{
+		public enum PlayersCount
+		{
+			NotDefined,
+			Singleplayer,
+			Mutiplayer
+		}
+
+
 		public string Genre { get; set; }
+
+
+		public PlayersCount Players { get; set; }
+
+
+		public Game()
+		{
+			Genre = string.Empty;
+			Players = PlayersCount.NotDefined;
+		}
 	}
 }

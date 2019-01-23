@@ -137,8 +137,9 @@ namespace Notes.DB
 		{
 			_gamesInsertCommand = new SQLiteCommand();
 
-			_gamesInsertCommand.CommandText = "INSERT INTO Games (Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre) " +
-				"VALUES (@Name, @CurrentState, @Comment, @DownloadLink, @Version, @Login, @Password, @Email, @Genre);";
+			_gamesInsertCommand.CommandText = 
+				"INSERT INTO Games (Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre, PlayersCount) " +
+				"VALUES (@Name, @CurrentState, @Comment, @DownloadLink, @Version, @Login, @Password, @Email, @Genre, @PlayersCount);";
 
 			_gamesInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
 			_gamesInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
@@ -149,6 +150,7 @@ namespace Notes.DB
 			_gamesInsertCommand.Parameters.Add("@Password", System.Data.DbType.String);
 			_gamesInsertCommand.Parameters.Add("@Email", System.Data.DbType.String);
 			_gamesInsertCommand.Parameters.Add("@Genre", System.Data.DbType.String);
+			_gamesInsertCommand.Parameters.Add("@PlayersCount", System.Data.DbType.Int32);
 		}
 
 
@@ -299,8 +301,8 @@ namespace Notes.DB
 			_gamesUpdateCommand = new SQLiteCommand();
 
 			_gamesUpdateCommand.CommandText = "UPDATE Games " +
-				"SET Name = @Name, CurrentState = @CurrentState, Comment = @Comment, " +
-				"DownloadLink = @DownloadLink, Version = @Version, Login = @Login, Password = @Password, Email = @Email, Genre = @Genre " + 
+				"SET Name = @Name, CurrentState = @CurrentState, Comment = @Comment, DownloadLink = @DownloadLink, " +
+				"Version = @Version, Login = @Login, Password = @Password, Email = @Email, Genre = @Genre, PlayersCount = @PlayersCount " + 
 				"WHERE Id = @Id;";
 
 			_gamesUpdateCommand.Parameters.Add("@Id", System.Data.DbType.String);
@@ -313,6 +315,7 @@ namespace Notes.DB
 			_gamesUpdateCommand.Parameters.Add("@Password", System.Data.DbType.String);
 			_gamesUpdateCommand.Parameters.Add("@Email", System.Data.DbType.String);
 			_gamesUpdateCommand.Parameters.Add("@Genre", System.Data.DbType.String);
+			_gamesUpdateCommand.Parameters.Add("@PlayersCount", System.Data.DbType.Int32);
 		}
 
 

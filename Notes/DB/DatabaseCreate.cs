@@ -59,6 +59,7 @@ namespace Notes.DB
 			string Season       = "Season        INTEGER NOT NULL DEFAULT 0";
 			string Episode      = "Episode       INTEGER NOT NULL DEFAULT 0";
 			string Description  = "Description   TEXT NOT NULL";
+			string PlayersCount = "PlayersCount  INTEGER NOT NULL DEFAULT 0";		// 0 - not defined, 1 - singleplayer, 2 - multiplayer
 
 			SQLiteCommand command;
 
@@ -82,8 +83,8 @@ namespace Notes.DB
 				Id, Name, CurrentState, Comment, Year));
 			ExecuteNonQuery(command);
 
-			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9});", 
-				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre));
+			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10});", 
+				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre, PlayersCount));
 			ExecuteNonQuery(command);
 
 			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Literature ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12});", 

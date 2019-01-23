@@ -247,6 +247,7 @@ namespace Notes.DB
 					game.Password = reader.GetString(7);
 					game.Email = reader.GetString(8);
 					game.Genre = reader.GetString(9);
+					game.Players = (Game.PlayersCount)reader.GetInt32(10);
 
 					notes.Add(game);
 				}

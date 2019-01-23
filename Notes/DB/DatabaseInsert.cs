@@ -301,6 +301,7 @@ namespace Notes.DB
 								_gamesInsertCommand.Parameters[6].Value = game.Password;
 								_gamesInsertCommand.Parameters[7].Value = game.Email;
 								_gamesInsertCommand.Parameters[8].Value = game.Genre;
+								_gamesInsertCommand.Parameters[9].Value = (int)game.Players;
 
 								_gamesInsertCommand.Prepare();
 								_gamesInsertCommand.ExecuteNonQuery();

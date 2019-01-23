@@ -60,6 +60,17 @@ namespace Notes
 		}
 
 
+		public static Game.PlayersCount ToPlayersCount(this string source, Game.PlayersCount defaultValue = Game.PlayersCount.NotDefined)
+		{
+			string temp = source.Trim();
+			if (temp.Length == 0)
+				return defaultValue;
+
+			int index = Array.IndexOf(GameTable.PlayersCount, temp);
+			return (Enum.IsDefined(typeof(Game.PlayersCount), index)) ? (Game.PlayersCount)index : defaultValue;
+		}
+
+
 		public static Person.PSex ToSex(this string source, Person.PSex defaultValue = Person.PSex.NotSelected)
 		{
 			string temp = source.Trim();

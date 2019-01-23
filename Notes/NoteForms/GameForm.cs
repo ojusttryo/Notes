@@ -33,6 +33,8 @@ namespace Notes.NoteForms
 		private Label stateLabel;
 		private Label nameLabel;
 		private TextBox genreTextBox;
+		private Label playersCountLabel;
+		private ComboBox playersCountComboBox;
 		private Label genreLabel;
 
 		public GameForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -49,6 +51,9 @@ namespace Notes.NoteForms
 			genres.AddRange(Database.SelectUniqueValues("Games", "Genre").Where(x => x != "").ToArray());
 			genreTextBox.AutoCompleteCustomSource = genres;
 
+			playersCountComboBox.Items.AddRange(GameTable.PlayersCount);
+			playersCountComboBox.SelectedIndex = 0;
+
 			Game game = _editedNote as Game;
 			if (game != null)
 			{
@@ -59,6 +64,7 @@ namespace Notes.NoteForms
 				loginTextBox.Text = game.Login;
 				passwordTextBox.Text = game.Password;
 				emailTextBox.Text = game.Email;
+				playersCountComboBox.SelectedIndex = (int)game.Players;
 				stateComboBox.SelectedIndex = (int)game.CurrentState;
 				commentRichTextBox.Text = game.Comment;
 			}
@@ -92,6 +98,8 @@ namespace Notes.NoteForms
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.genreTextBox = new System.Windows.Forms.TextBox();
 			this.genreLabel = new System.Windows.Forms.Label();
+			this.playersCountLabel = new System.Windows.Forms.Label();
+			this.playersCountComboBox = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// versionTextBox
@@ -113,16 +121,16 @@ namespace Notes.NoteForms
 			// 
 			// emailTextBox
 			// 
-			this.emailTextBox.Location = new System.Drawing.Point(71, 262);
+			this.emailTextBox.Location = new System.Drawing.Point(71, 298);
 			this.emailTextBox.Name = "emailTextBox";
 			this.emailTextBox.Size = new System.Drawing.Size(362, 20);
-			this.emailTextBox.TabIndex = 6;
+			this.emailTextBox.TabIndex = 7;
 			// 
 			// emailLabel
 			// 
 			this.emailLabel.AutoSize = true;
 			this.emailLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.emailLabel.Location = new System.Drawing.Point(33, 265);
+			this.emailLabel.Location = new System.Drawing.Point(33, 301);
 			this.emailLabel.Name = "emailLabel";
 			this.emailLabel.Size = new System.Drawing.Size(32, 13);
 			this.emailLabel.TabIndex = 54;
@@ -130,16 +138,16 @@ namespace Notes.NoteForms
 			// 
 			// passwordTextBox
 			// 
-			this.passwordTextBox.Location = new System.Drawing.Point(71, 236);
+			this.passwordTextBox.Location = new System.Drawing.Point(71, 272);
 			this.passwordTextBox.Name = "passwordTextBox";
 			this.passwordTextBox.Size = new System.Drawing.Size(362, 20);
-			this.passwordTextBox.TabIndex = 5;
+			this.passwordTextBox.TabIndex = 6;
 			// 
 			// passwordLabel
 			// 
 			this.passwordLabel.AutoSize = true;
 			this.passwordLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.passwordLabel.Location = new System.Drawing.Point(12, 239);
+			this.passwordLabel.Location = new System.Drawing.Point(12, 275);
 			this.passwordLabel.Name = "passwordLabel";
 			this.passwordLabel.Size = new System.Drawing.Size(53, 13);
 			this.passwordLabel.TabIndex = 53;
@@ -147,16 +155,16 @@ namespace Notes.NoteForms
 			// 
 			// loginTextBox
 			// 
-			this.loginTextBox.Location = new System.Drawing.Point(71, 210);
+			this.loginTextBox.Location = new System.Drawing.Point(71, 246);
 			this.loginTextBox.Name = "loginTextBox";
 			this.loginTextBox.Size = new System.Drawing.Size(362, 20);
-			this.loginTextBox.TabIndex = 4;
+			this.loginTextBox.TabIndex = 5;
 			// 
 			// loginLabel
 			// 
 			this.loginLabel.AutoSize = true;
 			this.loginLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.loginLabel.Location = new System.Drawing.Point(32, 213);
+			this.loginLabel.Location = new System.Drawing.Point(32, 249);
 			this.loginLabel.Name = "loginLabel";
 			this.loginLabel.Size = new System.Drawing.Size(33, 13);
 			this.loginLabel.TabIndex = 52;
@@ -166,7 +174,7 @@ namespace Notes.NoteForms
 			// 
 			this.linkLabel.AutoSize = true;
 			this.linkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.linkLabel.Location = new System.Drawing.Point(38, 96);
+			this.linkLabel.Location = new System.Drawing.Point(38, 132);
 			this.linkLabel.Name = "linkLabel";
 			this.linkLabel.Size = new System.Drawing.Size(27, 13);
 			this.linkLabel.TabIndex = 51;
@@ -174,20 +182,20 @@ namespace Notes.NoteForms
 			// 
 			// linkRichTextBox
 			// 
-			this.linkRichTextBox.Location = new System.Drawing.Point(71, 93);
+			this.linkRichTextBox.Location = new System.Drawing.Point(71, 129);
 			this.linkRichTextBox.Name = "linkRichTextBox";
 			this.linkRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
 			this.linkRichTextBox.Size = new System.Drawing.Size(362, 111);
-			this.linkRichTextBox.TabIndex = 3;
+			this.linkRichTextBox.TabIndex = 4;
 			this.linkRichTextBox.Text = "";
 			// 
 			// commentRichTextBox
 			// 
-			this.commentRichTextBox.Location = new System.Drawing.Point(71, 315);
+			this.commentRichTextBox.Location = new System.Drawing.Point(71, 351);
 			this.commentRichTextBox.Name = "commentRichTextBox";
 			this.commentRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
-			this.commentRichTextBox.TabIndex = 8;
+			this.commentRichTextBox.TabIndex = 9;
 			this.commentRichTextBox.Text = "";
 			// 
 			// stateComboBox
@@ -195,10 +203,10 @@ namespace Notes.NoteForms
 			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(71, 288);
+			this.stateComboBox.Location = new System.Drawing.Point(71, 324);
 			this.stateComboBox.Name = "stateComboBox";
 			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 7;
+			this.stateComboBox.TabIndex = 8;
 			// 
 			// nameTextBox
 			// 
@@ -209,10 +217,10 @@ namespace Notes.NoteForms
 			// 
 			// submitButton
 			// 
-			this.submitButton.Location = new System.Drawing.Point(191, 432);
+			this.submitButton.Location = new System.Drawing.Point(191, 468);
 			this.submitButton.Name = "submitButton";
 			this.submitButton.Size = new System.Drawing.Size(75, 23);
-			this.submitButton.TabIndex = 9;
+			this.submitButton.TabIndex = 10;
 			this.submitButton.Text = "Submit";
 			this.submitButton.UseVisualStyleBackColor = true;
 			this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
@@ -221,7 +229,7 @@ namespace Notes.NoteForms
 			// 
 			this.commentLabel.AutoSize = true;
 			this.commentLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.commentLabel.Location = new System.Drawing.Point(14, 318);
+			this.commentLabel.Location = new System.Drawing.Point(14, 354);
 			this.commentLabel.Name = "commentLabel";
 			this.commentLabel.Size = new System.Drawing.Size(51, 13);
 			this.commentLabel.TabIndex = 50;
@@ -231,7 +239,7 @@ namespace Notes.NoteForms
 			// 
 			this.stateLabel.AutoSize = true;
 			this.stateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.stateLabel.Location = new System.Drawing.Point(33, 291);
+			this.stateLabel.Location = new System.Drawing.Point(33, 327);
 			this.stateLabel.Name = "stateLabel";
 			this.stateLabel.Size = new System.Drawing.Size(32, 13);
 			this.stateLabel.TabIndex = 49;
@@ -266,10 +274,32 @@ namespace Notes.NoteForms
 			this.genreLabel.TabIndex = 57;
 			this.genreLabel.Text = "Genre";
 			// 
+			// playersCountLabel
+			// 
+			this.playersCountLabel.AutoSize = true;
+			this.playersCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.playersCountLabel.Location = new System.Drawing.Point(29, 102);
+			this.playersCountLabel.Name = "playersCountLabel";
+			this.playersCountLabel.Size = new System.Drawing.Size(31, 13);
+			this.playersCountLabel.TabIndex = 58;
+			this.playersCountLabel.Text = "Type";
+			// 
+			// playersCountComboBox
+			// 
+			this.playersCountComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.playersCountComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.playersCountComboBox.FormattingEnabled = true;
+			this.playersCountComboBox.Location = new System.Drawing.Point(71, 99);
+			this.playersCountComboBox.Name = "playersCountComboBox";
+			this.playersCountComboBox.Size = new System.Drawing.Size(155, 21);
+			this.playersCountComboBox.TabIndex = 3;
+			// 
 			// GameForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
-			this.ClientSize = new System.Drawing.Size(444, 466);
+			this.ClientSize = new System.Drawing.Size(444, 498);
+			this.Controls.Add(this.playersCountComboBox);
+			this.Controls.Add(this.playersCountLabel);
 			this.Controls.Add(this.genreTextBox);
 			this.Controls.Add(this.genreLabel);
 			this.Controls.Add(this.versionTextBox);
@@ -310,6 +340,7 @@ namespace Notes.NoteForms
 			game.Login = loginTextBox.Text;
 			game.Password = passwordTextBox.Text;
 			game.Email = emailTextBox.Text;
+			game.Players = (Game.PlayersCount)playersCountComboBox.SelectedIndex;
 			game.CurrentState = (Note.State)stateComboBox.SelectedIndex;
 			game.Comment = commentRichTextBox.Text;
 
