@@ -85,7 +85,7 @@ namespace Notes.DB
 
 			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Games ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10});", 
 				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email, Genre, PlayersCount));
-			ExecuteNonQuery(command);
+			ExecuteNonQuery(command);		
 
 			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Literature ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12});", 
 				Id, Name, CurrentState, Comment, Year, Author, Genre, Universe, Series, Volume, Chapter, Page, Pages));

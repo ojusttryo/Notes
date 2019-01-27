@@ -119,6 +119,13 @@ namespace Notes.ProgramSettings
 		}
 
 
+		public void RemovePasswordProtection()
+		{
+			Database.ChangePassword("");
+			_databasePassword = "";
+		}
+
+
 		public void SetDefaultState(Dictionary<string, string> defaultStates)
 		{
 			foreach (KeyValuePair<string, string> pair in defaultStates)

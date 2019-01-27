@@ -64,17 +64,13 @@ namespace Notes.DB
 
 		/// <summary>
 		/// Меняет пароль для базы данных. Также используется для его первой установки.
-		/// На данный момент невозможно сбросить пароль (т.е. установить пустой).
 		/// </summary>
-		/// <param name="password">Новый пароль.</param>
+		/// <param name="password">Новый пароль. Если пароль пустой, то защита убирается.</param>
 		public static void ChangePassword(string password)
 		{
 			try
 			{
 				password = password.Trim();
-				// Один раз поставили, дальше уже только менять. Может потом сделаю возможность сброса, но это не желательно.
-				if (string.IsNullOrEmpty(password))
-					return;
 
 				SQLiteConnection con = CreateConnection();
 				con.Open();

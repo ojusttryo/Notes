@@ -22,7 +22,7 @@ namespace Notes.ProgramSettings
 		private Button saveButton;
 		private Label backupLabel;
 		private Label securityLabel;
-
+		private Button removeProtectionButton;
 		private Settings _settings;
 
 		public SecuritySettingsForm(Settings settings)
@@ -58,6 +58,7 @@ namespace Notes.ProgramSettings
 			this.saveButton = new System.Windows.Forms.Button();
 			this.backupLabel = new System.Windows.Forms.Label();
 			this.securityLabel = new System.Windows.Forms.Label();
+			this.removeProtectionButton = new System.Windows.Forms.Button();
 			this.panel2.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -65,6 +66,7 @@ namespace Notes.ProgramSettings
 			// panel2
 			// 
 			this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panel2.Controls.Add(this.removeProtectionButton);
 			this.panel2.Controls.Add(this.newPasswordTextBox);
 			this.panel2.Controls.Add(this.label2);
 			this.panel2.Location = new System.Drawing.Point(9, 135);
@@ -77,7 +79,7 @@ namespace Notes.ProgramSettings
 			this.newPasswordTextBox.Location = new System.Drawing.Point(98, 12);
 			this.newPasswordTextBox.Name = "newPasswordTextBox";
 			this.newPasswordTextBox.PasswordChar = '*';
-			this.newPasswordTextBox.Size = new System.Drawing.Size(296, 20);
+			this.newPasswordTextBox.Size = new System.Drawing.Size(183, 20);
 			this.newPasswordTextBox.TabIndex = 4;
 			// 
 			// label2
@@ -165,6 +167,17 @@ namespace Notes.ProgramSettings
 			this.securityLabel.TabIndex = 7;
 			this.securityLabel.Text = "Access";
 			// 
+			// removeProtectionButton
+			// 
+			this.removeProtectionButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.removeProtectionButton.Location = new System.Drawing.Point(287, 10);
+			this.removeProtectionButton.Name = "removeProtectionButton";
+			this.removeProtectionButton.Size = new System.Drawing.Size(107, 23);
+			this.removeProtectionButton.TabIndex = 11;
+			this.removeProtectionButton.Text = "Remove protection";
+			this.removeProtectionButton.UseVisualStyleBackColor = true;
+			this.removeProtectionButton.Click += new System.EventHandler(this.removeProtectionButton_Click);
+			// 
 			// SecuritySettingsForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
@@ -200,6 +213,11 @@ namespace Notes.ProgramSettings
 			_settings.SetNewPassword(password);
 
 			Close();
+		}
+
+		private void removeProtectionButton_Click(object sender, EventArgs e)
+		{
+			_settings.RemovePasswordProtection();
 		}
 	}
 }
