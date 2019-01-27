@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.CommonUIElements;
 
 namespace Notes.NoteForms
 {
@@ -15,7 +16,6 @@ namespace Notes.NoteForms
 	public class SerialForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox seasonTextBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
@@ -24,6 +24,7 @@ namespace Notes.NoteForms
 		private Label seasonLabel;
 		private TextBox episodeTextBox;
 		private Label episodeLabel;
+		private StateComboBox stateComboBox;
 		private Label nameLabel;
 
 		public SerialForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -33,8 +34,6 @@ namespace Notes.NoteForms
 
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 
 			Serial serial = _editedNote as Serial;
 			if (serial != null)
@@ -46,8 +45,8 @@ namespace Notes.NoteForms
 				commentRichTextBox.Text = serial.Comment;
 			}
 
-			seasonTextBox.KeyPress +=  new KeyPressEventHandler(MainForm.CheckNumericInput);
-			episodeTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
+			seasonTextBox.KeyPress +=  new KeyPressEventHandler(InputEventHandler.CheckNumeric);
+			episodeTextBox.KeyPress += new KeyPressEventHandler(InputEventHandler.CheckNumeric);
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
@@ -60,7 +59,6 @@ namespace Notes.NoteForms
 		private void InitializeComponent()
 		{
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.seasonTextBox = new System.Windows.Forms.TextBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
@@ -70,6 +68,7 @@ namespace Notes.NoteForms
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.episodeTextBox = new System.Windows.Forms.TextBox();
 			this.episodeLabel = new System.Windows.Forms.Label();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// commentRichTextBox
@@ -80,16 +79,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 4;
 			this.commentRichTextBox.Text = "";
-			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(273, 47);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 3;
 			// 
 			// seasonTextBox
 			// 
@@ -174,14 +163,25 @@ namespace Notes.NoteForms
 			this.episodeLabel.TabIndex = 15;
 			this.episodeLabel.Text = "Episode";
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(273, 48);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
+			this.stateComboBox.TabIndex = 3;
+			// 
 			// SerialForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 224);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.episodeTextBox);
 			this.Controls.Add(this.episodeLabel);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.seasonTextBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);

@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.CommonUIElements;
 
 namespace Notes.NoteForms
 {
@@ -23,13 +24,13 @@ namespace Notes.NoteForms
 		private Label linkLabel;
 		private RichTextBox linkRichTextBox;
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
 		private Label commentLabel;
 		private Label stateLabel;
 		private TextBox versionTextBox;
 		private Label versionLabel;
+		private StateComboBox stateComboBox;
 		private Label nameLabel;
 
 		public ProgramForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -39,8 +40,6 @@ namespace Notes.NoteForms
 
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 
 			Program program = _editedNote as Program;
 			if (program != null)
@@ -74,7 +73,6 @@ namespace Notes.NoteForms
 			this.linkLabel = new System.Windows.Forms.Label();
 			this.linkRichTextBox = new System.Windows.Forms.RichTextBox();
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.commentLabel = new System.Windows.Forms.Label();
@@ -82,6 +80,7 @@ namespace Notes.NoteForms
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.versionTextBox = new System.Windows.Forms.TextBox();
 			this.versionLabel = new System.Windows.Forms.Label();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// emailTextBox
@@ -163,16 +162,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.TabIndex = 7;
 			this.commentRichTextBox.Text = "";
 			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(66, 268);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 6;
-			// 
 			// nameTextBox
 			// 
 			this.nameTextBox.Location = new System.Drawing.Point(66, 21);
@@ -237,10 +226,22 @@ namespace Notes.NoteForms
 			this.versionLabel.TabIndex = 38;
 			this.versionLabel.Text = "Version";
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(66, 268);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(154, 21);
+			this.stateComboBox.TabIndex = 6;
+			// 
 			// ProgramForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 445);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.versionTextBox);
 			this.Controls.Add(this.versionLabel);
 			this.Controls.Add(this.emailTextBox);
@@ -252,7 +253,6 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.linkLabel);
 			this.Controls.Add(this.linkRichTextBox);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.commentLabel);

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 using Notes.Notes;
+using static Notes.Info;
 
 namespace Notes.NoteTables
 {
@@ -23,7 +24,7 @@ namespace Notes.NoteTables
 
 
 		public MealTable(Point location):
-			base(location, "Meal", "Meal")
+			base(location, "Meal")
 		{
 
 		}

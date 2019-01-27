@@ -14,25 +14,25 @@ namespace Notes.DB
 		{
 			switch (tableName)
 			{
-				case "AnimeFilms":   return UpdateDatedNote(tableName, note, _animeFilmsUpdateCommand);
-				case "AnimeSerials": return UpdateSerial(tableName, note, _animeSerialsUpdateCommand);
-				case "Bookmarks":    return UpdateBookmark(tableName, note);
-				case "Desires":      return UpdateDesires(tableName, note);
-				case "Films":        return UpdateDatedNote(tableName, note, _filmsUpdateCommand);
-				case "Games":        return UpdateGame(tableName, note);
-				case "Literature":   return UpdateLiterature(tableName, note);
-				case "Meal":         return UpdateMeal(tableName, note);				
-				case "Performances": return UpdateDatedNote(tableName, note, _performancesUpdateCommand);
-				case "People":       return UpdatePerson(tableName, note);
-				case "Programs":     return UpdateProgram(tableName, note);
-				case "Serials":      return UpdateSerial(tableName, note, _serialsUpdateCommand);
-				case "TVShows":      return UpdateSerial(tableName, note, _TVShowsUpdateCommand);
+				case "AnimeFilms":   return UpdateDatedNote(note, _animeFilmsUpdateCommand);
+				case "AnimeSerials": return UpdateSerial(note, _animeSerialsUpdateCommand);
+				case "Bookmarks":    return UpdateBookmark(note);
+				case "Desires":      return UpdateDesires(note);
+				case "Films":        return UpdateDatedNote(note, _filmsUpdateCommand);
+				case "Games":        return UpdateGame(note);
+				case "Literature":   return UpdateLiterature(note);
+				case "Meal":         return UpdateMeal(note);				
+				case "Performances": return UpdateDatedNote(note, _performancesUpdateCommand);
+				case "People":       return UpdatePerson(note);
+				case "Programs":     return UpdateProgram(note);
+				case "Serials":      return UpdateSerial(note, _serialsUpdateCommand);
+				case "TVShows":      return UpdateSerial(note, _TVShowsUpdateCommand);
 				default: return false;
 			}
 		}
 
 
-		private static bool UpdateDatedNote(string tableName, Note note, SQLiteCommand datedNoteUpdateCommand)
+		private static bool UpdateDatedNote(Note note, SQLiteCommand datedNoteUpdateCommand)
 		{
 			DatedNote datedNote = note as DatedNote;
 			if (datedNote == null || datedNote.Id < 0)
@@ -53,7 +53,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateSerial(string tableName, Note note, SQLiteCommand serialsUpdateCommand)
+		private static bool UpdateSerial(Note note, SQLiteCommand serialsUpdateCommand)
 		{
 			Serial serial = note as Serial;
 			if (serial == null || serial.Id < 0)
@@ -75,7 +75,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateBookmark(string tableName, Note note)
+		private static bool UpdateBookmark(Note note)
 		{
 			Bookmark b = note as Bookmark;
 			if (b == null || b.Id < 0)
@@ -99,7 +99,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateDesires(string tableName, Note note)
+		private static bool UpdateDesires(Note note)
 		{
 			Desire desire = note as Desire;
 			if (desire == null || desire.Id < 0)
@@ -120,7 +120,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateGame(string tableName, Note note)
+		private static bool UpdateGame(Note note)
 		{
 			Game game = note as Game;
 			if (game == null || game.Id < 0)
@@ -147,7 +147,7 @@ namespace Notes.DB
 		}
 		
 
-		private static bool UpdateLiterature(string tableName, Note note)
+		private static bool UpdateLiterature(Note note)
 		{
 			Literature lit = note as Literature;
 			if (lit == null || lit.Id < 0)
@@ -176,7 +176,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateMeal(string tableName, Note note)
+		private static bool UpdateMeal(Note note)
 		{
 			Meal meal = note as Meal;
 			if (meal == null || meal.Id < 0)
@@ -198,7 +198,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdatePerson(string tableName, Note note)
+		private static bool UpdatePerson(Note note)
 		{
 			Person person = note as Person;
 			if (person == null || person.Id < 0)
@@ -223,7 +223,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateProgram(string tableName, Note note)
+		private static bool UpdateProgram(Note note)
 		{
 			Program program = note as Program;
 			if (program == null || program.Id < 0)

@@ -5,35 +5,20 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
+using Notes.CommonUIElements;
+
 namespace Notes.Import
 {
-	public class BookmarksImportTable : DataGridView
+	public class BookmarksImportTable : TableBase
 	{
 		public BookmarksImportTable(Point location)
 		{
 			Location = location;
 
-			MultiSelect = true;
-			SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-			
-			AllowUserToAddRows = false;
-			AllowUserToDeleteRows = false;
+			// Часть опций настраивается в базовом классе.
+
 			AllowUserToResizeColumns = false;
-			AllowUserToResizeRows = false;
-
-			EditMode = DataGridViewEditMode.EditOnEnter;
-
-			DefaultCellStyle.SelectionBackColor = Color.LightCyan;
-			DefaultCellStyle.SelectionForeColor = Color.Black;
-			BackgroundColor = Color.White;
-
-			RowHeadersVisible = false;
 			ColumnHeadersVisible = false;
-
-			BorderStyle = BorderStyle.None;
-			AdvancedCellBorderStyle.All = DataGridViewAdvancedCellBorderStyle.None;
-
-			ScrollBars = ScrollBars.Vertical;
 
 			Columns.Add(new DataGridViewCheckBoxColumn());
 			Columns.Add(new DataGridViewTextBoxColumn());
@@ -75,7 +60,7 @@ namespace Notes.Import
 				HitTestInfo hitInfo = HitTest(cursorPosition.X, cursorPosition.Y);
 				if (hitInfo != null && hitInfo.RowIndex >= 0 && hitInfo.ColumnIndex >= 0)
 				{
-					// Только когда нет ни контрола, ни шифта - т.е. ничего не делаем, если выбираются строки для удаления.
+					// Если нажат Shift или Ctrl, возможно, идет выделение диапазонов и т.п. Так что ничего не делаем.
 					if (e.Button == MouseButtons.Right && Control.ModifierKeys == Keys.None)
 					{
 						DataGridViewRow row = Rows[hitInfo.RowIndex];
@@ -88,9 +73,13 @@ namespace Notes.Import
 					}
 				}
 
+				// TODO: если выбрана одна закладка, то показывать опции меню в зависимости от ее состояния (выбрана/не выбрана)
+
 				if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && e.Button == MouseButtons.Right)
 					this.ContextMenu.Show(this, cursorPosition);
 			};
+
+			AddBookmarksContextMenuItems(URLIndex: 2);
 		}
 
 

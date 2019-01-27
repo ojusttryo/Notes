@@ -7,6 +7,7 @@ using System.Data.SQLite;
 
 using Notes.ProgramSettings;
 using Notes.Notes;
+using static Notes.Info;
 
 namespace Notes.DB
 {
@@ -66,7 +67,13 @@ namespace Notes.DB
 					command.Connection = connection;
 
 					if (connection.State == System.Data.ConnectionState.Open)
-						affectedRows = command.ExecuteNonQuery();
+					{
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
+						{
+							affectedRows = command.ExecuteNonQuery();
+							transaction.Commit();
+						}
+					}
 						
 					connection.Close();
 					command.Connection = null;
@@ -84,13 +91,13 @@ namespace Notes.DB
 		}
 
 
-		public static bool DeleteNotes(string tableName, List<int> identifiers)
+		public static bool DeleteNotes(string tableNameDB, List<int> identifiers)
 		{
 			bool deleted = false;
 
 			try
 			{
-				using (SQLiteCommand command = new SQLiteCommand("DELETE FROM " + tableName + " WHERE Id = @Id;"))
+				using (SQLiteCommand command = new SQLiteCommand("DELETE FROM " + tableNameDB + " WHERE Id = @Id;"))
 				{
 					command.Parameters.Add("@Id", System.Data.DbType.Int32);
 
@@ -145,6 +152,44 @@ namespace Notes.DB
 		}
 
 
+		public static void SaveDefaultStates(Dictionary<string, string> defaultStates)
+		{
+			try
+			{
+				using (SQLiteConnection connection = Database.CreateConnection())
+				{		
+					connection.Open();
+					_settingsInsertOrUpdateCommand.Connection = connection;
+
+					if (connection.State == System.Data.ConnectionState.Open)
+					{
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
+						{
+							foreach (KeyValuePair<string, string> state in defaultStates)
+							{
+								_settingsInsertOrUpdateCommand.Parameters[0].Value = string.Format("{0}DefaultState", state.Key);
+								_settingsInsertOrUpdateCommand.Parameters[1].Value = state.Value;
+								_settingsInsertOrUpdateCommand.Prepare();
+								_settingsInsertOrUpdateCommand.ExecuteNonQuery();
+							}
+
+							transaction.Commit();
+						}
+					}
+						
+					connection.Close();
+					_settingsInsertOrUpdateCommand.Connection = null;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not execute command: {0}{1}{2}{3}", 
+					Environment.NewLine, _settingsInsertOrUpdateCommand.CommandText, 
+					Environment.NewLine, ex.ToString()));
+			}
+		}
+
+
 		/// <summary>
 		/// Read all settings from database and set it to Settings.
 		/// </summary>
@@ -160,13 +205,9 @@ namespace Notes.DB
 						command.Connection = con;
 						command.Parameters.Add("@Name", System.Data.DbType.String);
 												
-						command.Parameters[0].Value = "InitialNotesTable";
+						command.Parameters[0].Value = "DefaultNotesTable";
 						command.Prepare();
 						string initialNotesTable = ReadSingleValue(command);
-
-						command.Parameters[0].Value = "InitialNotesState";
-						command.Prepare();
-						string initialNotesState = ReadSingleValue(command);
 
 						command.Parameters[0].Value = "BackupEmail";
 						command.Prepare();
@@ -176,9 +217,18 @@ namespace Notes.DB
 						command.Prepare();
 						string backupPassword = ReadSingleValue(command);
 
+						Dictionary<string, string> defaultStates = new Dictionary<string, string>();
+						foreach (string tableNameDB in GetTableNamesDB())
+						{
+							command.Parameters[0].Value = string.Format("{0}DefaultState", tableNameDB);
+							command.Prepare();
+							string defaultState = ReadSingleValue(command);
+							defaultStates.Add(tableNameDB, defaultState);
+						}
+
 						command.Connection = null;
 
-						_settings.InitializeFromDatabase(initialNotesTable, initialNotesState, backupEmail, backupPassword);
+						_settings.InitializeFromDatabase(initialNotesTable, backupEmail, backupPassword, defaultStates);
 					}
 
 					con.Close();

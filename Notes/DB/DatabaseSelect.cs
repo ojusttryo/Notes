@@ -13,15 +13,15 @@ namespace Notes.DB
 		/// <summary>
 		/// Получить максимальный Id в таблице.
 		/// </summary>
-		/// <param name="tableName">Имя таблицы.</param>
+		/// <param name="tableNameDB">Имя таблицы.</param>
 		/// <returns>Id записи или -1, если записей нет или произошла ошибка.</returns>
-		private static int SelectMaxId(string tableName)
+		private static int SelectMaxId(string tableNameDB)
 		{
 			int maxId = -1;
 
 			try
 			{
-				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT MAX(Id) FROM {0}", tableName)))
+				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT MAX(Id) FROM {0}", tableNameDB)))
 				{
 					using (SQLiteConnection connection = CreateConnection())
 					{
@@ -45,7 +45,7 @@ namespace Notes.DB
 			}
 			catch (Exception ex)
 			{
-				Log.Error(string.Format("Can not select max Id from {0}.{1}{2}", tableName, Environment.NewLine, ex.ToString()));
+				Log.Error(string.Format("Can not select max Id from {0}.{1}{2}", tableNameDB, Environment.NewLine, ex.ToString()));
 				return maxId;
 			}
 		}
@@ -54,13 +54,13 @@ namespace Notes.DB
 		/// <summary>
 		/// Извлекает уникальные (distinct) значения из поля таблицы.
 		/// </summary>
-		public static List<string> SelectUniqueValues(string tableName, string fieldName)
+		public static List<string> SelectUniqueValues(string tableNameDB, string fieldName)
 		{
 			List<string> values = new List<string>();
 
 			try
 			{
-				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT DISTINCT {0} FROM {1}", fieldName, tableName)))
+				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT DISTINCT {0} FROM {1}", fieldName, tableNameDB)))
 				{
 					using (SQLiteConnection connection = CreateConnection())
 					{
@@ -84,7 +84,7 @@ namespace Notes.DB
 			}
 			catch (Exception ex)
 			{
-				Log.Error(string.Format("Can not select unique {0} values from {1}: {2}{3}", fieldName, tableName, Environment.NewLine, ex.ToString()));
+				Log.Error(string.Format("Can not select unique {0} values from {1}: {2}{3}", fieldName, tableNameDB, Environment.NewLine, ex.ToString()));
 				return values;
 			}
 		}
@@ -93,12 +93,12 @@ namespace Notes.DB
 		/// <summary>
 		/// Получить все заметки из таблицы. Заметки сортируются по имени.
 		/// </summary>
-		public static List<Note> SelectNotes(string tableName)
+		public static List<Note> SelectNotes(string tableNameDB)
 		{
-			string commandText = string.Format("SELECT * FROM {0} ORDER BY Name", tableName);
+			string commandText = string.Format("SELECT * FROM {0} ORDER BY Name", tableNameDB);
             SQLiteCommand command = new SQLiteCommand(commandText);
 
-			List<Note> notes = ReadNotes(command, tableName);
+			List<Note> notes = ReadNotes(command, tableNameDB);
 
 			return notes;
 		}
@@ -107,7 +107,7 @@ namespace Notes.DB
 		/// <summary>
 		/// Подключается к БД и считывает заметки. Результат никогда не равен null.
 		/// </summary>
-		private static List<Note> ReadNotes(SQLiteCommand selectCommand, string tableName)
+		private static List<Note> ReadNotes(SQLiteCommand selectCommand, string tableNameDB)
 		{
 			try
 			{
@@ -127,7 +127,7 @@ namespace Notes.DB
 						{
 							using (SQLiteDataReader reader = selectCommand.ExecuteReader())
 							{
-								switch (tableName)
+								switch (tableNameDB)
 								{
 									case "AnimeFilms":   notes = ReadDatedNotes(reader); break;
 									case "AnimeSerials": notes = ReadSerials(reader); break;

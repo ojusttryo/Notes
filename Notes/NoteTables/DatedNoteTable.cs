@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using Notes.Notes;
+using static Notes.Info;
 
 namespace Notes.NoteTables 
 {
@@ -20,8 +21,8 @@ namespace Notes.NoteTables
 			Comment
 		}
 
-		public DatedNoteTable(Point location, string tableNameInDB, string tableName):
-			base(location, tableNameInDB, tableName)
+		public DatedNoteTable(Point location, string tableNameInDB):
+			base(location, tableNameInDB)
 		{
 
 		}

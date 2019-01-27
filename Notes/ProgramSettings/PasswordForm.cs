@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using Notes.DB;
+using Notes.CommonUIElements;
 
 namespace Notes.ProgramSettings
 {
@@ -13,7 +14,7 @@ namespace Notes.ProgramSettings
 		private TextBox passwordTextBox;
 		private Button submitButton;
 		private Label wrongPasswordLabel;
-		private Label label1;
+		private Label enterPasswordLabel;
 
 		private Settings _settings;
 
@@ -23,7 +24,7 @@ namespace Notes.ProgramSettings
 			_settings = settings;
 			wrongPasswordLabel.Visible = false;
 
-			KeyPress += new KeyPressEventHandler(MainForm.CheckPasword);
+			KeyPress += new KeyPressEventHandler(InputEventHandler.CheckPasword);
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
@@ -35,25 +36,22 @@ namespace Notes.ProgramSettings
 		}
 
 
-
-
-
 		private void InitializeComponent()
 		{
-			this.label1 = new System.Windows.Forms.Label();
+			this.enterPasswordLabel = new System.Windows.Forms.Label();
 			this.passwordTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.wrongPasswordLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// label1
+			// enterPasswordLabel
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 28);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(83, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Enter password:";
+			this.enterPasswordLabel.AutoSize = true;
+			this.enterPasswordLabel.Location = new System.Drawing.Point(12, 28);
+			this.enterPasswordLabel.Name = "enterPasswordLabel";
+			this.enterPasswordLabel.Size = new System.Drawing.Size(83, 13);
+			this.enterPasswordLabel.TabIndex = 0;
+			this.enterPasswordLabel.Text = "Enter password:";
 			// 
 			// passwordTextBox
 			// 
@@ -92,7 +90,7 @@ namespace Notes.ProgramSettings
 			this.Controls.Add(this.wrongPasswordLabel);
 			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.passwordTextBox);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.enterPasswordLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.KeyPreview = true;
 			this.MaximizeBox = false;

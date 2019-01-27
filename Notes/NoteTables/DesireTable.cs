@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 using Notes.Notes;
+using static Notes.Info;
 
 namespace Notes.NoteTables
 {
@@ -22,7 +23,7 @@ namespace Notes.NoteTables
 
 
 		public DesireTable(Point location):
-			base(location, "Desires", "Desires")
+			base(location, "Desires")
 		{
 
 		}

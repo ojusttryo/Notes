@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using static Notes.Info;
 
 namespace Notes
 {
@@ -55,7 +56,7 @@ namespace Notes
 			if (temp.Length == 0)
 				return defaultValue;
 
-			int index = Array.IndexOf(NoteTable.States, temp);
+			int index = Array.IndexOf(States, temp);
 			return (Enum.IsDefined(typeof(Note.State), index)) ? (Note.State)index : defaultValue;
 		}
 

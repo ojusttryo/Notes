@@ -10,29 +10,29 @@ namespace Notes.DB
 {
 	public partial class Database
 	{
-		public static bool Insert(string tableName, List<Note> notes)
+		public static bool Insert(string tableNameDB, List<Note> notes)
 		{
-			switch (tableName)
+			switch (tableNameDB)
 			{
-				case "AnimeFilms":   return InsertDatedNotes(tableName, notes, _animeFilmsInsertCommand);
-				case "AnimeSerials": return InsertSerials(tableName, notes, _animeSerialsInsertCommand);
-				case "Bookmarks":    return InsertBookmarks(tableName, notes);
-				case "Desires":      return InsertDesires(tableName, notes);
-				case "Films":        return InsertDatedNotes(tableName, notes, _filmsInsertCommand);
-				case "Games":        return InsertGames(tableName, notes);
-				case "Literature":   return InsertLiterature(tableName, notes);
-				case "Meal":         return InsertMeal(tableName, notes);
-				case "Performances": return InsertDatedNotes(tableName, notes, _performancesInsertCommand);
-				case "People":       return InsertPeople(tableName, notes);
-				case "Programs":     return InsertPrograms(tableName, notes);
-				case "Serials":      return InsertSerials(tableName, notes, _serialsInsertCommand);
-				case "TVShows":      return InsertSerials(tableName, notes, _TVShowsInsertCommand);
+				case "AnimeFilms":   return InsertDatedNotes(notes, _animeFilmsInsertCommand);
+				case "AnimeSerials": return InsertSerials(notes, _animeSerialsInsertCommand);
+				case "Bookmarks":    return InsertBookmarks(notes);
+				case "Desires":      return InsertDesires(notes);
+				case "Films":        return InsertDatedNotes(notes, _filmsInsertCommand);
+				case "Games":        return InsertGames(notes);
+				case "Literature":   return InsertLiterature(notes);
+				case "Meal":         return InsertMeal(notes);
+				case "Performances": return InsertDatedNotes(notes, _performancesInsertCommand);
+				case "People":       return InsertPeople(notes);
+				case "Programs":     return InsertPrograms(notes);
+				case "Serials":      return InsertSerials(notes, _serialsInsertCommand);
+				case "TVShows":      return InsertSerials(notes, _TVShowsInsertCommand);
 				default: return false;
 			}
 		}
 
 
-		private static bool InsertDatedNotes(string tableName, List<Note> notes, SQLiteCommand datedNoteInsertCommand)
+		private static bool InsertDatedNotes(List<Note> notes, SQLiteCommand datedNoteInsertCommand)
 		{
 			bool inserted = false;
 
@@ -90,7 +90,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertSerials(string tableName, List<Note> notes, SQLiteCommand serialsInsertCommand)
+		private static bool InsertSerials(List<Note> notes, SQLiteCommand serialsInsertCommand)
 		{
 			bool inserted = false;
 
@@ -149,7 +149,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertBookmarks(string tableName, List<Note> notes)
+		private static bool InsertBookmarks(List<Note> notes)
 		{
 			bool inserted = false;
 
@@ -210,7 +210,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertDesires(string tableName, List<Note> notes)
+		private static bool InsertDesires(List<Note> notes)
 		{
 			bool inserted = false;
 
@@ -268,7 +268,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertGames(string tableName, List<Note> notes)
+		private static bool InsertGames(List<Note> notes)
 		{
 			bool inserted = false;
 
@@ -332,7 +332,7 @@ namespace Notes.DB
 		}
 		
 
-		private static bool InsertLiterature(string tableName, List<Note> notes)
+		private static bool InsertLiterature(List<Note> notes)
 		{
 			bool inserted = false;
 
@@ -398,7 +398,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertMeal(string tableName, List<Note> notes)
+		private static bool InsertMeal(List<Note> notes)
 		{
 			bool inserted = false;
 
@@ -457,7 +457,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertPeople(string tableName, List<Note> notes)
+		private static bool InsertPeople(List<Note> notes)
 		{
 			bool inserted = false;
 
@@ -519,7 +519,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertPrograms(string tableName, List<Note> notes)
+		private static bool InsertPrograms(List<Note> notes)
 		{
 			bool inserted = false;
 

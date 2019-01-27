@@ -4,29 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.ComponentModel;
 
 using Notes.Notes;
-using Notes;
+using Notes.CommonUIElements;
 using Notes.DB;
+using static Notes.Info;
 
 namespace Notes.NoteTables
 {
-	public abstract class NoteTable : DataGridView
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
+	public abstract class NoteTable : TableBase
 	{
-		public string TableNameInDatabase { get; protected set; }
+		public string TableNameDB { get; protected set; }
 
 
-		public string TableName { get; protected set; }
-
-
-		public static string[] States = { "Not selected", "Active", "Deleted", "Finished", "Postponed", "Waiting" };
+		public string TableNameUI
+		{
+			get { return GetTableNameUI(TableNameDB); }
+		}
 
 
 		/// <summary>
 		/// Свойство указывает на необходимость вызова не дефолтных событий (например, реакция на изменение состояния).
 		/// </summary>
 		public bool CallCustomEvents { get; set; }
-
+		
 
 		private NoteTable()
 		{
@@ -34,11 +38,10 @@ namespace Notes.NoteTables
 		}
 
 
-		protected NoteTable(Point location, string tableNameInDB, string tableName)
+		protected NoteTable(Point location, string tableNameInDB)
 		{
 			Location = location;
-			TableNameInDatabase = tableNameInDB;
-			TableName = tableName;
+			TableNameDB = tableNameInDB;
 
 			Initialize();
 			CreateColumns();
@@ -49,7 +52,7 @@ namespace Notes.NoteTables
 
 		private void LoadNotes()
 		{
-			List<Note> notes = Database.SelectNotes(TableNameInDatabase);
+			List<Note> notes = Database.SelectNotes(TableNameDB);
 			foreach (Note note in notes)
 				AddNote(note);
 		}
@@ -64,28 +67,9 @@ namespace Notes.NoteTables
 
 		private void Initialize()
 		{
+			// Часть опций настраивается в базовом классе.
+
 			CallCustomEvents = true;
-
-			MultiSelect = true;
-			SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
-			AllowUserToAddRows = false;
-			AllowUserToDeleteRows = false;
-			AllowUserToResizeRows = false;
-
-			EditMode = DataGridViewEditMode.EditOnEnter;
-
-			DefaultCellStyle.SelectionBackColor = Color.LightCyan;
-			DefaultCellStyle.SelectionForeColor = Color.Black;
-			BackgroundColor = Color.White;
-
-			RowHeadersVisible = false;
-
-			BorderStyle = BorderStyle.None;
-			AdvancedCellBorderStyle.All = DataGridViewAdvancedCellBorderStyle.None;
-
-			ScrollBars = ScrollBars.Vertical;
-
 
 			// События для изменения заметки через главную форму. Можно менять только некоторые столбцы. Остальные заблокированы.
 			// Первое событие нужно, т.к. без него не происходит моментальный вызов второго. Только после выбора какого-то другого элемента в таблице.
@@ -105,7 +89,7 @@ namespace Notes.NoteTables
 
 				switch (Columns[e.ColumnIndex].Name)
 				{
-					case "State": Database.Update(TableNameInDatabase, GetNoteFromSelectedRow()); break;
+					case "State": Database.Update(TableNameDB, GetNoteFromSelectedRow()); break;
 					default: break;
 				}
 			};
@@ -133,8 +117,6 @@ namespace Notes.NoteTables
 				}
 			};
 
-
-			this.ContextMenu = new ContextMenu();
 			MenuItem deleteItem = new MenuItem("Delete");
 			deleteItem.Click += delegate (object o, EventArgs e) { DeleteSelectedNotes(); };
 			this.ContextMenu.MenuItems.Add(deleteItem);
@@ -183,7 +165,7 @@ namespace Notes.NoteTables
 			foreach (DataGridViewRow row in SelectedRows)
 				identifiers.Add(row.Cells[0].Value.ToString().ToIntOrException());
 
-			bool deleted = Database.DeleteNotes(TableNameInDatabase, identifiers);
+			bool deleted = Database.DeleteNotes(TableNameDB, identifiers);
 			if (!deleted)
 			{
 				MessageBox.Show("Unknown error. Cannot delete notes.");

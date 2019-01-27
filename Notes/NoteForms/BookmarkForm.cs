@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
 
+using Notes.CommonUIElements;
 using Notes.Notes;
 using Notes.NoteTables;
 
@@ -15,7 +16,6 @@ namespace Notes.NoteForms
 	class BookmarkForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private Button submitButton;
 		private Label commentLabel;
 		private Label stateLabel;
@@ -28,6 +28,7 @@ namespace Notes.NoteForms
 		private Label passwordLabel;
 		private TextBox emailTextBox;
 		private Label emailLabel;
+		private StateComboBox stateComboBox;
 		private Label nameLabel;
 
 
@@ -38,8 +39,6 @@ namespace Notes.NoteForms
 
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 
 			Bookmark b = _editedNote as Bookmark;
 			if (b != null)
@@ -64,7 +63,6 @@ namespace Notes.NoteForms
 		private void InitializeComponent()
 		{
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.commentLabel = new System.Windows.Forms.Label();
 			this.stateLabel = new System.Windows.Forms.Label();
@@ -78,6 +76,7 @@ namespace Notes.NoteForms
 			this.passwordLabel = new System.Windows.Forms.Label();
 			this.emailTextBox = new System.Windows.Forms.TextBox();
 			this.emailLabel = new System.Windows.Forms.Label();
+			this.stateComboBox = new CommonUIElements.StateComboBox();
 			this.SuspendLayout();
 			// 
 			// commentRichTextBox
@@ -88,16 +87,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 6;
 			this.commentRichTextBox.Text = "";
-			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(66, 242);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 5;
 			// 
 			// submitButton
 			// 
@@ -216,10 +205,22 @@ namespace Notes.NoteForms
 			this.emailLabel.TabIndex = 21;
 			this.emailLabel.Text = "Email";
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(66, 242);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
+			this.stateComboBox.TabIndex = 5;
+			// 
 			// BookmarkForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 420);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.emailTextBox);
 			this.Controls.Add(this.emailLabel);
 			this.Controls.Add(this.passwordTextBox);
@@ -229,7 +230,6 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.URLLabel);
 			this.Controls.Add(this.URLRichTextBox);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.commentLabel);

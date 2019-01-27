@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Notes.Notes;
 using Notes.DB;
+using static Notes.Info;
 
 namespace Notes.NoteTables
 {
@@ -25,8 +26,8 @@ namespace Notes.NoteTables
 		}
 
 
-		public SerialTable(Point location, string tableNameInDB, string tableName):
-			base(location, tableNameInDB, tableName)
+		public SerialTable(Point location, string tableNameInDB):
+			base(location, tableNameInDB)
 		{
 
 		}
@@ -84,13 +85,13 @@ namespace Notes.NoteTables
 				if (Columns[e.ColumnIndex - 1].Name == "Episode")
 				{
 					IncrementCellValue(e.RowIndex, e.ColumnIndex - 1);
-					Database.Update(TableNameInDatabase, GetNoteFromSelectedRow());
+					Database.Update(TableNameDB, GetNoteFromSelectedRow());
 				}
 				else if (Columns[e.ColumnIndex - 1].Name == "Season")
 				{
 					IncrementCellValue(e.RowIndex, e.ColumnIndex - 1);
 					SetCellValue("Episode", e.RowIndex, 0);
-					Database.Update(TableNameInDatabase, GetNoteFromSelectedRow());
+					Database.Update(TableNameDB, GetNoteFromSelectedRow());
 				}
 			};
 		}

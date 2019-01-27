@@ -8,6 +8,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.CommonUIElements;
 using Notes.DB;
 
 namespace Notes.NoteForms
@@ -17,7 +18,6 @@ namespace Notes.NoteForms
 	class LiteratureForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox yearTextBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
@@ -40,6 +40,7 @@ namespace Notes.NoteForms
 		private TextBox pageTextBox;
 		private Label pagesLabel;
 		private Label pageLabel;
+		private StateComboBox stateComboBox;
 		private Label nameLabel;
 
 		public LiteratureForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -66,9 +67,6 @@ namespace Notes.NoteForms
 			serieses.AddRange(Database.SelectUniqueValues("Literature", "Series").Where(x => x != "").ToArray());
 			seriesTextBox.AutoCompleteCustomSource = serieses;
 
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
-
 			Literature lit = _editedNote as Literature;
 			if (lit != null)
 			{
@@ -89,7 +87,7 @@ namespace Notes.NoteForms
 			// При редактировании вносится только 1 том, а при добавлении можно указать сразу диапазон. 
 			if (lit != null)
 			{
-				volumeTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
+				volumeTextBox.KeyPress += new KeyPressEventHandler(InputEventHandler.CheckNumeric);
 			}
 			else
 			{
@@ -99,10 +97,10 @@ namespace Notes.NoteForms
 						e.Handled = true;
 				};
 			}
-			chapterTextBox.KeyPress += new KeyPressEventHandler(MainForm.CheckNumericInput);
-			pageTextBox.KeyPress    += new KeyPressEventHandler(MainForm.CheckNumericInput);
-			pagesTextBox.KeyPress   += new KeyPressEventHandler(MainForm.CheckNumericInput);
-			yearTextBox.KeyPress    += new KeyPressEventHandler(MainForm.CheckNumericInput);
+			chapterTextBox.KeyPress += new KeyPressEventHandler(InputEventHandler.CheckNumeric);
+			pageTextBox.KeyPress    += new KeyPressEventHandler(InputEventHandler.CheckNumeric);
+			pagesTextBox.KeyPress   += new KeyPressEventHandler(InputEventHandler.CheckNumeric);
+			yearTextBox.KeyPress    += new KeyPressEventHandler(InputEventHandler.CheckNumeric);
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
@@ -115,7 +113,6 @@ namespace Notes.NoteForms
 		private void InitializeComponent()
 		{
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.yearTextBox = new System.Windows.Forms.TextBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
@@ -139,6 +136,7 @@ namespace Notes.NoteForms
 			this.pageTextBox = new System.Windows.Forms.TextBox();
 			this.pagesLabel = new System.Windows.Forms.Label();
 			this.pageLabel = new System.Windows.Forms.Label();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// commentRichTextBox
@@ -149,16 +147,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 11;
 			this.commentRichTextBox.Text = "";
-			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(273, 205);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 10;
 			// 
 			// yearTextBox
 			// 
@@ -373,10 +361,22 @@ namespace Notes.NoteForms
 			this.pageLabel.TabIndex = 28;
 			this.pageLabel.Text = "Page";
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(273, 207);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
+			this.stateComboBox.TabIndex = 10;
+			// 
 			// LiteratureForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 382);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.pagesTextBox);
 			this.Controls.Add(this.pageTextBox);
 			this.Controls.Add(this.pagesLabel);
@@ -394,7 +394,6 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.authorTextBox);
 			this.Controls.Add(this.authorLabel);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.yearTextBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);

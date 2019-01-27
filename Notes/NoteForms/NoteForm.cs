@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 using Notes.NoteTables;
 using Notes.Notes;
 
 namespace Notes.NoteForms
 {
+	[ToolboxItem(true)]
+	[DesignTimeVisible(true)]
 	public class NoteForm : Form
 	{
 		public enum Mode
@@ -51,8 +54,8 @@ namespace Notes.NoteForms
 		{
 			switch (OpenMode)
 			{
-				case Mode.Add:  return string.Format("{0} - Add",  _editedTable.TableName);
-				case Mode.Edit: return string.Format("{0} - Edit", _editedTable.TableName);
+				case Mode.Add:  return string.Format("{0} - Add",  _editedTable.TableNameUI);
+				case Mode.Edit: return string.Format("{0} - Edit", _editedTable.TableNameUI);
 				default: return "Note";
 			}
 		}

@@ -13,7 +13,7 @@ namespace Notes.DB
 		/// <summary>
 		/// Импортирует заметки из БД старой программы. 
 		/// </summary>
-		public static void Import(string filePath, string tableName)
+		public static void Import(string filePath, string tableNameInOldDB)
 		{
 			Dictionary<int, Note.State> oldStates = new Dictionary<int, Note.State>();
 			oldStates.Add(1, Note.State.Active);
@@ -22,24 +22,24 @@ namespace Notes.DB
 			oldStates.Add(3, Note.State.Postponed);
 			oldStates.Add(0, Note.State.Waiting);
 
-			switch (tableName)
+			switch (tableNameInOldDB)
 			{
-				case "anime": Insert("AnimeSerials", SelectFromOldTable(filePath, "anime", oldStates)); break;
-				case "serials": Insert("Serials", SelectFromOldTable(filePath, "serials", oldStates)); break;
-				case "books": Insert("Literature", SelectFromOldTable(filePath, "books", oldStates)); break;
-				case "films": Insert("Films", SelectFromOldTable(filePath, "films", oldStates)); break;
+				case "anime":   Insert("AnimeSerials", SelectFromOldTable(filePath, "anime", oldStates)); break;
+				case "serials": Insert("Serials",      SelectFromOldTable(filePath, "serials", oldStates)); break;
+				case "books":   Insert("Literature",   SelectFromOldTable(filePath, "books", oldStates)); break;
+				case "films":   Insert("Films",        SelectFromOldTable(filePath, "films", oldStates)); break;
 				default: break;
 			}		
 		}
 
 
-		private static List<Note> SelectFromOldTable(string filePath, string tableName, Dictionary<int, Note.State> oldStates)
+		private static List<Note> SelectFromOldTable(string filePath, string tableNameInOldDB, Dictionary<int, Note.State> oldStates)
 		{
 			List<Note> notes = new List<Note>();
 			
 			try
 			{
-				string commandText = string.Format("SELECT * FROM {0}", tableName);			
+				string commandText = string.Format("SELECT * FROM {0}", tableNameInOldDB);			
 				using (SQLiteCommand selectCommand = new SQLiteCommand(commandText))
 				{
 					using (SQLiteConnection connection = Database.CreateConnection(filePath))
@@ -51,12 +51,12 @@ namespace Notes.DB
 						{
 							using (SQLiteDataReader reader = selectCommand.ExecuteReader())
 							{
-								switch (tableName)
+								switch (tableNameInOldDB)
 								{
-									case "anime": return ReadOldSerials(reader, oldStates);
+									case "anime":   return ReadOldSerials(reader, oldStates);
 									case "serials": return ReadOldSerials(reader, oldStates);
-									case "books": return ReadOldLiterature(reader, oldStates);
-									case "films": return ReadOldFilms(reader, oldStates);
+									case "books":   return ReadOldLiterature(reader, oldStates);
+									case "films":   return ReadOldFilms(reader, oldStates);
 								}								
 							}
 						}

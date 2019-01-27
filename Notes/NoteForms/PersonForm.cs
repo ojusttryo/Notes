@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.CommonUIElements;
 
 namespace Notes.NoteForms
 {
@@ -15,7 +16,6 @@ namespace Notes.NoteForms
 	class PersonForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox birthdateTextBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
@@ -30,6 +30,7 @@ namespace Notes.NoteForms
 		private Label nicknameLabel;
 		private RichTextBox contactsRichTextBox;
 		private Label nameLabel;
+		private StateComboBox stateComboBox;
 		private ComboBox sexComboBox;
 
 		public PersonForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -39,8 +40,6 @@ namespace Notes.NoteForms
 						
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 			sexComboBox.Items.AddRange(PeopleTable.Sex);
 			sexComboBox.SelectedIndex = 0;
 			
@@ -57,7 +56,7 @@ namespace Notes.NoteForms
 				commentRichTextBox.Text = person.Comment;
 			}
 
-			birthdateTextBox.KeyPress += new KeyPressEventHandler(CheckDateInput);
+			birthdateTextBox.KeyPress += new KeyPressEventHandler(InputEventHandler.CheckDate);
 
 			KeyDown += delegate (object o, KeyEventArgs e)
 			{
@@ -65,25 +64,11 @@ namespace Notes.NoteForms
 					submitButton.PerformClick();
 			};
 		}
-
-
-		public void CheckDateInput(object sender, KeyPressEventArgs e)
-		{
-			TextBox birthdateTextBox = (TextBox)sender;
-			if (birthdateTextBox == null)
-				return;
-
-			// TODO Можно в будущем сделать проверку на ввод. Но пока не решил, как же лучше. 
-			// Может, \d{2}\.\d{2}\.\d{4}?
-			// Но не хочется жестко фиксировать.
-			// Ведь кто-то может не знать год рождения, а кто-то наоборот - только год знает. 
-		}
 		
 
 		private void InitializeComponent()
 		{
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.birthdateTextBox = new System.Windows.Forms.TextBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
@@ -99,6 +84,7 @@ namespace Notes.NoteForms
 			this.nicknameLabel = new System.Windows.Forms.Label();
 			this.contactsRichTextBox = new System.Windows.Forms.RichTextBox();
 			this.sexComboBox = new System.Windows.Forms.ComboBox();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// commentRichTextBox
@@ -109,16 +95,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 7;
 			this.commentRichTextBox.Text = "";
-			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(66, 219);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 6;
 			// 
 			// birthdateTextBox
 			// 
@@ -258,10 +234,22 @@ namespace Notes.NoteForms
 			this.sexComboBox.Size = new System.Drawing.Size(155, 21);
 			this.sexComboBox.TabIndex = 2;
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(66, 219);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
+			this.stateComboBox.TabIndex = 6;
+			// 
 			// PersonForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 395);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.sexComboBox);
 			this.Controls.Add(this.contactsRichTextBox);
 			this.Controls.Add(this.nicknameTextBox);
@@ -271,7 +259,6 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.addressLabel);
 			this.Controls.Add(this.sexLabel);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.birthdateTextBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);

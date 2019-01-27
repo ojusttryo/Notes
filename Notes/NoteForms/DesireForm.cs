@@ -8,6 +8,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.CommonUIElements;
 
 namespace Notes.NoteForms
 {
@@ -16,13 +17,13 @@ namespace Notes.NoteForms
 	public class DesireForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
 		private Label commentLabel;
 		private Label stateLabel;
 		private Label descriptionLabel;
 		private RichTextBox descriptionRichTextBox;
+		private StateComboBox stateComboBox;
 		private Label nameLabel;
 
 		public DesireForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -32,8 +33,6 @@ namespace Notes.NoteForms
 			
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 
 			Desire desire = _editedNote as Desire;
 			if (desire != null)
@@ -55,7 +54,6 @@ namespace Notes.NoteForms
 		private void InitializeComponent()
 		{
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.commentLabel = new System.Windows.Forms.Label();
@@ -63,6 +61,7 @@ namespace Notes.NoteForms
 			this.descriptionLabel = new System.Windows.Forms.Label();
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// commentRichTextBox
@@ -73,16 +72,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 3;
 			this.commentRichTextBox.Text = "";
-			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(66, 206);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 2;
 			// 
 			// nameTextBox
 			// 
@@ -150,13 +139,24 @@ namespace Notes.NoteForms
 			this.descriptionRichTextBox.TabIndex = 1;
 			this.descriptionRichTextBox.Text = "";
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(66, 206);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(154, 21);
+			this.stateComboBox.TabIndex = 2;
+			// 
 			// DesireForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 385);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.descriptionRichTextBox);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.commentLabel);

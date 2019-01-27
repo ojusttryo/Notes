@@ -21,25 +21,16 @@ using Notes.NoteForms;
 using Notes.Import;
 using Notes.ProgramSettings;
 using Notes.DB;
+using static Notes.Info;
 
 namespace Notes
 {
 	public partial class MainForm : Form
 	{
 		/// <summary>
-		/// Ширина границы окна. Нужна для правильного позиционирования элементов.
-		/// </summary>
-		private int _borderWidth = 0;
-
-		/// <summary>
-		/// Высота заголовка главного окна. Нужна для правильного позиционирования элементов.
-		/// </summary>
-		private int _titleHeight = 0;
-
-		/// <summary>
 		/// Вертикальный и горизонтальный отступ между элементами на форме.
 		/// </summary>
-		const int _indentBetweenElements = 5;
+		private const int _indentBetweenElements = 5;
 
 		private Dictionary<string, NoteTable> _noteTables;
 
@@ -52,162 +43,90 @@ namespace Notes
 
 		public MainForm(Settings settings)
 		{
-			InitializeComponent();
 			_settings = settings;
 
-			_borderWidth = (this.Width - this.ClientRectangle.Width) / 2;
-			_titleHeight = this.Height - this.ClientRectangle.Height - _borderWidth * 2;
+			InitializeComponent();
+			CreateNoteTables();			
+			SetEventHandlers();
+			SwitchToTable(_settings.DefaultNotesTable);
+		}
 
-			BackColor = Color.White;
-			Resize += new EventHandler(MainForm_Resize);
 
+		private void CreateNoteTables()
+		{
 			Point noteTableLocation = new Point(ClientRectangle.Location.X, addButton.Location.Y + addButton.Height + _indentBetweenElements);
 
 			_noteTables = new Dictionary<string, NoteTable>();
-			_noteTables.Add("AnimeFilms", new DatedNoteTable(noteTableLocation, "AnimeFilms", "Anime films"));
-			_noteTables.Add("Films", new DatedNoteTable(noteTableLocation, "Films", "Films"));
-			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances", "Performances"));
-			_noteTables.Add("Literature", new LiteratureTable(noteTableLocation));
-			_noteTables.Add("Bookmarks", new BookmarkTable(noteTableLocation));
-			_noteTables.Add("Meal", new MealTable(noteTableLocation));
-			_noteTables.Add("Programs", new ProgramTable(noteTableLocation));
-			_noteTables.Add("Games", new GameTable(noteTableLocation));
-			_noteTables.Add("People", new PeopleTable(noteTableLocation));
-			_noteTables.Add("Serials", new SerialTable(noteTableLocation, "Serials", "Serials"));
-			_noteTables.Add("AnimeSerials", new SerialTable(noteTableLocation, "AnimeSerials", "Anime serials"));
-			_noteTables.Add("TVShows", new SerialTable(noteTableLocation, "TVShows", "TV shows"));
-			_noteTables.Add("Desires", new DesireTable(noteTableLocation));
+			_noteTables.Add("AnimeFilms",   new DatedNoteTable(noteTableLocation, "AnimeFilms"));
+			_noteTables.Add("Films",        new DatedNoteTable(noteTableLocation, "Films"));
+			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances"));
+			_noteTables.Add("Literature",   new LiteratureTable(noteTableLocation));
+			_noteTables.Add("Bookmarks",    new BookmarkTable(noteTableLocation));
+			_noteTables.Add("Meal",         new MealTable(noteTableLocation));
+			_noteTables.Add("Programs",     new ProgramTable(noteTableLocation));
+			_noteTables.Add("Games",        new GameTable(noteTableLocation));
+			_noteTables.Add("People",       new PeopleTable(noteTableLocation));
+			_noteTables.Add("Serials",      new SerialTable(noteTableLocation, "Serials"));
+			_noteTables.Add("AnimeSerials", new SerialTable(noteTableLocation, "AnimeSerials"));
+			_noteTables.Add("TVShows",      new SerialTable(noteTableLocation, "TVShows"));
+			_noteTables.Add("Desires",      new DesireTable(noteTableLocation));
+		}
+		
 
-			OpenInitialNotes();
-
-			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
-			Shown += delegate (object o, EventArgs e) { OnResize(null); };
-
-			KeyDown += delegate (object o, KeyEventArgs e)
-			{
-				DataGridViewCell currentCell = _currentNoteTable.CurrentCell;
-				bool currentCellIsIsNotHeader = (currentCell != null && currentCell.ColumnIndex >= 0 && currentCell.RowIndex >= 0);
-				bool tableIsActive = (_currentNoteTable == ActiveControl);
-
-				if (e.Control && e.KeyCode == Keys.F)
-					ActiveControl = searchTextBox;
-				else if (e.Control && e.KeyCode == Keys.E)
-					editButton.PerformClick();
-				else if (e.KeyCode == Keys.Add)
-					addButton.PerformClick();
-				else if (e.KeyCode == Keys.Delete && tableIsActive)
-					deleteButton.PerformClick();
-				else if (e.Control && e.KeyCode == Keys.S)
-					settingsButton.PerformClick();
-				else if (e.KeyCode == Keys.Enter && currentCellIsIsNotHeader && tableIsActive)
-					editButton.PerformClick();
-			};
+		private void SetEventHandlers()
+		{
+			KeyDown += new KeyEventHandler(MainForm_KeyDown);
 
 			searchTextBox.KeyPress += delegate (object o, KeyPressEventArgs e)
 			{
-				// Выполнить поиск по нажатию Enter
+				// Поиск по нажатию Enter
 				if (e.KeyChar == (char)13)
 				{
 					e.Handled = true;
 					search();
 				}
 			};
-		}
 
+			Resize += new EventHandler(MainForm_Resize);
 
-		private void OpenInitialNotes()
-		{
-			switch (_settings.InitialNotesTable)
+			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
+			Shown += delegate (object o, EventArgs e) 
 			{
-				// Отдельно перебираем только пустые элементы или с пробелами, где имя в интерфейсе не соответствует имени в БД.
-				case "": SwitchToTable("AnimeFilms", "Anime films"); break;
-				case "Anime films": SwitchToTable("AnimeFilms", "Anime films"); break;
-				case "Anime serials": SwitchToTable("AnimeSerials", "Anime serials"); break;
-				case "TV shows": SwitchToTable("TVShows", "TV Shows"); break;
-				default: SwitchToTable(_settings.InitialNotesTable); break;
-			}
-
-			switch (_settings.InitialNotesState)
-			{
-				case "All": allStatesToolStripMenuItem.PerformClick(); break;
-				case "Active": activeToolStripMenuItem.PerformClick(); break;
-				case "Deleted": deletedToolStripMenuItem.PerformClick(); break;
-				case "Finished": finishedToolStripMenuItem.PerformClick(); break;
-				case "Postponed": postponedToolStripMenuItem.PerformClick(); break;
-				case "Waiting": waitingToolStripMenuItem.PerformClick(); break;
-				default: allStatesToolStripMenuItem.PerformClick(); break;
-			}
+				OnResize(null);
+			};
 		}
+		
 
-
-		private void SwitchToTable(string tableName, string title = null)
+		private void MainForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			sexToolStripMenuItem.Visible = (tableName == "People");
+			DataGridViewCell currentCell = _currentNoteTable.CurrentCell;
+			bool currentCellIsIsNotHeader = (currentCell != null && currentCell.ColumnIndex >= 0 && currentCell.RowIndex >= 0);
+			bool tableIsActive = (_currentNoteTable == ActiveControl);
 
-			this.Text = (string.IsNullOrEmpty(title)) ? tableName : title;
-
-			if (_currentNoteTable != null)
-				Controls.Remove(_currentNoteTable);
-
-			_currentNoteTable = _noteTables[tableName];
-			// При переключении вкладок нужно чтоб у открытой всегда был правильный порядок.
-			// Когда добавляем новую запись в конец, таблица все еще считается отсортированной, поэтому нужно всегда вызвать метод,
-			// а не проверять условия предыдущей сортировки.
-			_currentNoteTable.Sort(_currentNoteTable.Columns[1], ListSortDirection.Ascending);
-			Controls.Add(_currentNoteTable);
-
-			UpdateSearchComboBox();
-			ShowAllRows();
-
-			OnResize(null);
+			if (e.Control && e.KeyCode == Keys.F)
+				ActiveControl = searchTextBox;
+			else if (e.Control && e.KeyCode == Keys.E)
+				editButton.PerformClick();
+			else if (e.KeyCode == Keys.Add)
+				addButton.PerformClick();
+			else if (e.KeyCode == Keys.Delete && tableIsActive)
+				deleteButton.PerformClick();
+			else if (e.KeyCode == Keys.Enter && currentCellIsIsNotHeader && tableIsActive)
+				editButton.PerformClick();
 		}
+		
 
-
-		private void ShowAllRows()
-		{
-			if (_currentNoteTable != null)
-			{
-				foreach (DataGridViewRow row in _currentNoteTable.Rows)
-					row.Visible = true;
-			}
-		}
-
-
-		private void UpdateSearchComboBox()
-		{
-			searchComboBox.Items.Clear();
-			if (_currentNoteTable != null)
-			{
-				searchComboBox.Items.AddRange(_currentNoteTable.SearchFields);
-				searchComboBox.SelectedIndex = 0;
-
-				// Ширина выпадающего списка.
-				int maxItemWidth = 0;
-				Label label = new Label();
-				foreach (object item in searchComboBox.Items)
-				{
-					label.Text = item.ToString();
-					if (label.PreferredWidth > maxItemWidth)
-						maxItemWidth = label.PreferredWidth;
-				}
-
-				searchComboBox.Width = maxItemWidth + 20;   // 20 - скролбар + небольшой отступ
-			}
-		}
-
-
-		/// <summary>
-		/// Обновление размеров и позиций графических элементов при любом изменении размера окна. 
-		/// </summary>
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
 			searchButton.Location = new Point(ClientRectangle.Width - searchButton.Width - _indentBetweenElements * 2, searchButton.Location.Y);
 			searchComboBox.Location = new Point(searchButton.Location.X - searchComboBox.Width - _indentBetweenElements, searchComboBox.Location.Y);
-			searchTextBox.Location = new Point(settingsButton.Location.X + settingsButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
-			searchTextBox.Width = searchComboBox.Location.X - settingsButton.Location.X - settingsButton.Width - 2 * _indentBetweenElements;
-			if (searchTextBox.Width > 400)
+			searchTextBox.Location = new Point(editButton.Location.X + editButton.Width + _indentBetweenElements, searchTextBox.Location.Y);
+			searchTextBox.Width = searchComboBox.Location.X - editButton.Location.X - editButton.Width - 2 * _indentBetweenElements;
+
+			const int maxSearchTextBoxWidth = 400;
+			if (searchTextBox.Width > maxSearchTextBoxWidth)
 			{
-				searchTextBox.Width = 400;
+				searchTextBox.Width = maxSearchTextBoxWidth;
 				searchComboBox.Location = new Point(searchTextBox.Location.X + searchTextBox.Width + _indentBetweenElements, searchComboBox.Location.Y);
 				searchButton.Location = new Point(searchComboBox.Location.X + searchComboBox.Width + _indentBetweenElements, searchButton.Location.Y);
 			}
@@ -223,69 +142,6 @@ namespace Notes
 			}
 		}
 
-		private void addButton_Click(object sender, EventArgs e)
-		{
-			switch (_currentNoteTable.TableNameInDatabase)
-			{
-				case "AnimeFilms":   new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Films":        new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Performances": new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Literature":   new LiteratureForm(this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Bookmarks":    new BookmarkForm(  this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Meal":         new MealForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Programs":     new ProgramForm(   this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Games":        new GameForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "People":       new PersonForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Serials":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "AnimeSerials": new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "TVShows":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Desires":      new DesireForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				default: break;
-			}
-		}
-
-
-		private void deleteButton_Click(object sender, EventArgs e)
-		{
-			_currentNoteTable.DeleteSelectedNotes();
-		}
-
-
-		private void editButton_Click(object sender, EventArgs e)
-		{
-			StartCurrentNoteEditing();
-		}
-
-
-		public void StartCurrentNoteEditing()
-		{
-			if (_currentNoteTable.CurrentRow == null)
-				return;
-
-			// Временно запрещается вызов событий, чтоб не было повторного сохранения изменений в таблице.
-			_currentNoteTable.CallCustomEvents = false;
-
-			switch (_currentNoteTable.TableNameInDatabase)
-			{
-				case "AnimeFilms":   new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Films":        new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Performances": new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Literature":   new LiteratureForm(this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Bookmarks":    new BookmarkForm(  this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Meal":         new MealForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Programs":     new ProgramForm(   this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Games":        new GameForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "People":       new PersonForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Serials":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "AnimeSerials": new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "TVShows":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Desires":      new DesireForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				default: break;
-			}
-
-			_currentNoteTable.CallCustomEvents = true;
-		}
-
 
 		public void AddNote(Note note)
 		{
@@ -297,7 +153,7 @@ namespace Notes
 
 		public void AddNotes(List<Note> notes)
 		{
-			bool successful = Database.Insert(_currentNoteTable.TableNameInDatabase, notes);
+			bool successful = Database.Insert(_currentNoteTable.TableNameDB, notes);
 			if (successful)
 			{
 				foreach (Note note in notes)
@@ -309,211 +165,43 @@ namespace Notes
 
 		public void UpdateNote(Note note)
 		{
-			bool successful = Database.Update(_currentNoteTable.TableNameInDatabase, note);
+			bool successful = Database.Update(_currentNoteTable.TableNameDB, note);
 			if (successful)
 				_currentNoteTable.UpdateNote(note);
 		}
+		
 
+		#region File menu
 
-		private void searchButton_Click(object sender, EventArgs e)
+		private void backupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			search();
-		}
+			string email = _settings.BackupEmail;
+			string password = _settings.BackupPassword;
+			string smtpAddress = Regex.Replace(email, @"\A.+@", @"smtp.");
 
-
-		private void search()
-		{
-			// Можно сделать через запрос к базе. Но как по мне, лучше не перезаписывать данные в таблице новым запросом, а просто скрывать лишнее.
-
-			string fieldName = searchComboBox.GetItemText(searchComboBox.SelectedItem);
-			if (!_currentNoteTable.Columns.Contains(fieldName))
-				return;
-
-			// При пустом запросе отображаются все строки.
-			if (searchTextBox.Text == string.Empty)
+			try
 			{
-				foreach (DataGridViewRow row in _currentNoteTable.Rows)
-					row.Visible = true;
-			}
-
-			// Сделал возможность поиска сразу по нескольким подстрокам, разделенным пробелом. Все подстроки должны содержаться в искомой строке.
-			int columnIndex = _currentNoteTable.Columns[fieldName].Index;
-			string[] searchSubstrings = searchTextBox.Text.Split(' ').Where(x => x.Trim().Length > 0).ToArray();			
-			foreach (DataGridViewRow row in _currentNoteTable.Rows)
-			{
-				string rowValue = row.Cells[columnIndex].Value.ToString();
-				// From https://stackoverflow.com/questions/444798/case-insensitive-containsstring
-				CultureInfo culture = CultureInfo.InvariantCulture;
-				row.Visible = searchSubstrings.All(x => culture.CompareInfo.IndexOf(rowValue, x.Trim(), CompareOptions.IgnoreCase) >= 0);
-			}
-
-			OnResize(null);
-		}
-
-
-		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			this.Close();
-		}
-
-		private void animeFilmsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("AnimeFilms", "Anime films");
-		}
-
-		private void animeSerialsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("AnimeSerials", "Anime serials");
-		}
-
-		private void bookmarksToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Bookmarks");
-		}
-
-		private void desiresToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Desires");
-		}
-
-		private void filmsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Films");
-		}
-
-		private void gamesToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Games");
-		}
-
-		private void literatureToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Literature");
-		}
-
-		private void mealToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Meal");
-		}
-
-		private void performancesToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Performances");
-		}
-
-		private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("People");
-		}
-
-		private void programsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Programs");
-		}
-
-		private void serialsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("Serials");
-		}
-
-		private void TVshowsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SwitchToTable("TVShows", "TV shows");
-		}
-
-
-		public static void CheckNumericInput(object sender, KeyPressEventArgs e)
-		{
-			// From https://ourcodeworld.com/articles/read/507/how-to-allow-only-numbers-inside-a-textbox-in-winforms-c-sharp
-			// Verify that the pressed key isn't CTRL or any non-numeric digit
-			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-				e.Handled = true;
-		}
-
-
-		public static void CheckPasword(object sender, KeyPressEventArgs e)
-		{
-			// Пока запрещу только табы и пробелы.
-			if (char.IsWhiteSpace(e.KeyChar))
-				e.Handled = true;
-		}
-
-
-		private void StateToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			// При выборе элемента меню, должны отображаться все заметки с этим состоянием.
-			// Если ранее был выполнен поиск, его результаты игнорируются. Выборка делается по всей таблице.
-			ToolStripMenuItem item = (ToolStripMenuItem)sender;
-			if (item != null && stateToolStripMenuItem.DropDownItems.Contains(item))
-			{
-				int stateIndex = stateToolStripMenuItem.DropDownItems.IndexOf(item);
-				// Первый пункт меню выбирает все заметки.
-				if (stateIndex == 0)
+				MailAddress from = new MailAddress(email, "Notes");
+				MailAddress to = new MailAddress(email);
+				using (MailMessage message = new MailMessage(from, to))
 				{
-					foreach (DataGridViewRow row in _currentNoteTable.Rows)
-						row.Visible = true;
-				}
-				else if (_currentNoteTable.Columns.Contains("State"))
-				{
-					DataGridViewComboBoxColumn column = (DataGridViewComboBoxColumn)_currentNoteTable.Columns["State"];
-					if (column == null)
-						return;
-
-					foreach (DataGridViewRow row in _currentNoteTable.Rows)
+					message.Subject = "Backup";
+					message.Body = "";
+					message.Attachments.Add(new Attachment("notes.sqlite"));
+					using (SmtpClient smtp = new SmtpClient(smtpAddress, 587))
 					{
-						DataGridViewComboBoxCell stateCell = row.Cells[column.Index] as DataGridViewComboBoxCell;
-						row.Visible = (stateCell != null && column.Items.IndexOf(stateCell.Value) == stateIndex);
+						smtp.Credentials = new NetworkCredential(email, password);
+						smtp.EnableSsl = true;
+						smtp.Send(message);
+
+						MessageBox.Show("Backup sent");
 					}
-				}
+				}				
 			}
-			searchTextBox.Text = "";
-
-			lastClickedStateItem = item;
-		}
-
-
-		private void settingsButton_Click(object sender, EventArgs e)
-		{
-			SettingsForm form = new SettingsForm(_settings);
-			form.ShowDialog();
-		}
-
-		private void SexToolStripMenuItem1_Click(object sender, EventArgs e)
-		{
-			const string sexColumn = "Sex";
-			if (!_currentNoteTable.Columns.Contains(sexColumn))
-				return;
-
-			// Сначала отображаем все заметки, выбранные предыдущим кликом на меню состояния.
-			if (lastClickedStateItem != null)
-				lastClickedStateItem.PerformClick();
-			else
-				allStatesToolStripMenuItem.PerformClick();
-
-			// Затем уже выбираем заметки по полу.
-			ToolStripMenuItem item = (ToolStripMenuItem)sender;
-			if (item != null && sexToolStripMenuItem.DropDownItems.Contains(item))
+			catch (Exception ex)
 			{
-				int sexIndex = sexToolStripMenuItem.DropDownItems.IndexOf(item);
-				// Нулевой элемент - любой пол.
-				if (sexIndex == 0)
-				{
-					// Ничего не нужно делать. Все уже выбрано состоянием.						
-				}
-				else
-				{
-					DataGridViewColumn column = _currentNoteTable.Columns[sexColumn];
-
-					foreach (DataGridViewRow row in _currentNoteTable.Rows)
-					{
-						// Строки, скрытые по выборке состояния, не нужно изменять.
-						if (row.Visible == false)
-							continue;
-
-						DataGridViewCell sexCell = row.Cells[column.Index];
-						row.Visible = (sexCell != null && sexCell.Value.ToString() == PeopleTable.Sex[sexIndex]);
-					}
-				}
+				Log.Error(string.Format("Cannot send backup:{0}{1}", Environment.NewLine, ex.ToString()));
+				MessageBox.Show(string.Format("Cannot send backup:{0}{1}", Environment.NewLine, ex.ToString()));
 			}
 		}
 
@@ -575,36 +263,308 @@ namespace Notes
 		}
 
 
-		private void backupToolStripMenuItem_Click(object sender, EventArgs e)
+		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string email = _settings.BackupEmail;
-			string password = _settings.BackupPassword;
-			string smtpAddress = Regex.Replace(email, @"\A.+@", @"smtp.");
+			this.Close();
+		}
 
-			try
+		#endregion
+
+
+		#region Category menu
+
+		private void notesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem item = (ToolStripMenuItem)sender;
+			if (item == null)
+				return;
+
+			SwitchToTable(GetTableNameDB(item.Text));
+		}
+
+
+		private void SwitchToTable(string tableNameDB)
+		{
+			ReplaceNoteTableInControls(tableNameDB);
+			SetSexMenuVisibleProperty(tableNameDB);
+			UpdateSearchComboBox();
+			SwitchToState();
+			OnResize(null);
+		}
+
+
+		private void ReplaceNoteTableInControls(string tableNameDB)
+		{
+			if (_currentNoteTable != null)
+				Controls.Remove(_currentNoteTable);
+
+			_currentNoteTable = _noteTables[tableNameDB];
+
+			// При переключении вкладок нужно чтоб у открытой всегда был правильный порядок.
+			// Когда добавляем новую запись в конец, таблица все еще считается отсортированной, поэтому нужно всегда вызвать метод,
+			// а не проверять условия предыдущей сортировки.
+			_currentNoteTable.Sort(_currentNoteTable.Columns[1], ListSortDirection.Ascending);
+
+			Controls.Add(_currentNoteTable);
+		}
+
+
+		private void SetSexMenuVisibleProperty(string tableNameDB)
+		{
+			// There is additional menu for People - Sex.
+			sexToolStripMenuItem.Visible = (tableNameDB == "People");
+		}
+
+
+		private void UpdateSearchComboBox()
+		{
+			searchComboBox.Items.Clear();
+			if (_currentNoteTable != null)
 			{
-				MailAddress from = new MailAddress(email, "Notes");
-				MailAddress to = new MailAddress(email);
-				using (MailMessage message = new MailMessage(from, to))
+				searchComboBox.Items.AddRange(_currentNoteTable.SearchFields);
+				searchComboBox.SelectedIndex = 0;
+
+				// Ширина выпадающего списка.
+				int maxItemWidth = 0;
+				Label label = new Label();
+				foreach (object item in searchComboBox.Items)
 				{
-					message.Subject = "Backup";
-					message.Body = "";
-					message.Attachments.Add(new Attachment("notes.sqlite"));
-					using (SmtpClient smtp = new SmtpClient(smtpAddress, 587))
-					{
-						smtp.Credentials = new NetworkCredential(email, password);
-						smtp.EnableSsl = true;
-						smtp.Send(message);
+					label.Text = item.ToString();
+					if (label.PreferredWidth > maxItemWidth)
+						maxItemWidth = label.PreferredWidth;
+				}
 
-						MessageBox.Show("Backup sent");
-					}
-				}				
-			}
-			catch (Exception ex)
-			{
-				Log.Error(string.Format("Cannot send backup:{0}{1}", Environment.NewLine, ex.ToString()));
-				MessageBox.Show(string.Format("Cannot send backup:{0}{1}", Environment.NewLine, ex.ToString()));
+				searchComboBox.Width = maxItemWidth + 20;   // 20 - скролбар + небольшой отступ
 			}
 		}
+
+
+		private void SwitchToState()
+		{
+			switch (_settings.GetDefaultState(_currentNoteTable.TableNameDB))
+			{
+				case "Active":    activeToolStripMenuItem.PerformClick(); break;
+				case "Deleted":   deletedToolStripMenuItem.PerformClick(); break;
+				case "Finished":  finishedToolStripMenuItem.PerformClick(); break;
+				case "Postponed": postponedToolStripMenuItem.PerformClick(); break;
+				case "Waiting":   waitingToolStripMenuItem.PerformClick(); break;
+				default:          allStatesToolStripMenuItem.PerformClick(); break;
+			}
+		}
+
+		#endregion
+
+
+		#region State menu
+
+		private void StateToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// При выборе элемента меню, должны отображаться все заметки с этим состоянием.
+			// Если ранее был выполнен поиск, его результаты игнорируются. Выборка делается по всей таблице.
+			ToolStripMenuItem item = (ToolStripMenuItem)sender;
+			if (item != null && stateToolStripMenuItem.DropDownItems.Contains(item))
+			{
+				if (item.Text == "All")
+					ShowAllNotes();
+				else
+					ShowNotesForClickedMenuItem(item);
+
+				Text = string.Format("{0} - {1}", GetTableNameUI(_currentNoteTable.TableNameDB), item.Text);
+			}
+			searchTextBox.Text = "";
+			lastClickedStateItem = item;
+		}
+
+
+		private void ShowAllNotes()
+		{
+			foreach (DataGridViewRow row in _currentNoteTable.Rows)
+				row.Visible = true;
+		}
+
+
+		private void ShowNotesForClickedMenuItem(ToolStripMenuItem item)
+		{
+			if (_currentNoteTable.Columns.Contains("State"))
+			{
+				DataGridViewComboBoxColumn column = (DataGridViewComboBoxColumn)_currentNoteTable.Columns["State"];
+				if (column == null)
+					return;
+
+				int stateIndex = stateToolStripMenuItem.DropDownItems.IndexOf(item);
+
+				foreach (DataGridViewRow row in _currentNoteTable.Rows)
+				{
+					DataGridViewComboBoxCell stateCell = row.Cells[column.Index] as DataGridViewComboBoxCell;
+					row.Visible = (stateCell != null && column.Items.IndexOf(stateCell.Value) == stateIndex);
+				}
+			}
+		}
+
+		#endregion
+
+
+		#region Sex menu
+
+		private void SexToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			const string sexColumnName = "Sex";
+			if (!_currentNoteTable.Columns.Contains(sexColumnName))
+				return;
+
+			// Сначала отображаем все заметки, выбранные предыдущим кликом на меню состояния.
+			if (lastClickedStateItem != null)
+				lastClickedStateItem.PerformClick();
+			else
+				allStatesToolStripMenuItem.PerformClick();
+
+			// Затем уже выбираем заметки по полу.
+			ToolStripMenuItem item = (ToolStripMenuItem)sender;
+			if (item != null && sexToolStripMenuItem.DropDownItems.Contains(item))
+			{
+				// Если нужно выбрать все, то ничего не делаем. Все уже выбрано нажатием на меню состояния.	
+				if (item.Text == "All")
+					return;
+				
+				DataGridViewColumn column = _currentNoteTable.Columns[sexColumnName];
+				foreach (DataGridViewRow row in _currentNoteTable.Rows)
+				{
+					// Строки, скрытые по выборке состояния, не нужно изменять.
+					if (row.Visible == false)
+						continue;
+						
+					DataGridViewCell sexCell = row.Cells[column.Index];
+					int sexIndex = sexToolStripMenuItem.DropDownItems.IndexOf(item);
+					row.Visible = (sexCell != null && sexCell.Value.ToString() == PeopleTable.Sex[sexIndex]);
+				}
+			}
+		}
+
+		#endregion
+
+
+		#region Buttons action
+
+		private void addButton_Click(object sender, EventArgs e)
+		{
+			switch (_currentNoteTable.TableNameDB)
+			{
+				case "AnimeFilms":   new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Films":        new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Performances": new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Literature":   new LiteratureForm(this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Bookmarks":    new BookmarkForm(  this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Meal":         new MealForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Programs":     new ProgramForm(   this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Games":        new GameForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "People":       new PersonForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Serials":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "AnimeSerials": new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "TVShows":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Desires":      new DesireForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				default: break;
+			}
+		}
+
+
+		private void deleteButton_Click(object sender, EventArgs e)
+		{
+			_currentNoteTable.DeleteSelectedNotes();
+		}
+
+
+		private void editButton_Click(object sender, EventArgs e)
+		{
+			StartCurrentNoteEditing();
+		}
+
+
+		public void StartCurrentNoteEditing()
+		{
+			if (_currentNoteTable.CurrentRow == null)
+				return;
+
+			// Временно запрещается вызов событий, чтоб не было повторного сохранения изменений в таблице.
+			_currentNoteTable.CallCustomEvents = false;
+
+			switch (_currentNoteTable.TableNameDB)
+			{
+				case "AnimeFilms":   new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Films":        new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Performances": new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Literature":   new LiteratureForm(this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Bookmarks":    new BookmarkForm(  this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Meal":         new MealForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Programs":     new ProgramForm(   this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Games":        new GameForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "People":       new PersonForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Serials":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "AnimeSerials": new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "TVShows":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Desires":      new DesireForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				default: break;
+			}
+
+			_currentNoteTable.CallCustomEvents = true;
+		}
+
+
+		private void searchButton_Click(object sender, EventArgs e)
+		{
+			search();
+		}
+
+
+		private void search()
+		{
+			// Можно сделать через запрос к базе. Но как по мне, лучше не перезаписывать данные в таблице новым запросом, а просто скрывать лишнее.
+
+			// Убираю выделение строк, чтоб не оставались выделеными скрытые строки. Например, в случае удаления.
+			_currentNoteTable.ClearSelection();
+
+			string fieldName = searchComboBox.GetItemText(searchComboBox.SelectedItem);
+			if (!_currentNoteTable.Columns.Contains(fieldName))
+				return;
+
+			// При пустом запросе отображаются все строки.
+			if (searchTextBox.Text == string.Empty)
+			{
+				foreach (DataGridViewRow row in _currentNoteTable.Rows)
+					row.Visible = true;
+			}
+
+			// Сделал возможность поиска сразу по нескольким подстрокам, разделенным пробелом. Все подстроки должны содержаться в искомой строке.
+			int columnIndex = _currentNoteTable.Columns[fieldName].Index;
+			string[] searchSubstrings = searchTextBox.Text.Split(' ').Where(x => x.Trim().Length > 0).ToArray();			
+			foreach (DataGridViewRow row in _currentNoteTable.Rows)
+			{
+				string rowValue = row.Cells[columnIndex].Value.ToString();
+				// From https://stackoverflow.com/questions/444798/case-insensitive-containsstring
+				CultureInfo culture = CultureInfo.InvariantCulture;
+				row.Visible = searchSubstrings.All(x => culture.CompareInfo.IndexOf(rowValue, x.Trim(), CompareOptions.IgnoreCase) >= 0);
+			}
+
+			OnResize(null);
+		}
+
+		#endregion
+
+
+		#region Settings menu
+
+		private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ViewSettingsForm viewForm = new ViewSettingsForm(_settings);
+			viewForm.ShowDialog();
+		}
+
+
+		private void securityToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SecuritySettingsForm securityForm = new SecuritySettingsForm(_settings);
+			securityForm.ShowDialog();
+		}
+
+		#endregion
 	}
 }

@@ -16,27 +16,27 @@ namespace Notes.Import
 		private Button importButton;
 		private BookmarksImportTable bookmarksTable;
 		private MainForm mainForm;
-		private const int indent = 5;
+		private const int _indentBetweenElements = 5;
 
 		public BookmarksImportForm(MainForm parent)
 		{
 			mainForm = parent;	
 			InitializeComponent();
 
-			Point tableLocation = new Point(0, indent);
+			Point tableLocation = new Point(0, _indentBetweenElements);
 			bookmarksTable = new BookmarksImportTable(tableLocation);
 
 			Controls.Add(bookmarksTable);
 
 			Resize += delegate (object o, EventArgs e)
 			{
-				int buttonsLocationY = ClientRectangle.Height - indent - selectAllButton.Height;
+				int buttonsLocationY = ClientRectangle.Height - _indentBetweenElements - selectAllButton.Height;
 				selectAllButton.Location = new Point(selectAllButton.Location.X, buttonsLocationY);
 				deselectAllButton.Location = new Point(deselectAllButton.Location.X, buttonsLocationY);
 				importButton.Location = new Point((ClientRectangle.Width - importButton.Width) / 2, buttonsLocationY);
 
 				int tableWidth = this.ClientRectangle.Width;
-				int tableHeight = selectAllButton.Location.Y - indent * 3;
+				int tableHeight = selectAllButton.Location.Y - _indentBetweenElements * 3;
 				Size tableSize = new Size(tableWidth, tableHeight);
 
 				bookmarksTable.ChangeSize(tableSize);

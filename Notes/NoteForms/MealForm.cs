@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using Notes.Notes;
 using Notes.NoteTables;
+using Notes.CommonUIElements;
 
 namespace Notes.NoteForms
 {
@@ -15,7 +16,6 @@ namespace Notes.NoteForms
 	class MealForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
 		private Label commentLabel;
@@ -24,6 +24,7 @@ namespace Notes.NoteForms
 		private Label ingredientsLabel;
 		private RichTextBox recipeRichTextBox;
 		private Label recipeLabel;
+		private StateComboBox stateComboBox;
 		private Label nameLabel;
 		
 
@@ -34,8 +35,6 @@ namespace Notes.NoteForms
 
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 
 			Meal meal = _editedNote as Meal;
 			if (meal != null)
@@ -58,7 +57,6 @@ namespace Notes.NoteForms
 		private void InitializeComponent()
 		{
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.commentLabel = new System.Windows.Forms.Label();
@@ -68,6 +66,7 @@ namespace Notes.NoteForms
 			this.ingredientsLabel = new System.Windows.Forms.Label();
 			this.recipeRichTextBox = new System.Windows.Forms.RichTextBox();
 			this.recipeLabel = new System.Windows.Forms.Label();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// commentRichTextBox
@@ -78,16 +77,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.Size = new System.Drawing.Size(362, 111);
 			this.commentRichTextBox.TabIndex = 4;
 			this.commentRichTextBox.Text = "";
-			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(66, 222);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 3;
 			// 
 			// nameTextBox
 			// 
@@ -174,16 +163,27 @@ namespace Notes.NoteForms
 			this.recipeLabel.TabIndex = 17;
 			this.recipeLabel.Text = "Recipe";
 			// 
+			// stateComboBox
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(66, 222);
+			this.stateComboBox.Name = "stateComboBox";
+			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
+			this.stateComboBox.TabIndex = 3;
+			// 
 			// MealForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(904, 400);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.recipeLabel);
 			this.Controls.Add(this.recipeRichTextBox);
 			this.Controls.Add(this.ingredientsLabel);
 			this.Controls.Add(this.ingredientsRichTextBox);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.commentLabel);

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using Notes.Notes;
 using Notes.NoteTables;
 using Notes.DB;
+using Notes.CommonUIElements;
 
 namespace Notes.NoteForms
 {
@@ -26,7 +27,6 @@ namespace Notes.NoteForms
 		private Label linkLabel;
 		private RichTextBox linkRichTextBox;
 		private RichTextBox commentRichTextBox;
-		private ComboBox stateComboBox;
 		private TextBox nameTextBox;
 		private Button submitButton;
 		private Label commentLabel;
@@ -35,6 +35,7 @@ namespace Notes.NoteForms
 		private TextBox genreTextBox;
 		private Label playersCountLabel;
 		private ComboBox playersCountComboBox;
+		private StateComboBox stateComboBox;
 		private Label genreLabel;
 
 		public GameForm(MainForm mainForm, NoteTable editedTable, Mode mode):
@@ -44,8 +45,6 @@ namespace Notes.NoteForms
 
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
-			stateComboBox.Items.AddRange(NoteTable.States);
-			stateComboBox.SelectedIndex = 0;
 
 			AutoCompleteStringCollection genres = new AutoCompleteStringCollection();
 			genres.AddRange(Database.SelectUniqueValues("Games", "Genre").Where(x => x != "").ToArray());
@@ -90,7 +89,6 @@ namespace Notes.NoteForms
 			this.linkLabel = new System.Windows.Forms.Label();
 			this.linkRichTextBox = new System.Windows.Forms.RichTextBox();
 			this.commentRichTextBox = new System.Windows.Forms.RichTextBox();
-			this.stateComboBox = new System.Windows.Forms.ComboBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.commentLabel = new System.Windows.Forms.Label();
@@ -100,6 +98,7 @@ namespace Notes.NoteForms
 			this.genreLabel = new System.Windows.Forms.Label();
 			this.playersCountLabel = new System.Windows.Forms.Label();
 			this.playersCountComboBox = new System.Windows.Forms.ComboBox();
+			this.stateComboBox = new StateComboBox();
 			this.SuspendLayout();
 			// 
 			// versionTextBox
@@ -198,16 +197,6 @@ namespace Notes.NoteForms
 			this.commentRichTextBox.TabIndex = 9;
 			this.commentRichTextBox.Text = "";
 			// 
-			// stateComboBox
-			// 
-			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.stateComboBox.FormattingEnabled = true;
-			this.stateComboBox.Location = new System.Drawing.Point(71, 324);
-			this.stateComboBox.Name = "stateComboBox";
-			this.stateComboBox.Size = new System.Drawing.Size(155, 21);
-			this.stateComboBox.TabIndex = 8;
-			// 
 			// nameTextBox
 			// 
 			this.nameTextBox.Location = new System.Drawing.Point(71, 15);
@@ -294,10 +283,22 @@ namespace Notes.NoteForms
 			this.playersCountComboBox.Size = new System.Drawing.Size(155, 21);
 			this.playersCountComboBox.TabIndex = 3;
 			// 
+			// stateComboBox1
+			// 
+			this.stateComboBox.BackColor = System.Drawing.Color.White;
+			this.stateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.stateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.stateComboBox.FormattingEnabled = true;
+			this.stateComboBox.Location = new System.Drawing.Point(70, 324);
+			this.stateComboBox.Name = "stateComboBox1";
+			this.stateComboBox.Size = new System.Drawing.Size(154, 21);
+			this.stateComboBox.TabIndex = 8;
+			// 
 			// GameForm
 			// 
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(444, 498);
+			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.playersCountComboBox);
 			this.Controls.Add(this.playersCountLabel);
 			this.Controls.Add(this.genreTextBox);
@@ -313,7 +314,6 @@ namespace Notes.NoteForms
 			this.Controls.Add(this.linkLabel);
 			this.Controls.Add(this.linkRichTextBox);
 			this.Controls.Add(this.commentRichTextBox);
-			this.Controls.Add(this.stateComboBox);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.submitButton);
 			this.Controls.Add(this.commentLabel);
