@@ -14,19 +14,20 @@ namespace Notes.DB
 		{
 			switch (tableNameDB)
 			{
-				case "AnimeFilms":   return InsertDatedNotes(notes, _animeFilmsInsertCommand);
-				case "AnimeSerials": return InsertSerials(notes, _animeSerialsInsertCommand);
-				case "Bookmarks":    return InsertBookmarks(notes);
-				case "Desires":      return InsertDesires(notes);
-				case "Films":        return InsertDatedNotes(notes, _filmsInsertCommand);
-				case "Games":        return InsertGames(notes);
-				case "Literature":   return InsertLiterature(notes);
-				case "Meal":         return InsertMeal(notes);
-				case "Performances": return InsertDatedNotes(notes, _performancesInsertCommand);
-				case "People":       return InsertPeople(notes);
-				case "Programs":     return InsertPrograms(notes);
-				case "Serials":      return InsertSerials(notes, _serialsInsertCommand);
-				case "TVShows":      return InsertSerials(notes, _TVShowsInsertCommand);
+				case "AnimeFilms":    return InsertDatedNotes(notes, _animeFilmsInsertCommand);
+				case "AnimeSerials":  return InsertSerials(notes, _animeSerialsInsertCommand);
+				case "Bookmarks":     return InsertBookmarks(notes);
+				case "Desires":       return InsertDescribedNote(notes, _desiresInsertCommand);
+				case "Films":         return InsertDatedNotes(notes, _filmsInsertCommand);
+				case "Games":         return InsertGames(notes);
+				case "Literature":    return InsertLiterature(notes);
+				case "Meal":          return InsertMeal(notes);
+				case "Performances":  return InsertDatedNotes(notes, _performancesInsertCommand);
+				case "People":        return InsertPeople(notes);
+				case "Programs":      return InsertPrograms(notes);
+				case "RegularDoings": return InsertDescribedNote(notes, _regularDoingsInsertCommand);
+				case "Serials":       return InsertSerials(notes, _serialsInsertCommand);
+				case "TVShows":       return InsertSerials(notes, _TVShowsInsertCommand);
 				default: return false;
 			}
 		}
@@ -210,7 +211,7 @@ namespace Notes.DB
 		}
 
 
-		private static bool InsertDesires(List<Note> notes)
+		private static bool InsertDescribedNote(List<Note> notes, SQLiteCommand describedNoteInsertCommand)
 		{
 			bool inserted = false;
 
@@ -219,7 +220,7 @@ namespace Notes.DB
 				using (SQLiteConnection connection = Database.CreateConnection())
 				{	
 					connection.Open();
-					_desiresInsertCommand.Connection = connection;
+					describedNoteInsertCommand.Connection = connection;
 
 					if (connection.State == System.Data.ConnectionState.Open)
 					{
@@ -227,22 +228,22 @@ namespace Notes.DB
 						{
 							foreach (Note note in notes)
 							{
-								Desire desire = note as Desire;
-								if (desire == null)
+								DescribedNote describedNote = note as DescribedNote;
+								if (describedNote == null)
 								{
 									Log.Error("Try to insert incorrect note");
 									continue;
 								}
 
-								_desiresInsertCommand.Parameters[0].Value = desire.Name;
-								_desiresInsertCommand.Parameters[1].Value = (int)desire.CurrentState;
-								_desiresInsertCommand.Parameters[2].Value = desire.Comment;
-								_desiresInsertCommand.Parameters[3].Value = desire.Description;
+								describedNoteInsertCommand.Parameters[0].Value = describedNote.Name;
+								describedNoteInsertCommand.Parameters[1].Value = (int)describedNote.CurrentState;
+								describedNoteInsertCommand.Parameters[2].Value = describedNote.Comment;
+								describedNoteInsertCommand.Parameters[3].Value = describedNote.Description;
 
-								_desiresInsertCommand.Prepare();
-								_desiresInsertCommand.ExecuteNonQuery();
+								describedNoteInsertCommand.Prepare();
+								describedNoteInsertCommand.ExecuteNonQuery();
 
-								desire.Id = (int)connection.LastInsertRowId;
+								describedNote.Id = (int)connection.LastInsertRowId;
 
 								inserted = true;
 							}
@@ -252,13 +253,13 @@ namespace Notes.DB
 					}
 
 					connection.Close();
-					_desiresInsertCommand.Connection = null;
+					describedNoteInsertCommand.Connection = null;
 				}
 			}
 			catch (Exception ex)
 			{
 				Log.Error(string.Format("Can not execute command: {0}{1}{2}{3}", 
-					Environment.NewLine, (_desiresInsertCommand != null) ? _desiresInsertCommand.CommandText : "", 
+					Environment.NewLine, (describedNoteInsertCommand != null) ? describedNoteInsertCommand.CommandText : "", 
 					Environment.NewLine, ex.ToString()));
 
 				return false;

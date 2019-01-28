@@ -57,19 +57,20 @@ namespace Notes
 			Point noteTableLocation = new Point(ClientRectangle.Location.X, addButton.Location.Y + addButton.Height + _indentBetweenElements);
 
 			_noteTables = new Dictionary<string, NoteTable>();
-			_noteTables.Add("AnimeFilms",   new DatedNoteTable(noteTableLocation, "AnimeFilms"));
-			_noteTables.Add("Films",        new DatedNoteTable(noteTableLocation, "Films"));
-			_noteTables.Add("Performances", new DatedNoteTable(noteTableLocation, "Performances"));
-			_noteTables.Add("Literature",   new LiteratureTable(noteTableLocation));
-			_noteTables.Add("Bookmarks",    new BookmarkTable(noteTableLocation));
-			_noteTables.Add("Meal",         new MealTable(noteTableLocation));
-			_noteTables.Add("Programs",     new ProgramTable(noteTableLocation));
-			_noteTables.Add("Games",        new GameTable(noteTableLocation));
-			_noteTables.Add("People",       new PeopleTable(noteTableLocation));
-			_noteTables.Add("Serials",      new SerialTable(noteTableLocation, "Serials"));
-			_noteTables.Add("AnimeSerials", new SerialTable(noteTableLocation, "AnimeSerials"));
-			_noteTables.Add("TVShows",      new SerialTable(noteTableLocation, "TVShows"));
-			_noteTables.Add("Desires",      new DesireTable(noteTableLocation));
+			_noteTables.Add("AnimeFilms",    new DatedNoteTable(noteTableLocation, "AnimeFilms"));
+			_noteTables.Add("AnimeSerials",  new SerialTable(noteTableLocation, "AnimeSerials"));
+			_noteTables.Add("Bookmarks",     new BookmarkTable(noteTableLocation));
+			_noteTables.Add("Desires",       new DescribedNoteTable(noteTableLocation, "Desires"));
+			_noteTables.Add("Films",         new DatedNoteTable(noteTableLocation, "Films"));
+			_noteTables.Add("Games",         new GameTable(noteTableLocation));
+			_noteTables.Add("Literature",    new LiteratureTable(noteTableLocation));
+			_noteTables.Add("Meal",          new MealTable(noteTableLocation));
+			_noteTables.Add("Performances",  new DatedNoteTable(noteTableLocation, "Performances"));
+			_noteTables.Add("People",        new PeopleTable(noteTableLocation));			
+			_noteTables.Add("Programs",      new ProgramTable(noteTableLocation));
+			_noteTables.Add("RegularDoings", new DescribedNoteTable(noteTableLocation, "RegularDoings"));			
+			_noteTables.Add("Serials",       new SerialTable(noteTableLocation, "Serials"));			
+			_noteTables.Add("TVShows",       new SerialTable(noteTableLocation, "TVShows"));		
 		}
 		
 
@@ -449,19 +450,21 @@ namespace Notes
 		{
 			switch (_currentNoteTable.TableNameDB)
 			{
-				case "AnimeFilms":   new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Films":        new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Performances": new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Literature":   new LiteratureForm(this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Bookmarks":    new BookmarkForm(  this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Meal":         new MealForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Programs":     new ProgramForm(   this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Games":        new GameForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "People":       new PersonForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Serials":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "AnimeSerials": new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "TVShows":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
-				case "Desires":      new DesireForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "AnimeFilms":    new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "AnimeSerials":  new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Bookmarks":     new BookmarkForm(     this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Desires":       new DescribedNoteForm(this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Films":         new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Games":         new GameForm(         this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Literature":    new LiteratureForm(   this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Meal":          new MealForm(         this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "Performances":  new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;				
+				case "People":        new PersonForm(       this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;				
+				case "Programs":      new ProgramForm(      this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				case "RegularDoings": new DescribedNoteForm(this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;				
+				case "Serials":       new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;				
+				case "TVShows":       new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
+				
 				default: break;
 			}
 		}
@@ -489,19 +492,21 @@ namespace Notes
 
 			switch (_currentNoteTable.TableNameDB)
 			{
-				case "AnimeFilms":   new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Films":        new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Performances": new DatedNoteForm( this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Literature":   new LiteratureForm(this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Bookmarks":    new BookmarkForm(  this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Meal":         new MealForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Programs":     new ProgramForm(   this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Games":        new GameForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "People":       new PersonForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Serials":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "AnimeSerials": new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "TVShows":      new SerialForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
-				case "Desires":      new DesireForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "AnimeFilms":    new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "AnimeSerials":  new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Bookmarks":     new BookmarkForm(     this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Desires":       new DescribedNoteForm(this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Films":         new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Games":         new GameForm(         this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Literature":    new LiteratureForm(   this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Meal":          new MealForm(         this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "Performances":  new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;				
+				case "People":        new PersonForm(       this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;				
+				case "Programs":      new ProgramForm(      this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				case "RegularDoings": new DescribedNoteForm(this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;				
+				case "Serials":       new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;				
+				case "TVShows":       new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
+				
 				default: break;
 			}
 

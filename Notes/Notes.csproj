@@ -127,7 +127,7 @@
     <Compile Include="NoteForms\DatedNoteForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NoteForms\DesireForm.cs">
+    <Compile Include="NoteForms\DescribedNoteForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NoteForms\GameForm.cs">
@@ -163,7 +163,7 @@
     <Compile Include="Notes\AuthorizationNote.cs" />
     <Compile Include="Notes\Bookmark.cs" />
     <Compile Include="Notes\DatedNote.cs" />
-    <Compile Include="Notes\Desire.cs" />
+    <Compile Include="Notes\DescribedNote.cs" />
     <Compile Include="Notes\Game.cs" />
     <Compile Include="Notes\Literature.cs" />
     <Compile Include="Notes\Meal.cs" />
@@ -177,7 +177,7 @@
     <Compile Include="NoteTables\DatedNoteTable.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NoteTables\DesireTable.cs">
+    <Compile Include="NoteTables\DescribedNoteTable.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NoteTables\GameTable.cs">
@@ -222,8 +222,8 @@
     <EmbeddedResource Include="NoteForms\DatedNoteForm.resx">
       <DependentUpon>DatedNoteForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NoteForms\DesireForm.resx">
-      <DependentUpon>DesireForm.cs</DependentUpon>
+    <EmbeddedResource Include="NoteForms\DescribedNoteForm.resx">
+      <DependentUpon>DescribedNoteForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NoteForms\GameForm.resx">
       <DependentUpon>GameForm.cs</DependentUpon>

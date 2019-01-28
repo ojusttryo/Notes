@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Notes.Notes
 {
-	public class Desire : Note
+	public class DescribedNote : Note
 	{
 		public string Description { get; set; }
 	}

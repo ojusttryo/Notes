@@ -14,7 +14,7 @@ namespace Notes.NoteForms
 {
 	[ToolboxItem(true)]
 	[DesignTimeVisible(true)]
-	public class DesireForm : NoteForm
+	public class DescribedNoteForm : NoteForm
 	{
 		private RichTextBox commentRichTextBox;
 		private TextBox nameTextBox;
@@ -26,7 +26,7 @@ namespace Notes.NoteForms
 		private StateComboBox stateComboBox;
 		private Label nameLabel;
 
-		public DesireForm(MainForm mainForm, NoteTable editedTable, Mode mode):
+		public DescribedNoteForm(MainForm mainForm, NoteTable editedTable, Mode mode):
 			base(mainForm, editedTable, mode)
 		{
 			InitializeComponent();
@@ -34,13 +34,13 @@ namespace Notes.NoteForms
 			Text = GetFormText();
 			submitButton.Text = GetSubmitButtonText();
 
-			Desire desire = _editedNote as Desire;
-			if (desire != null)
+			DescribedNote describedNote = _editedNote as DescribedNote;
+			if (describedNote != null)
 			{
-				nameTextBox.Text = desire.Name;
-				descriptionRichTextBox.Text = desire.Description;
-				stateComboBox.SelectedIndex = (int)desire.CurrentState;
-				commentRichTextBox.Text = desire.Comment;
+				nameTextBox.Text            = describedNote.Name;
+				descriptionRichTextBox.Text = describedNote.Description;
+				stateComboBox.SelectedIndex = (int)describedNote.CurrentState;
+				commentRichTextBox.Text     = describedNote.Comment;
 			}
 
 			KeyDown += delegate (object o, KeyEventArgs e)
@@ -176,13 +176,13 @@ namespace Notes.NoteForms
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			Desire desire = (_editedNote != null && _editedNote is Desire) ? _editedNote as Desire : new Desire();
-			desire.Name = nameTextBox.Text;
-			desire.Description = descriptionRichTextBox.Text;
-			desire.CurrentState = (Note.State)stateComboBox.SelectedIndex;
-			desire.Comment = commentRichTextBox.Text;
+			DescribedNote describedNote = (_editedNote != null && _editedNote is DescribedNote) ? _editedNote as DescribedNote : new DescribedNote();
+			describedNote.Name = nameTextBox.Text;
+			describedNote.Description = descriptionRichTextBox.Text;
+			describedNote.CurrentState = (Note.State)stateComboBox.SelectedIndex;
+			describedNote.Comment = commentRichTextBox.Text;
 
-			SubmitNote(desire);
+			SubmitNote(describedNote);
 
 			Close();
 		}

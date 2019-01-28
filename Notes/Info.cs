@@ -45,19 +45,20 @@ namespace Notes
 		static Info()
 		{
 			_tableNamesUI = new Dictionary<string, string>();
-			_tableNamesUI.Add("AnimeFilms",   "Anime films");
-			_tableNamesUI.Add("AnimeSerials", "Anime serials");
-			_tableNamesUI.Add("Bookmarks",    "Bookmarks");
-			_tableNamesUI.Add("Desires",      "Desires");
-			_tableNamesUI.Add("Films",        "Films");
-			_tableNamesUI.Add("Games",        "Games");
-			_tableNamesUI.Add("Literature",   "Literature");
-			_tableNamesUI.Add("Meal",         "Meal");
-			_tableNamesUI.Add("Performances", "Performances");
-			_tableNamesUI.Add("People",       "People");
-			_tableNamesUI.Add("Programs",     "Programs");
-			_tableNamesUI.Add("Serials",      "Serials");
-			_tableNamesUI.Add("TVShows",      "TV shows");
+			_tableNamesUI.Add("AnimeFilms",    "Anime films");
+			_tableNamesUI.Add("AnimeSerials",  "Anime serials");
+			_tableNamesUI.Add("Bookmarks",     "Bookmarks");
+			_tableNamesUI.Add("Desires",       "Desires");
+			_tableNamesUI.Add("Films",         "Films");
+			_tableNamesUI.Add("Games",         "Games");
+			_tableNamesUI.Add("Literature",    "Literature");
+			_tableNamesUI.Add("Meal",          "Meal");
+			_tableNamesUI.Add("Performances",  "Performances");
+			_tableNamesUI.Add("People",        "People");
+			_tableNamesUI.Add("Programs",      "Programs");
+			_tableNamesUI.Add("RegularDoings", "Regular doings");
+			_tableNamesUI.Add("Serials",       "Serials");
+			_tableNamesUI.Add("TVShows",       "TV shows");
 
 			_tableNamesDB = new Dictionary<string, string>();
 			foreach (KeyValuePair<string, string> pair in _tableNamesUI)

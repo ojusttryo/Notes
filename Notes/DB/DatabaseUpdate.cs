@@ -14,19 +14,20 @@ namespace Notes.DB
 		{
 			switch (tableName)
 			{
-				case "AnimeFilms":   return UpdateDatedNote(note, _animeFilmsUpdateCommand);
-				case "AnimeSerials": return UpdateSerial(note, _animeSerialsUpdateCommand);
-				case "Bookmarks":    return UpdateBookmark(note);
-				case "Desires":      return UpdateDesires(note);
-				case "Films":        return UpdateDatedNote(note, _filmsUpdateCommand);
-				case "Games":        return UpdateGame(note);
-				case "Literature":   return UpdateLiterature(note);
-				case "Meal":         return UpdateMeal(note);				
-				case "Performances": return UpdateDatedNote(note, _performancesUpdateCommand);
-				case "People":       return UpdatePerson(note);
-				case "Programs":     return UpdateProgram(note);
-				case "Serials":      return UpdateSerial(note, _serialsUpdateCommand);
-				case "TVShows":      return UpdateSerial(note, _TVShowsUpdateCommand);
+				case "AnimeFilms":    return UpdateDatedNote(note, _animeFilmsUpdateCommand);
+				case "AnimeSerials":  return UpdateSerial(note, _animeSerialsUpdateCommand);
+				case "Bookmarks":     return UpdateBookmark(note);
+				case "Desires":       return UpdateDesires(note, _desiresUpdateCommand);
+				case "Films":         return UpdateDatedNote(note, _filmsUpdateCommand);
+				case "Games":         return UpdateGame(note);
+				case "Literature":    return UpdateLiterature(note);
+				case "Meal":          return UpdateMeal(note);				
+				case "Performances":  return UpdateDatedNote(note, _performancesUpdateCommand);
+				case "People":        return UpdatePerson(note);
+				case "Programs":      return UpdateProgram(note);
+				case "RegularDoings": return UpdateDesires(note, _regularDoingsUpdateCommand);
+				case "Serials":       return UpdateSerial(note, _serialsUpdateCommand);
+				case "TVShows":       return UpdateSerial(note, _TVShowsUpdateCommand);
 				default: return false;
 			}
 		}
@@ -99,24 +100,24 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateDesires(Note note)
+		private static bool UpdateDesires(Note note, SQLiteCommand describedNoteUpdateCommand)
 		{
-			Desire desire = note as Desire;
-			if (desire == null || desire.Id < 0)
+			DescribedNote describedNote = note as DescribedNote;
+			if (describedNote == null || describedNote.Id < 0)
 			{
 				Log.Error("Try to save incorrect desire note");
 				return false;
 			}
 
-			_desiresUpdateCommand.Parameters[0].Value = desire.Id;
-			_desiresUpdateCommand.Parameters[1].Value = desire.Name;
-			_desiresUpdateCommand.Parameters[2].Value = (int)desire.CurrentState;
-			_desiresUpdateCommand.Parameters[3].Value = desire.Comment;
-			_desiresUpdateCommand.Parameters[4].Value = desire.Description;
+			describedNoteUpdateCommand.Parameters[0].Value = describedNote.Id;
+			describedNoteUpdateCommand.Parameters[1].Value = describedNote.Name;
+			describedNoteUpdateCommand.Parameters[2].Value = (int)describedNote.CurrentState;
+			describedNoteUpdateCommand.Parameters[3].Value = describedNote.Comment;
+			describedNoteUpdateCommand.Parameters[4].Value = describedNote.Description;
 
-			_desiresUpdateCommand.Prepare();
+			describedNoteUpdateCommand.Prepare();
 
-			return ExecuteNonQuery(_desiresUpdateCommand) == 1;
+			return ExecuteNonQuery(describedNoteUpdateCommand) == 1;
 		}
 
 

@@ -19,6 +19,7 @@ namespace Notes.DB
 		private static SQLiteCommand _performancesInsertCommand;
 		private static SQLiteCommand _peopleInsertCommand;
 		private static SQLiteCommand _programsInsertCommand;
+		private static SQLiteCommand _regularDoingsInsertCommand;
 		private static SQLiteCommand _serialsInsertCommand;
 		private static SQLiteCommand _TVShowsInsertCommand;		
 
@@ -33,6 +34,7 @@ namespace Notes.DB
 		private static SQLiteCommand _performancesUpdateCommand;
 		private static SQLiteCommand _peopleUpdateCommand;
 		private static SQLiteCommand _programsUpdateCommand;
+		private static SQLiteCommand _regularDoingsUpdateCommand;
 		private static SQLiteCommand _serialsUpdateCommand;
 		private static SQLiteCommand _TVShowsUpdateCommand;
 
@@ -44,7 +46,7 @@ namespace Notes.DB
 			CreateDatedNoteInsertCommand("AnimeFilms", out _animeFilmsInsertCommand);
 			CreateSerialsInsertCommand("AnimeSerials", out _animeSerialsInsertCommand);
 			CreateBookmarksInsertCommand();
-			CreateDesiresInsertCommand();
+			CreateDescribedNoteInsertCommand("Desires", out _desiresInsertCommand);
 			CreateDatedNoteInsertCommand("Films", out _filmsInsertCommand);
 			CreateGamesInsertCommand();
 			CreateLiteratureInsertCommand();
@@ -52,13 +54,14 @@ namespace Notes.DB
 			CreateDatedNoteInsertCommand("Performances", out _performancesInsertCommand);
 			CreatePeopleInsertCommand();
 			CreateProgramsInsertCommand();
+			CreateDescribedNoteInsertCommand("RegularDoings", out _regularDoingsInsertCommand);
 			CreateSerialsInsertCommand("Serials", out _serialsInsertCommand);
 			CreateSerialsInsertCommand("TVShows", out _TVShowsInsertCommand);
 
 			CreateDatedNoteUpdateCommand("AnimeFilms", out _animeFilmsUpdateCommand);
 			CreateSerialsUpdateCommand("AnimeSerials", out _animeSerialsUpdateCommand);
 			CreateBookmarksUpdateCommand();
-			CreateDesiresUpdateCommand();
+			CreateDescribedNoteUpdateCommand("Desires", out _desiresUpdateCommand);
 			CreateDatedNoteUpdateCommand("Films", out _filmsUpdateCommand);
 			CreateGamesUpdateCommand();
 			CreateLiteratureUpdateCommand();
@@ -66,6 +69,7 @@ namespace Notes.DB
 			CreateDatedNoteUpdateCommand("Performances", out _performancesUpdateCommand);
 			CreatePeopleUpdateCommand();
 			CreateProgramsUpdateCommand();
+			CreateDescribedNoteUpdateCommand("RegularDoings", out _regularDoingsUpdateCommand);
 			CreateSerialsUpdateCommand("Serials", out _serialsUpdateCommand);
 			CreateSerialsUpdateCommand("TVShows", out _TVShowsUpdateCommand);
 
@@ -73,32 +77,32 @@ namespace Notes.DB
 		}
 
 
-		private static void CreateDatedNoteInsertCommand(string tableName, out SQLiteCommand _datedNoteInsertCommand)
+		private static void CreateDatedNoteInsertCommand(string tableName, out SQLiteCommand datedNoteInsertCommand)
 		{
-			_datedNoteInsertCommand = new SQLiteCommand();
+			datedNoteInsertCommand = new SQLiteCommand();
 
-			_datedNoteInsertCommand.CommandText = "INSERT INTO " + tableName + " (Name, CurrentState, Comment, Year) " +
+			datedNoteInsertCommand.CommandText = "INSERT INTO " + tableName + " (Name, CurrentState, Comment, Year) " +
 				"VALUES (@Name, @CurrentState, @Comment, @Year);";
 
-			_datedNoteInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
-			_datedNoteInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
-			_datedNoteInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
-			_datedNoteInsertCommand.Parameters.Add("@Year", System.Data.DbType.Int32);
+			datedNoteInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			datedNoteInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
+			datedNoteInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
+			datedNoteInsertCommand.Parameters.Add("@Year", System.Data.DbType.Int32);
 		}
 
 
-		private static void CreateSerialsInsertCommand(string tableName, out SQLiteCommand _serialsInsertCommand)
+		private static void CreateSerialsInsertCommand(string tableName, out SQLiteCommand serialsInsertCommand)
 		{
-			_serialsInsertCommand = new SQLiteCommand();
+			serialsInsertCommand = new SQLiteCommand();
 
-			_serialsInsertCommand.CommandText = "INSERT INTO " + tableName + " (Name, CurrentState, Comment, Season, Episode) " +
+			serialsInsertCommand.CommandText = "INSERT INTO " + tableName + " (Name, CurrentState, Comment, Season, Episode) " +
 				"VALUES (@Name, @CurrentState, @Comment, @Season, @Episode);";
 
-			_serialsInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
-			_serialsInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
-			_serialsInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
-			_serialsInsertCommand.Parameters.Add("@Season", System.Data.DbType.Int32);
-			_serialsInsertCommand.Parameters.Add("@Episode", System.Data.DbType.Int32);
+			serialsInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			serialsInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
+			serialsInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
+			serialsInsertCommand.Parameters.Add("@Season", System.Data.DbType.Int32);
+			serialsInsertCommand.Parameters.Add("@Episode", System.Data.DbType.Int32);
 		}
 
 
@@ -119,17 +123,17 @@ namespace Notes.DB
 		}
 
 
-		private static void CreateDesiresInsertCommand()
+		private static void CreateDescribedNoteInsertCommand(string tableName, out SQLiteCommand describedNoteInsertCommand)
 		{
-			_desiresInsertCommand = new SQLiteCommand();
+			describedNoteInsertCommand = new SQLiteCommand();
 
-			_desiresInsertCommand.CommandText = "INSERT INTO Desires (Name, CurrentState, Comment, Description) " +
+			describedNoteInsertCommand.CommandText = "INSERT INTO " + tableName + " (Name, CurrentState, Comment, Description) " +
 				"VALUES (@Name, @CurrentState, @Comment, @Description);";
 
-			_desiresInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
-			_desiresInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
-			_desiresInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
-			_desiresInsertCommand.Parameters.Add("@Description", System.Data.DbType.String);
+			describedNoteInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			describedNoteInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
+			describedNoteInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
+			describedNoteInsertCommand.Parameters.Add("@Description", System.Data.DbType.String);
 		}
 
 
@@ -280,19 +284,19 @@ namespace Notes.DB
 		}
 
 
-		private static void CreateDesiresUpdateCommand()
+		private static void CreateDescribedNoteUpdateCommand(string tableName, out SQLiteCommand describedNoteUpdateCommand)
 		{
-			_desiresUpdateCommand = new SQLiteCommand();
+			describedNoteUpdateCommand = new SQLiteCommand();
 
-			_desiresUpdateCommand.CommandText = "UPDATE Desires " +
+			describedNoteUpdateCommand.CommandText = "UPDATE " + tableName + " " +
 				"SET Name = @Name, CurrentState = @CurrentState, Comment = @Comment, Description = @Description " + 
 				"WHERE Id = @Id;";
 
-			_desiresUpdateCommand.Parameters.Add("@Id", System.Data.DbType.Int32);
-			_desiresUpdateCommand.Parameters.Add("@Name", System.Data.DbType.String);
-			_desiresUpdateCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
-			_desiresUpdateCommand.Parameters.Add("@Comment", System.Data.DbType.String);
-			_desiresUpdateCommand.Parameters.Add("@Description", System.Data.DbType.String);
+			describedNoteUpdateCommand.Parameters.Add("@Id", System.Data.DbType.Int32);
+			describedNoteUpdateCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			describedNoteUpdateCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
+			describedNoteUpdateCommand.Parameters.Add("@Comment", System.Data.DbType.String);
+			describedNoteUpdateCommand.Parameters.Add("@Description", System.Data.DbType.String);
 		}
 
 

@@ -10,7 +10,7 @@ using static Notes.Info;
 
 namespace Notes.NoteTables
 {
-	class DesireTable : NoteTable
+	class DescribedNoteTable : NoteTable
 	{
 		enum Index
 		{
@@ -22,8 +22,8 @@ namespace Notes.NoteTables
 		}
 
 
-		public DesireTable(Point location):
-			base(location, "Desires")
+		public DescribedNoteTable(Point location, string tableNameDB):
+			base(location, tableNameDB)
 		{
 
 		}
@@ -59,17 +59,17 @@ namespace Notes.NoteTables
 
 		public override bool AddNote(Note note)
 		{
-			if (note is Desire)
+			if (note is DescribedNote)
 			{
-				Desire desire = note as Desire;
+				DescribedNote describedNote = note as DescribedNote;
 
 				Rows.Add(new string[]
 				{
-					desire.Id.ToString(),
-					desire.Name,
-					desire.Description,
-					States[(int)desire.CurrentState],
-					desire.Comment
+					describedNote.Id.ToString(),
+					describedNote.Name,
+					describedNote.Description,
+					States[(int)describedNote.CurrentState],
+					describedNote.Comment
 				});
 
 				return true;
@@ -81,14 +81,14 @@ namespace Notes.NoteTables
 
 		public override void UpdateNote(Note note)
 		{
-			Desire desire = note as Desire;
-			if (desire == null)
+			DescribedNote describedNote = note as DescribedNote;
+			if (describedNote == null)
 				return;
 
-			CurrentRow.Cells[(int)Index.Name].Value =              desire.Name;
-			CurrentRow.Cells[(int)Index.Description].Value =       desire.Description;
-			CurrentRow.Cells[(int)Index.State].Value = States[(int)desire.CurrentState];
-			CurrentRow.Cells[(int)Index.Comment].Value =           desire.Comment;
+			CurrentRow.Cells[(int)Index.Name].Value =              describedNote.Name;
+			CurrentRow.Cells[(int)Index.Description].Value =       describedNote.Description;
+			CurrentRow.Cells[(int)Index.State].Value = States[(int)describedNote.CurrentState];
+			CurrentRow.Cells[(int)Index.Comment].Value =           describedNote.Comment;
 		}
 
 
@@ -97,14 +97,14 @@ namespace Notes.NoteTables
 			if (CurrentRow == null)
 				return null;
 
-			Desire desire = new Desire();
-			desire.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
-			desire.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
-			desire.Description =  CurrentRow.Cells[(int)Index.Description].Value.ToString();
-			desire.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
-			desire.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
+			DescribedNote describedNote = new DescribedNote();
+			describedNote.Id =           CurrentRow.Cells[(int)Index.Id].Value.ToString().ToIntOrException();
+			describedNote.Name =         CurrentRow.Cells[(int)Index.Name].Value.ToString();
+			describedNote.Description =  CurrentRow.Cells[(int)Index.Description].Value.ToString();
+			describedNote.CurrentState = CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
+			describedNote.Comment =      CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 
-			return desire;
+			return describedNote;
 		}
 
 

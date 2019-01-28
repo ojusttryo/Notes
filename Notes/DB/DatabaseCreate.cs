@@ -107,6 +107,10 @@ namespace Notes.DB
 				Id, Name, CurrentState, Comment, DownloadLink, Version, Login, Password, Email));
 			ExecuteNonQuery(command);
 
+			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS RegularDoings ({0}, {1}, {2}, {3}, {4});",
+				Id, Name, CurrentState, Comment, Description));
+			ExecuteNonQuery(command);
+
 			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Serials ({0}, {1}, {2}, {3}, {4}, {5});", 
 				Id, Name, CurrentState, Comment, Season, Episode));
 			ExecuteNonQuery(command);

@@ -129,19 +129,20 @@ namespace Notes.DB
 							{
 								switch (tableNameDB)
 								{
-									case "AnimeFilms":   notes = ReadDatedNotes(reader); break;
-									case "AnimeSerials": notes = ReadSerials(reader); break;
-									case "Bookmarks":    notes = ReadBookmarks(reader); break;
-									case "Desires":      notes = ReadDesires(reader); break;
-									case "Films":        notes = ReadDatedNotes(reader); break;
-									case "Games":        notes = ReadGames(reader); break;
-									case "Literature":   notes = ReadLiterature(reader); break;
-									case "Meal":         notes = ReadMeal(reader); break;
-									case "Performances": notes = ReadDatedNotes(reader); break;
-									case "People":       notes = ReadPeople(reader); break;
-									case "Programs":     notes = ReadPrograms(reader); break;
-									case "Serials":      notes = ReadSerials(reader); break;									
-									case "TVShows":      notes = ReadSerials(reader); break;
+									case "AnimeFilms":    notes = ReadDatedNotes(reader); break;
+									case "AnimeSerials":  notes = ReadSerials(reader); break;
+									case "Bookmarks":     notes = ReadBookmarks(reader); break;
+									case "Desires":       notes = ReadDescribedNotes(reader); break;
+									case "Films":         notes = ReadDatedNotes(reader); break;
+									case "Games":         notes = ReadGames(reader); break;
+									case "Literature":    notes = ReadLiterature(reader); break;
+									case "Meal":          notes = ReadMeal(reader); break;
+									case "Performances":  notes = ReadDatedNotes(reader); break;
+									case "People":        notes = ReadPeople(reader); break;
+									case "Programs":      notes = ReadPrograms(reader); break;
+									case "RegularDoings": notes = ReadDescribedNotes(reader); break;
+									case "Serials":       notes = ReadSerials(reader); break;									
+									case "TVShows":       notes = ReadSerials(reader); break;
 									default: break;
 								}
 							}
@@ -429,7 +430,7 @@ namespace Notes.DB
 		}
 
 
-		private static List<Note> ReadDesires(SQLiteDataReader reader)
+		private static List<Note> ReadDescribedNotes(SQLiteDataReader reader)
 		{
 			try
 			{
@@ -437,22 +438,22 @@ namespace Notes.DB
 
 				while (reader.Read())
 				{
-					Desire desire = new Desire();
+					DescribedNote describedNote = new DescribedNote();
 
-					desire.Id = reader.GetInt32(0);
-					desire.Name = reader.GetString(1);
-					desire.CurrentState = (Note.State)reader.GetInt32(2);
-					desire.Comment = reader.GetString(3);
-					desire.Description = reader.GetString(4);
+					describedNote.Id = reader.GetInt32(0);
+					describedNote.Name = reader.GetString(1);
+					describedNote.CurrentState = (Note.State)reader.GetInt32(2);
+					describedNote.Comment = reader.GetString(3);
+					describedNote.Description = reader.GetString(4);
 
-					notes.Add(desire);
+					notes.Add(describedNote);
 				}
 
 				return notes;
 			}
 			catch (Exception ex)
 			{
-				Log.Error(string.Format("Can not read desires:{0}{1}",
+				Log.Error(string.Format("Can not read described notes:{0}{1}",
 					Environment.NewLine, ex.ToString()));
 				return new List<Note>();
 			}
