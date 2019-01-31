@@ -59,9 +59,15 @@ namespace Notes.DB
 			string Season       = "Season        INTEGER NOT NULL DEFAULT 0";
 			string Episode      = "Episode       INTEGER NOT NULL DEFAULT 0";
 			string Description  = "Description   TEXT NOT NULL";
-			string PlayersCount = "PlayersCount  INTEGER NOT NULL DEFAULT 0";		// 0 - not defined, 1 - singleplayer, 2 - multiplayer
+			string PlayersCount = "PlayersCount  INTEGER NOT NULL DEFAULT 0";       // 0 - not defined, 1 - singleplayer, 2 - multiplayer
+			string IsDateSet    = "IsDateSet     BOOLEAN NOT NULL DEFAULT 0";
+			string Date         = "Date          TEXT NOT NULL";		
 
 			SQLiteCommand command;
+
+			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS Affairs ({0}, {1}, {2}, {3}, {4}, {5}, {6});",
+				Id, Name, CurrentState, Comment, Description, IsDateSet, Date));
+			ExecuteNonQuery(command);
 
 			command = new SQLiteCommand(string.Format("CREATE TABLE IF NOT EXISTS AnimeFilms ({0}, {1}, {2}, {3}, {4});", 
 				Id, Name, CurrentState, Comment, Year));

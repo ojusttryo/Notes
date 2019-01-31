@@ -14,6 +14,7 @@ namespace Notes.DB
 		{
 			switch (tableNameDB)
 			{
+				case "Affairs":       return InsertAffairs(notes);
 				case "AnimeFilms":    return InsertDatedNotes(notes, _animeFilmsInsertCommand);
 				case "AnimeSerials":  return InsertSerials(notes, _animeSerialsInsertCommand);
 				case "Bookmarks":     return InsertBookmarks(notes);
@@ -30,6 +31,66 @@ namespace Notes.DB
 				case "TVShows":       return InsertSerials(notes, _TVShowsInsertCommand);
 				default: return false;
 			}
+		}
+
+
+		private static bool InsertAffairs(List<Note> notes)
+		{
+			bool inserted = false;
+
+			try
+			{
+				using (SQLiteConnection connection = Database.CreateConnection())
+				{	
+					connection.Open();
+					_affairsInsertCommand.Connection = connection;
+
+					if (connection.State == System.Data.ConnectionState.Open)
+					{
+						using (SQLiteTransaction transaction = connection.BeginTransaction())
+						{
+							foreach (Note note in notes)
+							{
+								Affair affair = note as Affair;
+								if (affair == null)
+								{
+									Log.Error("Try to insert incorrect note");
+									continue;
+								}
+
+								_affairsInsertCommand.Parameters[0].Value = affair.Name;
+								_affairsInsertCommand.Parameters[1].Value = (int)affair.CurrentState;
+								_affairsInsertCommand.Parameters[2].Value = affair.Comment;
+								_affairsInsertCommand.Parameters[3].Value = affair.Description;
+								_affairsInsertCommand.Parameters[4].Value = affair.IsDateSet;
+								_affairsInsertCommand.Parameters[5].Value = affair.GetDate();
+
+								_affairsInsertCommand.Prepare();
+								_affairsInsertCommand.ExecuteNonQuery();
+
+								affair.Id = (int)connection.LastInsertRowId;
+
+								inserted = true;
+							}
+
+							transaction.Commit();
+						}
+					}
+
+					connection.Close();
+					_affairsInsertCommand.Connection = null;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not execute command: {0}{1}{2}{3}", 
+					Environment.NewLine, (_affairsInsertCommand != null) ? _affairsInsertCommand.CommandText : "", 
+					Environment.NewLine, ex.ToString()));
+
+				return false;
+			}
+
+			return inserted;
 		}
 
 

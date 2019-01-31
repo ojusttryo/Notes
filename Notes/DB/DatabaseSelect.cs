@@ -11,47 +11,6 @@ namespace Notes.DB
 	public partial class Database
 	{
 		/// <summary>
-		/// Получить максимальный Id в таблице.
-		/// </summary>
-		/// <param name="tableNameDB">Имя таблицы.</param>
-		/// <returns>Id записи или -1, если записей нет или произошла ошибка.</returns>
-		private static int SelectMaxId(string tableNameDB)
-		{
-			int maxId = -1;
-
-			try
-			{
-				using (SQLiteCommand command = new SQLiteCommand(string.Format("SELECT MAX(Id) FROM {0}", tableNameDB)))
-				{
-					using (SQLiteConnection connection = CreateConnection())
-					{
-						connection.Open();
-						command.Connection = connection;
-						if (connection.State == System.Data.ConnectionState.Open)
-						{
-							using (SQLiteDataReader reader = command.ExecuteReader())
-							{
-								if (reader.Read() && reader.FieldCount > 0)
-									maxId = reader.GetInt32(0);
-							}
-						}
-
-						connection.Close();
-						command.Connection = null;
-					}
-				}
-
-				return maxId;
-			}
-			catch (Exception ex)
-			{
-				Log.Error(string.Format("Can not select max Id from {0}.{1}{2}", tableNameDB, Environment.NewLine, ex.ToString()));
-				return maxId;
-			}
-		}
-
-
-		/// <summary>
 		/// Извлекает уникальные (distinct) значения из поля таблицы.
 		/// </summary>
 		public static List<string> SelectUniqueValues(string tableNameDB, string fieldName)
@@ -91,27 +50,13 @@ namespace Notes.DB
 
 
 		/// <summary>
-		/// Получить все заметки из таблицы. Заметки сортируются по имени.
+		/// Подключается к БД и считывает заметки нужного типа.
 		/// </summary>
 		public static List<Note> SelectNotes(string tableNameDB)
 		{
-			string commandText = string.Format("SELECT * FROM {0} ORDER BY Name", tableNameDB);
-            SQLiteCommand command = new SQLiteCommand(commandText);
-
-			List<Note> notes = ReadNotes(command, tableNameDB);
-
-			return notes;
-		}
-
-
-		/// <summary>
-		/// Подключается к БД и считывает заметки. Результат никогда не равен null.
-		/// </summary>
-		private static List<Note> ReadNotes(SQLiteCommand selectCommand, string tableNameDB)
-		{
 			try
 			{
-				using (selectCommand)
+				using (SQLiteCommand selectCommand = new SQLiteCommand(string.Format("SELECT * FROM {0} ORDER BY Name", tableNameDB)))
 				{
 					using (SQLiteConnection connection = Database.CreateConnection())
 					{
@@ -129,6 +74,7 @@ namespace Notes.DB
 							{
 								switch (tableNameDB)
 								{
+									case "Affairs":       notes = ReadAffairs(reader); break;
 									case "AnimeFilms":    notes = ReadDatedNotes(reader); break;
 									case "AnimeSerials":  notes = ReadSerials(reader); break;
 									case "Bookmarks":     notes = ReadBookmarks(reader); break;
@@ -141,7 +87,7 @@ namespace Notes.DB
 									case "People":        notes = ReadPeople(reader); break;
 									case "Programs":      notes = ReadPrograms(reader); break;
 									case "RegularDoings": notes = ReadDescribedNotes(reader); break;
-									case "Serials":       notes = ReadSerials(reader); break;									
+									case "Serials":       notes = ReadSerials(reader); break;
 									case "TVShows":       notes = ReadSerials(reader); break;
 									default: break;
 								}
@@ -156,9 +102,39 @@ namespace Notes.DB
 			}
 			catch (Exception ex)
 			{
-				Log.Error(string.Format("Can not execute select command:{0}{1}{2}{3}",
-					Environment.NewLine, selectCommand.CommandText, Environment.NewLine, ex.ToString()));
+				Log.Error(string.Format("Can not execute select command:{0}{1}", Environment.NewLine, ex.ToString()));
+				return new List<Note>();
+			}
+		}
 
+
+		private static List<Note> ReadAffairs(SQLiteDataReader reader)
+		{
+			try
+			{
+				List<Note> notes = new List<Note>();
+
+				while (reader.Read())
+				{
+					Affair affair = new Affair();
+
+					affair.Id = reader.GetInt32(0);
+					affair.Name = reader.GetString(1);					
+					affair.CurrentState = (Note.State)reader.GetInt32(2);
+					affair.Comment = reader.GetString(3);
+					affair.Description = reader.GetString(4);
+					affair.IsDateSet = reader.GetBoolean(5);
+					affair.SetDate(reader.GetString(6));
+
+					notes.Add(affair);
+				}
+
+				return notes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(string.Format("Can not read affairs:{0}{1}",
+					Environment.NewLine, ex.ToString()));
 				return new List<Note>();
 			}
 		}

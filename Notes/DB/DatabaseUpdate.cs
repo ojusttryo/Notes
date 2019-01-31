@@ -14,10 +14,11 @@ namespace Notes.DB
 		{
 			switch (tableName)
 			{
+				case "Affairs":       return UpdateAffair(note);
 				case "AnimeFilms":    return UpdateDatedNote(note, _animeFilmsUpdateCommand);
 				case "AnimeSerials":  return UpdateSerial(note, _animeSerialsUpdateCommand);
 				case "Bookmarks":     return UpdateBookmark(note);
-				case "Desires":       return UpdateDesires(note, _desiresUpdateCommand);
+				case "Desires":       return UpdateDescribedNote(note, _desiresUpdateCommand);
 				case "Films":         return UpdateDatedNote(note, _filmsUpdateCommand);
 				case "Games":         return UpdateGame(note);
 				case "Literature":    return UpdateLiterature(note);
@@ -25,11 +26,34 @@ namespace Notes.DB
 				case "Performances":  return UpdateDatedNote(note, _performancesUpdateCommand);
 				case "People":        return UpdatePerson(note);
 				case "Programs":      return UpdateProgram(note);
-				case "RegularDoings": return UpdateDesires(note, _regularDoingsUpdateCommand);
+				case "RegularDoings": return UpdateDescribedNote(note, _regularDoingsUpdateCommand);
 				case "Serials":       return UpdateSerial(note, _serialsUpdateCommand);
 				case "TVShows":       return UpdateSerial(note, _TVShowsUpdateCommand);
 				default: return false;
 			}
+		}
+
+	
+		private static bool UpdateAffair(Note note)
+		{
+			Affair affair = note as Affair;
+			if (affair == null || affair.Id < 0)
+			{
+				Log.Error("Try to save incorrect affair note");
+				return false;
+			}
+
+			_affairsUpdateCommand.Parameters[0].Value = affair.Id;
+			_affairsUpdateCommand.Parameters[1].Value = affair.Name;
+			_affairsUpdateCommand.Parameters[2].Value = (int)affair.CurrentState;
+			_affairsUpdateCommand.Parameters[3].Value = affair.Comment;
+			_affairsUpdateCommand.Parameters[4].Value = affair.Description;
+			_affairsUpdateCommand.Parameters[5].Value = affair.IsDateSet;
+			_affairsUpdateCommand.Parameters[6].Value = affair.GetDate();
+
+			_affairsUpdateCommand.Prepare();
+
+			return ExecuteNonQuery(_affairsUpdateCommand) == 1;
 		}
 
 
@@ -100,12 +124,12 @@ namespace Notes.DB
 		}
 
 
-		private static bool UpdateDesires(Note note, SQLiteCommand describedNoteUpdateCommand)
+		private static bool UpdateDescribedNote(Note note, SQLiteCommand describedNoteUpdateCommand)
 		{
 			DescribedNote describedNote = note as DescribedNote;
 			if (describedNote == null || describedNote.Id < 0)
 			{
-				Log.Error("Try to save incorrect desire note");
+				Log.Error("Try to save incorrect described note note");
 				return false;
 			}
 

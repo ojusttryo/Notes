@@ -8,5 +8,11 @@ namespace Notes.Notes
 	public class DescribedNote : Note
 	{
 		public string Description { get; set; }
+
+
+		public DescribedNote()
+		{
+			Description = string.Empty;
+		}
 	}
 }

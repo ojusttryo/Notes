@@ -45,6 +45,7 @@ namespace Notes
 		static Info()
 		{
 			_tableNamesUI = new Dictionary<string, string>();
+			_tableNamesUI.Add("Affairs",       "Affairs");
 			_tableNamesUI.Add("AnimeFilms",    "Anime films");
 			_tableNamesUI.Add("AnimeSerials",  "Anime serials");
 			_tableNamesUI.Add("Bookmarks",     "Bookmarks");

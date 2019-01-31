@@ -57,6 +57,7 @@ namespace Notes
 			Point noteTableLocation = new Point(ClientRectangle.Location.X, addButton.Location.Y + addButton.Height + _indentBetweenElements);
 
 			_noteTables = new Dictionary<string, NoteTable>();
+			_noteTables.Add("Affairs",       new AffairTable(noteTableLocation));
 			_noteTables.Add("AnimeFilms",    new DatedNoteTable(noteTableLocation, "AnimeFilms"));
 			_noteTables.Add("AnimeSerials",  new SerialTable(noteTableLocation, "AnimeSerials"));
 			_noteTables.Add("Bookmarks",     new BookmarkTable(noteTableLocation));
@@ -450,6 +451,7 @@ namespace Notes
 		{
 			switch (_currentNoteTable.TableNameDB)
 			{
+				case "Affairs":       new AffairForm(       this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
 				case "AnimeFilms":    new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
 				case "AnimeSerials":  new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
 				case "Bookmarks":     new BookmarkForm(     this, _currentNoteTable, NoteForm.Mode.Add).ShowDialog(); break;
@@ -492,6 +494,7 @@ namespace Notes
 
 			switch (_currentNoteTable.TableNameDB)
 			{
+				case "Affairs":       new AffairForm(       this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
 				case "AnimeFilms":    new DatedNoteForm(    this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
 				case "AnimeSerials":  new SerialForm(       this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;
 				case "Bookmarks":     new BookmarkForm(     this, _currentNoteTable, NoteForm.Mode.Edit).ShowDialog(); break;

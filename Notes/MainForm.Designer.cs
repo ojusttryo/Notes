@@ -69,6 +69,7 @@
 			this.deleteButton = new System.Windows.Forms.Button();
 			this.addButton = new System.Windows.Forms.Button();
 			this.searchButton = new System.Windows.Forms.Button();
+			this.affairsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -143,6 +144,7 @@
 			// categoryToolStripMenuItem
 			// 
 			this.categoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.affairsToolStripMenuItem,
             this.animeFilmsToolStripMenuItem,
             this.animeSerialsToolStripMenuItem,
             this.bookmarksToolStripMenuItem,
@@ -424,6 +426,13 @@
 			this.searchButton.UseVisualStyleBackColor = true;
 			this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
 			// 
+			// affairsToolStripMenuItem
+			// 
+			this.affairsToolStripMenuItem.Name = "affairsToolStripMenuItem";
+			this.affairsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+			this.affairsToolStripMenuItem.Text = "Affairs";
+			this.affairsToolStripMenuItem.Click += new System.EventHandler(this.notesToolStripMenuItem_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -493,6 +502,7 @@
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem securityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem regularDoingsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem affairsToolStripMenuItem;
 	}
 }
 

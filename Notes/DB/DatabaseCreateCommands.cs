@@ -8,6 +8,7 @@ namespace Notes.DB
 {
 	public partial class Database
 	{
+		private static SQLiteCommand _affairsInsertCommand;
 		private static SQLiteCommand _animeFilmsInsertCommand;
 		private static SQLiteCommand _animeSerialsInsertCommand;
 		private static SQLiteCommand _bookmarksInsertCommand;
@@ -21,8 +22,9 @@ namespace Notes.DB
 		private static SQLiteCommand _programsInsertCommand;
 		private static SQLiteCommand _regularDoingsInsertCommand;
 		private static SQLiteCommand _serialsInsertCommand;
-		private static SQLiteCommand _TVShowsInsertCommand;		
+		private static SQLiteCommand _TVShowsInsertCommand;
 
+		private static SQLiteCommand _affairsUpdateCommand;
 		private static SQLiteCommand _animeFilmsUpdateCommand;
 		private static SQLiteCommand _animeSerialsUpdateCommand;
 		private static SQLiteCommand _bookmarksUpdateCommand;
@@ -43,6 +45,7 @@ namespace Notes.DB
 
 		private static void CreateCommands()
 		{
+			CreateAffairsInsertCommand();
 			CreateDatedNoteInsertCommand("AnimeFilms", out _animeFilmsInsertCommand);
 			CreateSerialsInsertCommand("AnimeSerials", out _animeSerialsInsertCommand);
 			CreateBookmarksInsertCommand();
@@ -58,6 +61,7 @@ namespace Notes.DB
 			CreateSerialsInsertCommand("Serials", out _serialsInsertCommand);
 			CreateSerialsInsertCommand("TVShows", out _TVShowsInsertCommand);
 
+			CreateAffairsUpdateCommand();
 			CreateDatedNoteUpdateCommand("AnimeFilms", out _animeFilmsUpdateCommand);
 			CreateSerialsUpdateCommand("AnimeSerials", out _animeSerialsUpdateCommand);
 			CreateBookmarksUpdateCommand();
@@ -74,6 +78,22 @@ namespace Notes.DB
 			CreateSerialsUpdateCommand("TVShows", out _TVShowsUpdateCommand);
 
 			CreateSettingsInsertOrUpdateCommand();
+		}
+
+
+		private static void CreateAffairsInsertCommand()
+		{
+			_affairsInsertCommand = new SQLiteCommand();
+
+			_affairsInsertCommand.CommandText = "INSERT INTO Affairs (Name, CurrentState, Comment, Description, IsDateSet, Date) " +
+				"VALUES (@Name, @CurrentState, @Comment, @Description, @IsDateSet, @Date);";
+
+			_affairsInsertCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			_affairsInsertCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
+			_affairsInsertCommand.Parameters.Add("@Comment", System.Data.DbType.String);
+			_affairsInsertCommand.Parameters.Add("@Description", System.Data.DbType.String);
+			_affairsInsertCommand.Parameters.Add("@IsDateSet", System.Data.DbType.Boolean);
+			_affairsInsertCommand.Parameters.Add("@Date", System.Data.DbType.String);
 		}
 
 
@@ -229,6 +249,25 @@ namespace Notes.DB
 			_programsInsertCommand.Parameters.Add("@Login", System.Data.DbType.String);
 			_programsInsertCommand.Parameters.Add("@Password", System.Data.DbType.String);
 			_programsInsertCommand.Parameters.Add("@Email", System.Data.DbType.String);
+		}
+
+
+		private static void CreateAffairsUpdateCommand()
+		{
+			_affairsUpdateCommand = new SQLiteCommand();
+
+			_affairsUpdateCommand.CommandText = "UPDATE Affairs " + 
+				"SET Name = @Name, CurrentState = @CurrentState, Comment = @Comment, " +
+				"Description = @Description, IsDateSet = @IsDateSet, Date = @Date " + 
+				"WHERE Id = @Id;";
+
+			_affairsUpdateCommand.Parameters.Add("@Id", System.Data.DbType.Int32);
+			_affairsUpdateCommand.Parameters.Add("@Name", System.Data.DbType.String);
+			_affairsUpdateCommand.Parameters.Add("@CurrentState", System.Data.DbType.Int32);
+			_affairsUpdateCommand.Parameters.Add("@Comment", System.Data.DbType.String);
+			_affairsUpdateCommand.Parameters.Add("@Description", System.Data.DbType.String);
+			_affairsUpdateCommand.Parameters.Add("@IsDateSet", System.Data.DbType.Boolean);
+			_affairsUpdateCommand.Parameters.Add("@Date", System.Data.DbType.String);
 		}
 
 
