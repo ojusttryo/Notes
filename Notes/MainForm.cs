@@ -96,6 +96,14 @@ namespace Notes
 			{
 				OnResize(null);
 			};
+
+			// Когда пользователь крутит колесико, то значит хочет прокрутить таблицу. Больше тут просто нечего. 
+			// Поэтому сразу фокус на нее.
+			MouseWheel += delegate (object o, MouseEventArgs e)
+			{
+				if (ActiveControl != _currentNoteTable)
+					ActiveControl = _currentNoteTable;
+			};
 		}
 		
 
