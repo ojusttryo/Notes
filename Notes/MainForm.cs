@@ -81,6 +81,10 @@ namespace Notes
 
 			searchTextBox.KeyPress += delegate (object o, KeyPressEventArgs e)
 			{
+				// Ignore plus
+				if (e.KeyChar == (char)43)
+					e.Handled = true;
+
 				// Поиск по нажатию Enter
 				if (e.KeyChar == (char)13)
 				{
@@ -92,10 +96,7 @@ namespace Notes
 			Resize += new EventHandler(MainForm_Resize);
 
 			// Без этого не отображается вертикальный скролл бар в таблице при первом открытии.
-			Shown += delegate (object o, EventArgs e) 
-			{
-				OnResize(null);
-			};
+			Shown += delegate (object o, EventArgs e) { OnResize(null); };
 
 			// Когда пользователь крутит колесико, то значит хочет прокрутить таблицу. Больше тут просто нечего. 
 			// Поэтому сразу фокус на нее.
@@ -123,6 +124,8 @@ namespace Notes
 				deleteButton.PerformClick();
 			else if (e.KeyCode == Keys.Enter && currentCellIsIsNotHeader && tableIsActive)
 				editButton.PerformClick();
+			else if (e.KeyCode == Keys.F5)
+				SortByName();
 		}
 		
 
@@ -178,6 +181,15 @@ namespace Notes
 			bool successful = Database.Update(_currentNoteTable.TableNameDB, note);
 			if (successful)
 				_currentNoteTable.UpdateNote(note);
+		}
+
+
+		private void ShowLastSelectedNotes()
+		{
+			if (lastClickedStateItem != null)
+				lastClickedStateItem.PerformClick();
+			else
+				allStatesToolStripMenuItem.PerformClick();
 		}
 		
 
@@ -296,6 +308,10 @@ namespace Notes
 		private void SwitchToTable(string tableNameDB)
 		{
 			ReplaceNoteTableInControls(tableNameDB);
+			// При переключении вкладок нужно чтоб у открытой всегда был правильный порядок.
+			// Когда добавляем новую запись в конец, таблица все еще считается отсортированной, поэтому нужно всегда вызвать метод,
+			// а не проверять условия предыдущей сортировки.
+			SortByName();
 			SetSexMenuVisibleProperty(tableNameDB);
 			UpdateSearchComboBox();
 			SwitchToState();
@@ -310,12 +326,13 @@ namespace Notes
 
 			_currentNoteTable = _noteTables[tableNameDB];
 
-			// При переключении вкладок нужно чтоб у открытой всегда был правильный порядок.
-			// Когда добавляем новую запись в конец, таблица все еще считается отсортированной, поэтому нужно всегда вызвать метод,
-			// а не проверять условия предыдущей сортировки.
-			_currentNoteTable.Sort(_currentNoteTable.Columns[1], ListSortDirection.Ascending);
-
 			Controls.Add(_currentNoteTable);
+		}
+
+
+		private void SortByName()
+		{
+			_currentNoteTable.Sort(_currentNoteTable.Columns[1], ListSortDirection.Ascending);
 		}
 
 
@@ -423,10 +440,7 @@ namespace Notes
 				return;
 
 			// Сначала отображаем все заметки, выбранные предыдущим кликом на меню состояния.
-			if (lastClickedStateItem != null)
-				lastClickedStateItem.PerformClick();
-			else
-				allStatesToolStripMenuItem.PerformClick();
+			ShowLastSelectedNotes();
 
 			// Затем уже выбираем заметки по полу.
 			ToolStripMenuItem item = (ToolStripMenuItem)sender;

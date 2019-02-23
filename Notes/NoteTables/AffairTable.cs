@@ -75,7 +75,7 @@ namespace Notes.NoteTables
 					affair.Name,
 					affair.Description,
 					affair.IsDateSet,
-					affair.IsDateSet ? affair.GetDate() : "",
+					affair.IsDateSet ? affair.GetDate().Replace(' ', '.') : "",
 					States[(int)affair.CurrentState],
 					affair.Comment
 				);
@@ -96,7 +96,7 @@ namespace Notes.NoteTables
 			CurrentRow.Cells[(int)Index.Name].Value =              affair.Name;
 			CurrentRow.Cells[(int)Index.Description].Value =       affair.Description;
 			CurrentRow.Cells[(int)Index.IsDateSet].Value =         affair.IsDateSet;
-			CurrentRow.Cells[(int)Index.Date].Value =              affair.IsDateSet ? affair.GetDate() : "";
+			CurrentRow.Cells[(int)Index.Date].Value =              affair.IsDateSet ? affair.GetDate().Replace(' ', '.') : "";
 			CurrentRow.Cells[(int)Index.State].Value = States[(int)affair.CurrentState];
 			CurrentRow.Cells[(int)Index.Comment].Value =           affair.Comment;
 		}
@@ -113,7 +113,7 @@ namespace Notes.NoteTables
 			affair.Description =     CurrentRow.Cells[(int)Index.Description].Value.ToString();
 			affair.IsDateSet = (bool)CurrentRow.Cells[(int)Index.IsDateSet].Value;
 			if (affair.IsDateSet)
-				affair.SetDate(      CurrentRow.Cells[(int)Index.Date].Value.ToString());
+				affair.SetDate(      CurrentRow.Cells[(int)Index.Date].Value.ToString().Replace('.', ' '));
 			affair.CurrentState =    CurrentRow.Cells[(int)Index.State].Value.ToString().ToNoteState();
 			affair.Comment =         CurrentRow.Cells[(int)Index.Comment].Value.ToString();
 

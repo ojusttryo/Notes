@@ -32,6 +32,8 @@ namespace Notes.CommonUIElements
 
 			BorderStyle = BorderStyle.None;
 			AdvancedCellBorderStyle.All = DataGridViewAdvancedCellBorderStyle.None;
+			// На случай, если захочу установить границы по строкам.
+			// CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
 
 			ScrollBars = ScrollBars.Vertical;
 

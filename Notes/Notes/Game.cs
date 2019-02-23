@@ -11,7 +11,8 @@ namespace Notes.Notes
 		{
 			NotDefined,
 			Singleplayer,
-			Mutiplayer
+			Mutiplayer,
+			Mixed
 		}
 
 

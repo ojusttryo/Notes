@@ -29,7 +29,7 @@ namespace Notes.NoteTables
 		}
 
 
-		public static string[] PlayersCount = { "Not defined", "Singleplayer", "Multiplayer" };
+		public static string[] PlayersCount = { "Not defined", "Singleplayer", "Multiplayer", "Mixed" };
 		
 
 		public GameTable(Point location):
